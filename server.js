@@ -6,7 +6,7 @@ app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 
 app.get('/', (req,res) =>{
-  res.send('Hello world')
+  res.send('Hello world!')
 })
 
 app.post('/rest/api/lead', (req,res) =>{
