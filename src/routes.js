@@ -61,7 +61,7 @@ router.route('/user')
     for(const field of requiredFields){
       if(!req.query[`${field}`]){
         const {error} = missingParamError(field)
-        const {statusCode, body} = accessDenied(error)
+        const {statusCode, body} = invalidRequest(error)
         return res.status(statusCode).send(body)
       }
     }
