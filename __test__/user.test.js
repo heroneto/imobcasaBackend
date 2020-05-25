@@ -36,9 +36,24 @@ describe('API:USERS tests', () => {
       expect(res.status).toEqual(401)
       expect(res.text).toBe('InvalidParamError: token')
     })
+    it('POST: Should return 401 if no token was provided', async () =>{
+      const res = await request(app)
+        .put('/user')
+      expect(res.status).toEqual(401)
+      expect(res.text).toBe('MissingParamError: token')
+    })
+    it('POST: Should return 401 if invalid token was provided', async () => {
+      const res = await request(app)
+        .put('/user')
+        .query({
+          token: 'invalidToken'
+        })
+      expect(res.status).toEqual(401)
+      expect(res.text).toBe('InvalidParamError: token')
+    })
   })
 
-  describe('GET:User routes tests', () =>{
+  describe('GET:User route tests', () =>{
     it('Shoud return 200 if valid request was send', async () => {
       const res = await request(app)
         .get('/user')
@@ -50,7 +65,7 @@ describe('API:USERS tests', () => {
     })
   })
 
-  describe('POST:User routes tests', () =>{
+  describe('POST:User route tests', () =>{
     it('Should return 400 if no fullName was provided', async () => {
     const res = await request(app)
       .post('/user')
@@ -170,6 +185,27 @@ describe('API:USERS tests', () => {
       expect(res.status).toEqual(200)
       expect(res.body).toHaveProperty('user')
     })
+  })
+
+  describe('PUT:User route tests', () =>{
+    it('Should return 400 if no id was provided', async () => {
+      const res = await request(app)
+        .put('/user')
+        .query({
+          token: 'validToken'
+        })
+        .send({
+          // id: 'validUserId',
+          fullName: 'validFullName',
+          username: 'validUsername',
+          email: 'validEmail',
+          password: 'validPassword',
+          passwordConfirmation: 'validPassowdConfirmation',
+          manager: true
+        })
+      expect(res.status).toEqual(400)
+      expect(res.text).toBe('MissingParamError: id')
+      })
   })
 
 })
