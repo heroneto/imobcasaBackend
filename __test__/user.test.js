@@ -1,9 +1,18 @@
 const request = require('supertest')
 const server = require('../setup/server')
+const startDatabase = require('../setup/database')
 const app = server()
 
 
 describe('API:USERS tests', () => {
+
+  beforeAll(async ()=>{
+    try{
+      await startDatabase('test')
+    }catch(err){
+      console.log(err)
+    }    
+  })
 
   describe('AUTH:tests', () => {
     it('GET: Should return 401 if no token was provided', async () =>{
@@ -221,12 +230,10 @@ describe('API:USERS tests', () => {
           token: 'validToken'
         })
         .send({
-          id: 'invalidUserId',
+          id: "invalidUserId",
           fullName: 'validFullName',
           username: 'validUsername',
           email: 'validEmail',
-          password: 'validPassword',
-          passwordConfirmation: 'validPassowdConfirmation',
           manager: true
         })
       expect(res.status).toEqual(400)
@@ -239,17 +246,58 @@ describe('API:USERS tests', () => {
           token: 'validToken'
         })
         .send({
-          id: 'validUserId',
-          fullName: 'validFullName',
-          username: 'validUsername',
-          email: 'validEmail',
-          password: 'validPassword',
-          passwordConfirmation: 'validPassowdConfirmation',
-          manager: true
+          id: 1,
+          fullName: 'validFullNameChanged',
+          username: 'validUsernameChanged',
+          email: 'validEmailChanged',
+          password: 'validPasswordChanged',
+          passwordConfirmation: 'validPassowdConfirmationChanged',
+          manager: false
         })
       expect(res.status).toEqual(200)
       expect(res.body).toHaveProperty('user')
-      expect(res.body.user.id).toEqual('validUserId')
+      expect(res.body.user.id).toEqual(1)
+      expect(res.body.user.email).toEqual('validEmailChanged')
+    })
+  })
+
+  describe('SEARCH:User route tests', () =>{
+    it('Should return 400 if no search param was provided', async () => {
+      const res = await request(app)
+        .get('/search/user')
+        .query({
+          token: 'validToken'
+        })
+      expect(res.status).toEqual(400)
+      expect(res.text).toBe('MissingParamError: email, username or id')
+    })
+    it('Should return 400 if no user found', async () => {
+      const res = await request(app)
+        .get('/search/user')
+        .query({
+          token: 'validToken'
+        })
+        .send({
+          id: 'invalidUserId',
+          username: 'invalidUsernameChanged',
+          email: 'invalidEmailChanged'
+        })
+      expect(res.status).toEqual(400)
+      expect(res.text).toBe('InvalidParamError: no users found')
+    })
+    it('Should return 200 if user was find', async () => {
+      const res = await request(app)
+        .get('/search/user')
+        .query({
+          token: 'validToken'
+        })
+        .send({
+          id: 1,
+          username: 'validUsernameChanged',
+          email: 'validEmailChanged'
+        })
+      expect(res.status).toEqual(200)
+      expect(res.body).toHaveProperty('users')
     })
   })
 
@@ -284,37 +332,11 @@ describe('API:USERS tests', () => {
           token: 'validToken'
         })
         .send({
-          id: 'validUserId'
+          id: 1
         })
       expect(res.status).toEqual(200)
       expect(res.body).toHaveProperty('user')
-      expect(res.body.user.id).toEqual('validUserId')
-    })
-  })
-
-  describe('SEARCH:User route tests', () =>{
-    it('Should return 400 if no search param was provided', async () => {
-      const res = await request(app)
-        .get('/search/user')
-        .query({
-          token: 'validToken'
-        })
-      expect(res.status).toEqual(400)
-      expect(res.text).toBe('MissingParamError: email, username or id')
-    })
-    it('Should return 200 if user was find', async () => {
-      const res = await request(app)
-        .get('/search/user')
-        .query({
-          token: 'validToken'
-        })
-        .send({
-          id: 'validUserId',
-          username: 'validUsername',
-          email: 'validEmail'
-        })
-      expect(res.status).toEqual(200)
-      expect(res.body).toHaveProperty('user')
+      expect(res.body.user.id).toEqual(1)
     })
   })
 })
