@@ -51,7 +51,9 @@ describe('POST:User routes tests', () =>{
   const res = await request(app)
     .post('/user')
     .query({
-      token: 'validToken',
+      token: 'validToken'
+    })
+    .send({
       // fullName: 'validFullName',
       username: 'validUsername',
       email: 'validEmail',
@@ -66,6 +68,7 @@ describe('POST:User routes tests', () =>{
   //   const res = await request(app)
   //     .post('/user')
   //     .query({
+  //       token: 'validToken',
   //       fullName: 'validFullName',
   //       // username: 'validUsername',
   //       email: 'validEmail',
@@ -74,7 +77,7 @@ describe('POST:User routes tests', () =>{
   //       manager: true
   //     })
   //   expect(res.status).toEqual(401)
-  //   expect(res.text).toBe('MissingParamError')
+  //   expect(res.text).toBe('MissingParamError: username')
   // })
 
   // it('Should return 400 if no email was provided', async () => {
