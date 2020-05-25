@@ -1,6 +1,25 @@
 var express = require('express')
 var router = express.Router()
+const {accessDenied} = require('./protocols/httpCodes')
+const {invalidParamError, missingParamError} = require('./Errors/')
 
+function authTest(username, password){
+  const dbUser = "heron"
+  const dbPasword = "12345"
+  if(dbUser == username && dbPasword == password){
+    return true
+  }else{
+    return false
+  }
+}
+
+function checkToken(token){
+  if(token === 'validToken'){
+    return true
+  }else{
+    return false
+  }
+}
 
 
 router.get('/', (req,res) =>{
@@ -20,35 +39,55 @@ router.get('/search/user', (req,res)=>{
 
 router.route('/user')
   .all((req,res,next)=>{
-    console.log("Validando acesso do usuário")
     const {token} = req.query
-    const user = {isValid: token == 123456 ? true : false}
-    if(user.isValid){
-      next()
-    }else{
-      res.send("Acesso inválido")
+    if(!token){
+      const {error} = missingParamError('token')
+      const {statusCode, body} = accessDenied(error)
+      return res.status(statusCode).send(body)
     }
+    const isAuthenticated = checkToken(token)
+    if(!isAuthenticated){
+      const {error} = invalidParamError()
+      const {statusCode, body} = accessDenied(error)
+      return res.status(statusCode).send(body)
+    }
+    next()
   })
   .get((req,res)=>{
-    res.send('todos usuarios')
-  })
-  
+    res.status(200).send({users: ''})
+  })  
   .post((req,res)=>{
-    res.send('criando usuario')
+    const requiredFields = ['fullName', 'username', 'email', 'password', 'passwordConfirmation', 'managet']
+    for(const field of requiredFields){
+      if(!req.query[`${field}`]){
+        const {error} = missingParamError(field)
+        const {statusCode, body} = accessDenied(error)
+        return res.status(statusCode).send(body)
+      }
+    }
+    // const {
+    //   fullName,
+    //   username,
+    //   email,
+    //   password,
+    //   passwordConfirmation,
+    //   manager
+    // } = req.query
+    // if(!username || !fullName || !email || password || !passwordConfirmation || manager){
+    //   const {error} = missingParamError()
+    //   const {statusCode, body} = accessDenied(error)
+    //   return res.status(statusCode).send(body)
+    // }
+    res.status(200).send('criando usuario')
   })
-  
   .put((req,res)=>{
     const {id} = req.query
-    res.send(`atualizando usuario ${id}`)
+    res.status(200).send(`atualizando usuario ${id}`)
   })
   .delete((req,res)=>{
     const {id} = req.query
-    res.send(`deletando usuário ${id}`)
+    res.status(200).send(`deletando usuário ${id}`)
   })
-
-
-
-
 
 
 module.exports = router
