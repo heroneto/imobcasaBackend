@@ -205,7 +205,26 @@ describe('API:USERS tests', () => {
         })
       expect(res.status).toEqual(400)
       expect(res.text).toBe('MissingParamError: id')
-      })
+    })
+    it('Should return 200 if user was updated', async () => {
+      const res = await request(app)
+        .put('/user')
+        .query({
+          token: 'validToken'
+        })
+        .send({
+          id: 'validUserId',
+          fullName: 'validFullName',
+          username: 'validUsername',
+          email: 'validEmail',
+          password: 'validPassword',
+          passwordConfirmation: 'validPassowdConfirmation',
+          manager: true
+        })
+      expect(res.status).toEqual(200)
+      expect(res.body).toHaveProperty('user')
+      expect(res.body.user.id).toEqual('validUserId')
+    })
   })
 
 })
