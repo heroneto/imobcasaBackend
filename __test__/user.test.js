@@ -227,4 +227,35 @@ describe('API:USERS tests', () => {
     })
   })
 
+  describe('DELETE:User route tests', () =>{
+    it('Should return 400 if no id was provided', async () => {
+      const res = await request(app)
+        .delete('/user')
+        .query({
+          token: 'validToken'
+        })
+        .send({
+          // id: 'validUserId',
+        })
+      expect(res.status).toEqual(400)
+      expect(res.text).toBe('MissingParamError: id')
+    })
+    it('Should return 200 if user was deleted', async () => {
+      const res = await request(app)
+        .delete('/user')
+        .query({
+          token: 'validToken'
+        })
+        .send({
+          id: 'validUserId'
+        })
+      expect(res.status).toEqual(200)
+      expect(res.body).toHaveProperty('user')
+      expect(res.body.user.id).toEqual('validUserId')
+    })
+  })
+
+  // describe('SEARCH:User route tests', () =>{
+
+  // })
 })
