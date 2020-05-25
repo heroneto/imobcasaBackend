@@ -64,85 +64,89 @@ describe('POST:User routes tests', () =>{
   expect(res.status).toEqual(400)
   expect(res.text).toBe('MissingParamError: fullName')
   })
-  // it('Should return 400 if no username was provided', async () => {
-  //   const res = await request(app)
-  //     .post('/user')
-  //     .query({
-  //       token: 'validToken',
-  //       fullName: 'validFullName',
-  //       // username: 'validUsername',
-  //       email: 'validEmail',
-  //       password: 'validPassword',
-  //       passwordConfirmation: 'validPassowdConfirmation',
-  //       manager: true
-  //     })
-  //   expect(res.status).toEqual(401)
-  //   expect(res.text).toBe('MissingParamError: username')
-  // })
-
-  // it('Should return 400 if no email was provided', async () => {
-  //   const res = await request(app)
-  //     .post('/user')
-  //     .query({
-  //       fullName: 'validFullName',
-  //       username: 'validUsername',
-  //       // email: 'validEmail',
-  //       password: 'validPassword',
-  //       passwordConfirmation: 'validPassowdConfirmation',
-  //       manager: true
-  //     })
-  //   expect(res.status).toEqual(401)
-  //   expect(res.text).toBe('MissingParamError')
-  // })
-  // it('Should return 400 if no password was provided', async () => {
-  //   const res = await request(app)
-  //     .post('/user')
-  //     .query({
-  //       fullName: 'validFullName',
-  //       username: 'validUsername',
-  //       email: 'validEmail',
-  //       // password: 'validPassword',
-  //       passwordConfirmation: 'validPassowdConfirmation',
-  //       manager: true
-  //     })
-  //   expect(res.status).toEqual(401)
-  //   expect(res.text).toBe('MissingParamError')
-  // })
-  // it('Should return 400 if no passwordConfirmation was provided', async () => {
-  //   const res = await request(app)
-  //     .post('/user')
-  //     .query({
-  //       fullName: 'validFullName',
-  //       username: 'validUsername',
-  //       email: 'validEmail',
-  //       password: 'validPassword',
-  //       // passwordConfirmation: 'validPassowdConfirmation',
-  //       manager: true
-  //     })
-  //   expect(res.status).toEqual(401)
-  //   expect(res.text).toBe('MissingParamError')
-  // })
-  // it('Should return 400 if no manager rule was provided', async () => {
-  //   const res = await request(app)
-  //     .post('/user')
-  //     .query({
-  //       fullName: 'validFullName',
-  //       username: 'validUsername',
-  //       email: 'validEmail',
-  //       password: 'validPassword',
-  //       passwordConfirmation: 'validPassowdConfirmation',
-  //       // manager: true
-  //     })
-  //   expect(res.status).toEqual(401)
-  //   expect(res.text).toBe('MissingParamError')
-  // })
-  // it('Should return 200 if valid request was send', async () => {
-  //   const res = await request(app)
-  //     .get('/user')
-  //     .query({
-  //       token: 'validToken'
-  //     })
-  //   expect(res.status).toEqual(200)
-  //   expect(res.body).toHaveProperty('users')
-  // })
+  it('Should return 400 if no username was provided', async () => {
+    const res = await request(app)
+      .post('/user')
+      .query({
+        token: 'validToken'
+      })
+      .send({
+        fullName: 'validFullName',
+        // username: 'validUsername',
+        email: 'validEmail',
+        password: 'validPassword',
+        passwordConfirmation: 'validPassowdConfirmation',
+        manager: true
+      })
+    expect(res.status).toEqual(400)
+    expect(res.text).toBe('MissingParamError: username')
+  })
+  it('Should return 400 if no email was provided', async () => {
+    const res = await request(app)
+      .post('/user')
+      .query({
+        token: 'validToken'
+      })
+      .send({
+        fullName: 'validFullName',
+        username: 'validUsername',
+        // email: 'validEmail',
+        password: 'validPassword',
+        passwordConfirmation: 'validPassowdConfirmation',
+        manager: true
+      })
+    expect(res.status).toEqual(400)
+    expect(res.text).toBe('MissingParamError: email')
+  })
+  it('Should return 400 if no password was provided', async () => {
+    const res = await request(app)
+      .post('/user')
+      .query({
+        token: 'validToken'
+      })
+      .send({
+        fullName: 'validFullName',
+        username: 'validUsername',
+        email: 'validEmail',
+        // password: 'validPassword',
+        passwordConfirmation: 'validPassowdConfirmation',
+        manager: true
+      })
+    expect(res.status).toEqual(400)
+    expect(res.text).toBe('MissingParamError: password')
+  })
+  it('Should return 400 if no passwordConfirmation was provided', async () => {
+    const res = await request(app)
+      .post('/user')
+      .query({
+        token: 'validToken'
+      })
+      .send({
+        fullName: 'validFullName',
+        username: 'validUsername',
+        email: 'validEmail',
+        password: 'validPassword',
+        // passwordConfirmation: 'validPassowdConfirmation',
+        manager: true
+      })
+    expect(res.status).toEqual(400)
+    expect(res.text).toBe('MissingParamError: passwordConfirmation')
+  })
+  it('Should return 400 if no manager rule was provided', async () => {
+    const res = await request(app)
+      .post('/user')
+      .query({
+        token: 'validToken'
+      })
+      .send({
+        fullName: 'validFullName',
+        username: 'validUsername',
+        email: 'validEmail',
+        password: 'validPassword',
+        passwordConfirmation: 'validPassowdConfirmation',
+        // manager: true
+      })
+    expect(res.status).toEqual(400)
+    expect(res.text).toBe('MissingParamError: manager')
+  })
 })
