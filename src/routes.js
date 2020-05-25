@@ -31,10 +31,39 @@ router.post('/rest/api/lead', (req,res) =>{
   res.send("Tnks")
 })
 
-router.get('/search/user', (req,res)=>{
-  const {id} = req.query
-  res.send(`Usuário ${id} localizado`)
+
+router.route('/search/user')
+  .all((req,res,next)=>{
+    const {token} = req.query
+    if(!token){
+      const {error} = missingParamError('token')
+      const {statusCode, body} = unauthorized(error)
+      return res.status(statusCode).send(body)
+    }
+    const isAuthenticated = checkToken(token)
+    if(!isAuthenticated){
+      const {error} = invalidParamError('token')
+      const {statusCode, body} = unauthorized(error)
+      return res.status(statusCode).send(body)
+    }
+    next()
+  })
+  .get((req,res)=>{
+    try{
+      const {id, username, email} = req.body
+      if(!email && !id && !username){
+        const {error} = missingParamError('email, username or id')
+        const {statusCode, body} = invalidRequest(error)
+        return res.status(statusCode).send(body)
+      }
+      res.status(200).send({user: ''})
+    }catch(error){
+      console.log(error)
+    }
+  
 })
+
+
 
 
 router.route('/user')
