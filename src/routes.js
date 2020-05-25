@@ -81,8 +81,16 @@ router.route('/user')
     res.status(200).send({user})
   })
   .delete((req,res)=>{
-    const {id} = req.query
-    res.status(200).send(`deletando usuário ${id}`)
+    const {id} = req.body
+    if(!id){
+      const {error} = missingParamError('id')
+      const {statusCode, body} = invalidRequest(error)
+      return res.status(statusCode).send(body)
+    }
+    const user = {
+      id
+    }
+    res.status(200).send({user})
   })
 
 
