@@ -38,8 +38,6 @@ describe('API:USERS tests', () => {
     })
   })
 
-
-
   describe('GET:User routes tests', () =>{
     it('Shoud return 200 if valid request was send', async () => {
       const res = await request(app)
@@ -51,7 +49,6 @@ describe('API:USERS tests', () => {
       expect(res.body).toHaveProperty('users')
     })
   })
-
 
   describe('POST:User routes tests', () =>{
     it('Should return 400 if no fullName was provided', async () => {
@@ -155,6 +152,23 @@ describe('API:USERS tests', () => {
         })
       expect(res.status).toEqual(400)
       expect(res.text).toBe('MissingParamError: manager')
+    })
+    it('Should return 200 if user created', async () => {
+      const res = await request(app)
+        .post('/user')
+        .query({
+          token: 'validToken'
+        })
+        .send({
+          fullName: 'validFullName',
+          username: 'validUsername',
+          email: 'validEmail',
+          password: 'validPassword',
+          passwordConfirmation: 'validPassowdConfirmation',
+          manager: true
+        })
+      expect(res.status).toEqual(200)
+      expect(res.body).toHaveProperty('user')
     })
   })
 
