@@ -47,7 +47,7 @@ router.route('/user')
     }
     const isAuthenticated = checkToken(token)
     if(!isAuthenticated){
-      const {error} = invalidParamError()
+      const {error} = invalidParamError('token')
       const {statusCode, body} = accessDenied(error)
       return res.status(statusCode).send(body)
     }

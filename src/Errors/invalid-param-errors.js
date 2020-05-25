@@ -1,6 +1,6 @@
-const invalidParamError = () => {
+const invalidParamError = (param) => {
   return {
-    error: "InvalidParamError"
+    error: `InvalidParamError: ${param}`
   }
 }
 
