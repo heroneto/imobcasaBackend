@@ -19,5 +19,12 @@ const unauthorized = (error) => {
   }
 }
 
+const internalError = (error) => {
+  return {
+    statusCode: 500,
+    body: error
+  }
+}
 
-module.exports = {forbiden, invalidRequest, unauthorized}
+
+module.exports = {forbiden, invalidRequest, unauthorized, internalError}

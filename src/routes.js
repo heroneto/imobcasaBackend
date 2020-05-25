@@ -1,7 +1,7 @@
 var express = require('express')
 var router = express.Router()
-const {forbiden, invalidRequest, unauthorized} = require('./protocols/httpCodes')
-const {invalidParamError, missingParamError} = require('./Errors/')
+const {forbiden, invalidRequest, unauthorized, internalError} = require('./protocols/httpCodes')
+const {invalidParamError, missingParamError, serverError} = require('./Errors/')
 
 function authTest(username, password){
   const dbUser = "heron"
@@ -34,19 +34,26 @@ router.post('/rest/api/lead', (req,res) =>{
 
 router.route('/search/user')
   .all((req,res,next)=>{
-    const {token} = req.query
-    if(!token){
-      const {error} = missingParamError('token')
-      const {statusCode, body} = unauthorized(error)
+    try{
+      const {token} = req.query
+      if(!token){
+        const {error} = missingParamError('token')
+        const {statusCode, body} = unauthorized(error)
+        return res.status(statusCode).send(body)
+      }
+      const isAuthenticated = checkToken(token)
+      if(!isAuthenticated){
+        const {error} = invalidParamError('token')
+        const {statusCode, body} = unauthorized(error)
+        return res.status(statusCode).send(body)
+      }
+      next()
+    }catch(error){
+      const {error:serverError} = serverError()
+      const {statusCode, body} = internalError(serverError)
       return res.status(statusCode).send(body)
     }
-    const isAuthenticated = checkToken(token)
-    if(!isAuthenticated){
-      const {error} = invalidParamError('token')
-      const {statusCode, body} = unauthorized(error)
-      return res.status(statusCode).send(body)
-    }
-    next()
+
   })
   .get((req,res)=>{
     try{
@@ -58,68 +65,96 @@ router.route('/search/user')
       }
       res.status(200).send({user: ''})
     }catch(error){
-      console.log(error)
+      const {error:serverError} = serverError()
+      const {statusCode, body} = internalError(serverError)
+      return res.status(statusCode).send(body)
     }
-  
 })
-
-
-
 
 router.route('/user')
   .all((req,res,next)=>{
-    const {token} = req.query
-    if(!token){
-      const {error} = missingParamError('token')
-      const {statusCode, body} = unauthorized(error)
+    try{
+      const {token} = req.query
+      if(!token){
+        const {error} = missingParamError('token')
+        const {statusCode, body} = unauthorized(error)
+        return res.status(statusCode).send(body)
+      }
+      const isAuthenticated = checkToken(token)
+      if(!isAuthenticated){
+        const {error} = invalidParamError('token')
+        const {statusCode, body} = unauthorized(error)
+        return res.status(statusCode).send(body)
+      }
+      next()
+    }catch(error){
+      const {error:serverError} = serverError()
+      const {statusCode, body} = internalError(serverError)
       return res.status(statusCode).send(body)
     }
-    const isAuthenticated = checkToken(token)
-    if(!isAuthenticated){
-      const {error} = invalidParamError('token')
-      const {statusCode, body} = unauthorized(error)
-      return res.status(statusCode).send(body)
-    }
-    next()
   })
   .get((req,res)=>{
-    res.status(200).send({users: ''})
+    try{
+      res.status(200).send({users: ''})
+    }catch(error){
+      const {error:serverError} = serverError()
+      const {statusCode, body} = internalError(serverError)
+      return res.status(statusCode).send(body)
+    }
   })  
   .post((req,res)=>{
-    const requiredFields = ['fullName', 'username', 'email', 'password', 'passwordConfirmation', 'manager']
-    for(const field of requiredFields){
-      if(!req.body[`${field}`]){
-        const {error} = missingParamError(field)
+    try{
+      const requiredFields = ['fullName', 'username', 'email', 'password', 'passwordConfirmation', 'manager']
+      for(const field of requiredFields){
+        if(!req.body[`${field}`]){
+          const {error} = missingParamError(field)
+          const {statusCode, body} = invalidRequest(error)
+          return res.status(statusCode).send(body)
+        }
+      }
+      res.status(200).send({user: ''})
+    }catch(error){
+      const {error:serverError} = serverError()
+      const {statusCode, body} = internalError(serverError)
+      return res.status(statusCode).send(body)
+    }
+  })
+  .put((req,res)=>{
+    try{
+      const {id, ...rest} = req.body
+      if(!id){
+        const {error} = missingParamError('id')
         const {statusCode, body} = invalidRequest(error)
         return res.status(statusCode).send(body)
       }
-    }
-    res.status(200).send({user: ''})
-  })
-  .put((req,res)=>{
-    const {id, ...rest} = req.body
-    if(!id){
-      const {error} = missingParamError('id')
-      const {statusCode, body} = invalidRequest(error)
+      const user = {
+        id,
+        ...rest
+      }    
+      res.status(200).send({user})
+    }catch(error){
+      const {error:serverError} = serverError()
+      const {statusCode, body} = internalError(serverError)
       return res.status(statusCode).send(body)
     }
-    const user = {
-      id,
-      ...rest
-    }    
-    res.status(200).send({user})
   })
   .delete((req,res)=>{
-    const {id} = req.body
-    if(!id){
-      const {error} = missingParamError('id')
-      const {statusCode, body} = invalidRequest(error)
+    try{
+      const {id} = req.body
+      if(!id){
+        const {error} = missingParamError('id')
+        const {statusCode, body} = invalidRequest(error)
+        return res.status(statusCode).send(body)
+      }
+      const user = {
+        id
+      }
+      res.status(200).send({user})
+    }catch(error){
+      const {error:serverError} = serverError()
+      const {statusCode, body} = internalError(serverError)
       return res.status(statusCode).send(body)
-    }
-    const user = {
-      id
-    }
-    res.status(200).send({user})
+    }  
   })
 
 
