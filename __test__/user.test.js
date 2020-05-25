@@ -36,15 +36,30 @@ describe('API:USERS tests', () => {
       expect(res.status).toEqual(401)
       expect(res.text).toBe('InvalidParamError: token')
     })
-    it('POST: Should return 401 if no token was provided', async () =>{
+    it('PUT: Should return 401 if no token was provided', async () =>{
       const res = await request(app)
         .put('/user')
       expect(res.status).toEqual(401)
       expect(res.text).toBe('MissingParamError: token')
     })
-    it('POST: Should return 401 if invalid token was provided', async () => {
+    it('PUT: Should return 401 if invalid token was provided', async () => {
       const res = await request(app)
         .put('/user')
+        .query({
+          token: 'invalidToken'
+        })
+      expect(res.status).toEqual(401)
+      expect(res.text).toBe('InvalidParamError: token')
+    })
+    it('DELETE: Should return 401 if no token was provided', async () =>{
+      const res = await request(app)
+        .delete('/user')
+      expect(res.status).toEqual(401)
+      expect(res.text).toBe('MissingParamError: token')
+    })
+    it('DELETE: Should return 401 if invalid token was provided', async () => {
+      const res = await request(app)
+        .delete('/user')
         .query({
           token: 'invalidToken'
         })
@@ -73,7 +88,6 @@ describe('API:USERS tests', () => {
         token: 'validToken'
       })
       .send({
-        // fullName: 'validFullName',
         username: 'validUsername',
         email: 'validEmail',
         password: 'validPassword',
@@ -91,7 +105,6 @@ describe('API:USERS tests', () => {
         })
         .send({
           fullName: 'validFullName',
-          // username: 'validUsername',
           email: 'validEmail',
           password: 'validPassword',
           passwordConfirmation: 'validPassowdConfirmation',
@@ -109,7 +122,6 @@ describe('API:USERS tests', () => {
         .send({
           fullName: 'validFullName',
           username: 'validUsername',
-          // email: 'validEmail',
           password: 'validPassword',
           passwordConfirmation: 'validPassowdConfirmation',
           manager: true
@@ -127,7 +139,6 @@ describe('API:USERS tests', () => {
           fullName: 'validFullName',
           username: 'validUsername',
           email: 'validEmail',
-          // password: 'validPassword',
           passwordConfirmation: 'validPassowdConfirmation',
           manager: true
         })
@@ -145,7 +156,6 @@ describe('API:USERS tests', () => {
           username: 'validUsername',
           email: 'validEmail',
           password: 'validPassword',
-          // passwordConfirmation: 'validPassowdConfirmation',
           manager: true
         })
       expect(res.status).toEqual(400)
@@ -163,7 +173,6 @@ describe('API:USERS tests', () => {
           email: 'validEmail',
           password: 'validPassword',
           passwordConfirmation: 'validPassowdConfirmation',
-          // manager: true
         })
       expect(res.status).toEqual(400)
       expect(res.text).toBe('MissingParamError: manager')
@@ -195,7 +204,6 @@ describe('API:USERS tests', () => {
           token: 'validToken'
         })
         .send({
-          // id: 'validUserId',
           fullName: 'validFullName',
           username: 'validUsername',
           email: 'validEmail',
@@ -253,7 +261,6 @@ describe('API:USERS tests', () => {
           token: 'validToken'
         })
         .send({
-          // id: 'validUserId',
         })
       expect(res.status).toEqual(400)
       expect(res.text).toBe('MissingParamError: id')
@@ -292,11 +299,6 @@ describe('API:USERS tests', () => {
         .query({
           token: 'validToken'
         })
-        // .send({
-        //   // id: 'validUserId',
-        //   // username: 'validUsername',
-        //   // email: 'validEmail'
-        // })
       expect(res.status).toEqual(400)
       expect(res.text).toBe('MissingParamError: email, username or id')
     })
