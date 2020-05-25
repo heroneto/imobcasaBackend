@@ -65,20 +65,7 @@ router.route('/user')
         return res.status(statusCode).send(body)
       }
     }
-    // const {
-    //   fullName,
-    //   username,
-    //   email,
-    //   password,
-    //   passwordConfirmation,
-    //   manager
-    // } = req.query
-    // if(!username || !fullName || !email || password || !passwordConfirmation || manager){
-    //   const {error} = missingParamError()
-    //   const {statusCode, body} = accessDenied(error)
-    //   return res.status(statusCode).send(body)
-    // }
-    res.status(200).send('criando usuario')
+    res.status(200).send({user: ''})
   })
   .put((req,res)=>{
     const {id} = req.query
