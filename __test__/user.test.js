@@ -255,7 +255,34 @@ describe('API:USERS tests', () => {
     })
   })
 
-  // describe('SEARCH:User route tests', () =>{
-
-  // })
+  describe('SEARCH:User route tests', () =>{
+    it('Should return 400 if no search param was provided', async () => {
+      const res = await request(app)
+        .get('/search/user')
+        .query({
+          token: 'validToken'
+        })
+        // .send({
+        //   // id: 'validUserId',
+        //   // username: 'validUsername',
+        //   // email: 'validEmail'
+        // })
+      expect(res.status).toEqual(400)
+      expect(res.text).toBe('MissingParamError: email, username or id')
+    })
+    it('Should return 200 if user was find', async () => {
+      const res = await request(app)
+        .get('/search/user')
+        .query({
+          token: 'validToken'
+        })
+        .send({
+          id: 'validUserId',
+          username: 'validUsername',
+          email: 'validEmail'
+        })
+      expect(res.status).toEqual(200)
+      expect(res.body).toHaveProperty('user')
+    })
+  })
 })
