@@ -1,6 +1,6 @@
 var express = require('express')
 var router = express.Router()
-const {accessDenied} = require('./protocols/httpCodes')
+const {forbiden, invalidRequest, unauthorized} = require('./protocols/httpCodes')
 const {invalidParamError, missingParamError} = require('./Errors/')
 
 function authTest(username, password){
@@ -42,13 +42,13 @@ router.route('/user')
     const {token} = req.query
     if(!token){
       const {error} = missingParamError('token')
-      const {statusCode, body} = accessDenied(error)
+      const {statusCode, body} = unauthorized(error)
       return res.status(statusCode).send(body)
     }
     const isAuthenticated = checkToken(token)
     if(!isAuthenticated){
       const {error} = invalidParamError('token')
-      const {statusCode, body} = accessDenied(error)
+      const {statusCode, body} = unauthorized(error)
       return res.status(statusCode).send(body)
     }
     next()
