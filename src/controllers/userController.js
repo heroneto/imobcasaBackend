@@ -1,10 +1,10 @@
 const {forbiden, invalidRequest, unauthorized, internalError} = require('../protocols/httpCodes')
 const {invalidParamError, missingParamError, serverError} = require('../Errors/')
-
+const User = require('../models/').User
 
 
 module.exports = {
-  createUser: (req,res)=>{
+  createUser: async (req,res)=>{
     try{
       const requiredFields = ['fullName', 'username', 'email', 'password', 'passwordConfirmation', 'manager']
       for(const field of requiredFields){
@@ -14,47 +14,53 @@ module.exports = {
           return res.status(statusCode).send(body)
         }
       }
-      res.status(200).send({user: ''})
-    }catch(error){
-      const {error:serverError} = serverError()
-      const {statusCode, body} = internalError(serverError)
+      const user = await User.create(req.body)
+      res.status(200).send({user})
+    }catch(err){
+      console.log(err)
+      const {error} = serverError()
+      const {statusCode, body} = internalError(error)
       return res.status(statusCode).send(body)
     }
   },
-  getAllUsers: (req,res)=>{
+  getAllUsers: async (req,res)=>{
     try{
-      res.status(200).send({users: ''})
-    }catch(error){
-      const {error:serverError} = serverError()
-      const {statusCode, body} = internalError(serverError)
+      const users = await User.findAll()
+      res.status(200).send({users: users})
+    }catch(err){
+      console.log(err)
+      const {error} = serverError()
+      const {statusCode, body} = internalError(error)
       return res.status(statusCode).send(body)
     }
   },
-  updateUser: (req,res)=>{
+  updateUser: async (req,res)=>{
     try{
-      const {id, ...rest} = req.body
+      const {id, fullName, username, email, manager} = req.body
       if(!id){
         const {error} = missingParamError('id')
         const {statusCode, body} = invalidRequest(error)
         return res.status(statusCode).send(body)
       }
-      if(id === "invalidUserId"){
+      const user = await User.findOne({where: {id: id}})
+      if(!user){
         const {error} = invalidParamError('id')
         const {statusCode, body} = invalidRequest(error)
         return res.status(statusCode).send(body)
-      }
-      const user = {
-        id,
-        ...rest
-      }    
+      }      
+      user.fullName = fullName
+      user.username = username
+      user.email = email
+      user.manager = manager
+      await user.save()
       res.status(200).send({user})
-    }catch(error){
-      const {error:serverError} = serverError()
-      const {statusCode, body} = internalError(serverError)
+    }catch(err){
+      const {error} = serverError()
+      const {statusCode, body} = internalError(error)
       return res.status(statusCode).send(body)
     }
   },
-  deleteUser: (req,res)=>{
+  deleteUser: async (req,res)=>{
     try{
       const {id} = req.body
       if(!id){
@@ -62,18 +68,18 @@ module.exports = {
         const {statusCode, body} = invalidRequest(error)
         return res.status(statusCode).send(body)
       }
-      if(id === "invalidUserId"){
+      const user = await User.findOne({where: {id: id}})
+      if(!user){
         const {error} = invalidParamError('id')
         const {statusCode, body} = invalidRequest(error)
         return res.status(statusCode).send(body)
       }
-      const user = {
-        id
-      }
+      await User.destroy({where: {id: id}})
       res.status(200).send({user})
-    }catch(error){
-      const {error:serverError} = serverError()
-      const {statusCode, body} = internalError(serverError)
+    }catch(err){
+      console.log(err)
+      const {error} = serverError()
+      const {statusCode, body} = internalError(error)
       return res.status(statusCode).send(body)
     }  
   }
