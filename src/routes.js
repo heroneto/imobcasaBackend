@@ -59,7 +59,7 @@ router.route('/user')
   .post((req,res)=>{
     const requiredFields = ['fullName', 'username', 'email', 'password', 'passwordConfirmation', 'managet']
     for(const field of requiredFields){
-      if(!req.query[`${field}`]){
+      if(!req.body[`${field}`]){
         const {error} = missingParamError(field)
         const {statusCode, body} = invalidRequest(error)
         return res.status(statusCode).send(body)
