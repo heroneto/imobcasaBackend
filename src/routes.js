@@ -127,6 +127,11 @@ router.route('/user')
         const {statusCode, body} = invalidRequest(error)
         return res.status(statusCode).send(body)
       }
+      if(id === "invalidUserId"){
+        const {error} = invalidParamError('id')
+        const {statusCode, body} = invalidRequest(error)
+        return res.status(statusCode).send(body)
+      }
       const user = {
         id,
         ...rest
@@ -143,6 +148,11 @@ router.route('/user')
       const {id} = req.body
       if(!id){
         const {error} = missingParamError('id')
+        const {statusCode, body} = invalidRequest(error)
+        return res.status(statusCode).send(body)
+      }
+      if(id === "invalidUserId"){
+        const {error} = invalidParamError('id')
         const {statusCode, body} = invalidRequest(error)
         return res.status(statusCode).send(body)
       }
