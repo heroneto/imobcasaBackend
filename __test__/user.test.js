@@ -17,7 +17,7 @@ describe('GET:User routes tests', () =>{
         token: 'invalidToken'
       })
     expect(res.status).toEqual(403)
-    expect(res.text).toBe('InvalidParamError')
+    expect(res.text).toBe('InvalidParamError: token')
   })
   it('Shoud return 200 if valid request was send', async () => {
     const res = await request(app)
