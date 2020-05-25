@@ -68,14 +68,17 @@ router.route('/user')
     res.status(200).send({user: ''})
   })
   .put((req,res)=>{
-    const {id} = req.body
-    console.log(id)
+    const {id, ...rest} = req.body
     if(!id){
       const {error} = missingParamError('id')
       const {statusCode, body} = invalidRequest(error)
       return res.status(statusCode).send(body)
     }
-    res.status(200).send(`atualizando usuario ${id}`)
+    const user = {
+      id,
+      ...rest
+    }    
+    res.status(200).send({user})
   })
   .delete((req,res)=>{
     const {id} = req.query
