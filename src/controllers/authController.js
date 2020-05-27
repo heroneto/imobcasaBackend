@@ -1,6 +1,6 @@
 const {forbiden, invalidRequest, unauthorized, internalError} = require('../protocols/httpCodes')
 const {invalidParamError, missingParamError, serverError} = require('../Errors/')
-
+const User = require('../models/').User
 
 function authTest(username, password){
   const dbUser = "heron"
@@ -42,7 +42,7 @@ module.exports = {
       return res.status(statusCode).send(body)
     }
   },
-  userAuthentication: (req,res,next) => {
+  userAuthentication: async (req,res,next) => {
     try{
 
       const {username, password} = req.body
@@ -54,6 +54,13 @@ module.exports = {
           return res.status(statusCode).send(body)
         }
       }
+      const user = await User.findOne({where: {username: username}})
+      if(!user){
+        const {error} = invalidParamError('username')
+        const {statusCode, body} = unauthorized(error)
+        return res.status(statusCode).send(body)
+      }
+      
     }catch(err){
       const {error:serverError} = serverError()
       const {statusCode, body} = internalError(serverError)
