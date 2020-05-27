@@ -1,3 +1,6 @@
+const path = require('path')
+require('dotenv').config({path: path.resolve(__dirname, '../.env')})
+
 module.exports = {
   "development": {
     "username": "root",
@@ -18,11 +21,12 @@ module.exports = {
     "logging": false
   },
   "production": {
-    "username": "root",
-    "password": null,
-    "database": "database_production",
-    "host": "127.0.0.1",
+    "username": process.env.DBUSER,
+    "password": process.env.DBPASSWORD,
+    "database": "imobcasa",
+    "host": process.env.DBHOST,
     "dialect": "mysql",
-    "operatorsAliases": false
+    "operatorsAliases": false,
+    "logging": true
   }
 }
