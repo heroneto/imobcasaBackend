@@ -27,6 +27,6 @@ module.exports = {
     "host": process.env.DBHOST,
     "dialect": "mysql",
     "operatorsAliases": false,
-    "logging": true
+    "logging": false
   }
 }
