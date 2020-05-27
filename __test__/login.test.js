@@ -70,5 +70,15 @@ describe('API:AUTH tests', () => {
     expect(res.status).toEqual(401)
     expect(res.text).toBe('InvalidParamError: password')
     })
+    it('returns 200 and token if valid credentials was provided', async () => {
+      const res = await request(app)
+      .post('/login')
+      .send({
+        username: fakeUser.username,
+        password: fakeUser.password
+      })
+    expect(res.status).toEqual(200)
+    expect(res.body).toHaveProperty('token')
+    })
   })  
 })
