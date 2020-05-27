@@ -37,8 +37,8 @@ module.exports = {
       }
       next()
     }catch(error){
-      const {error:serverError} = serverError()
-      const {statusCode, body} = internalError(serverError)
+      const {error:serverErrorMsg} = serverError()
+      const {statusCode, body} = internalError(serverErrorMsg)
       return res.status(statusCode).send(body)
     }
   },
@@ -61,9 +61,17 @@ module.exports = {
         return res.status(statusCode).send(body)
       }
       
+      if(!await user.validPassword(password)){
+        const {error} = invalidParamError('password')
+        const {statusCode, body} = unauthorized(error)
+        return res.status(statusCode).send(body)
+      }
+      
+      return res.status(200).send({token: 1234})
     }catch(err){
-      const {error:serverError} = serverError()
-      const {statusCode, body} = internalError(serverError)
+      console.log(err)
+      const {error:serverErrorMsg} = serverError()
+      const {statusCode, body} = internalError(serverErrorMsg)
       return res.status(statusCode).send(body)
     }
   }
