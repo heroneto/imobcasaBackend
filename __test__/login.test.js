@@ -4,6 +4,14 @@ const startDatabase = require('../setup/database')
 const app = startServer()
 
 
+let fakeUser = {
+  fullName: 'validFullName',
+  username: 'validUsername',
+  email: 'validEmail',
+  password: 'validPassword',
+  passwordConfirmation: 'validPassowdConfirmation',
+  manager: 1
+}
 let token
 
 describe('API:AUTH tests', () => {
@@ -11,6 +19,12 @@ describe('API:AUTH tests', () => {
   beforeAll(async ()=>{
     try{
       await startDatabase('test')
+      const res = await request(app)
+          .post('/user')
+          .query({
+            token: 'validToken'
+          })
+          .send(fakeUser)
     }catch(err){
       console.log(err)
     }    
@@ -35,6 +49,16 @@ describe('API:AUTH tests', () => {
         })
       expect(res.status).toEqual(400)
       expect(res.text).toBe('MissingParamError: password')
+    })
+    it('return 401 if username is invalid', async() => {
+      const res = await request(app)
+        .post('/login')
+        .send({
+          username: 'invalidUser',
+          password: 'validPassword',
+        })
+      expect(res.status).toEqual(401)
+      expect(res.text).toBe('InvalidParamError: username')
     })
   })  
 })
