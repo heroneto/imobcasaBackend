@@ -55,10 +55,20 @@ describe('API:AUTH tests', () => {
         .post('/login')
         .send({
           username: 'invalidUser',
-          password: 'validPassword',
+          password: fakeUser.password
         })
       expect(res.status).toEqual(401)
       expect(res.text).toBe('InvalidParamError: username')
+    })
+    it('return 401 if invalid password was provided', async () => {
+      const res = await request(app)
+      .post('/login')
+      .send({
+        username: fakeUser.username,
+        password: 'invalidPassword'
+      })
+    expect(res.status).toEqual(401)
+    expect(res.text).toBe('InvalidParamError: password')
     })
   })  
 })
