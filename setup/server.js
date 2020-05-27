@@ -11,9 +11,12 @@ const startServer = () => {
   app.use(express.urlencoded({extended: true}))
   app.use(routes)
   
-  app.listen(port, () => {
-    console.log(`Servidor executando na porta ${port}`)
-  })
+  if (process.env.NODE_ENV !== 'test') {
+    app.listen(port, () => {
+      console.log(`Servidor executando na porta ${port}`)
+    })
+  }
+  
   return app
 }
 
