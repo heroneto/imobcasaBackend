@@ -2,14 +2,9 @@ const {forbiden, invalidRequest, unauthorized, internalError} = require('../prot
 const {invalidParamError, missingParamError, serverError} = require('../Errors/')
 const User = require('../models/').User
 
-function authTest(username, password){
-  const dbUser = "heron"
-  const dbPasword = "12345"
-  if(dbUser == username && dbPasword == password){
-    return true
-  }else{
-    return false
-  }
+function generateToken(username, password){
+  const token = 123
+  return token
 }
 
 function checkToken(token){
@@ -60,14 +55,13 @@ module.exports = {
         const {statusCode, body} = unauthorized(error)
         return res.status(statusCode).send(body)
       }
-      
       if(!await user.validPassword(password)){
         const {error} = invalidParamError('password')
         const {statusCode, body} = unauthorized(error)
         return res.status(statusCode).send(body)
       }
-      
-      return res.status(200).send({token: 1234})
+      const token = generateToken(username, password)
+      return res.status(200).send({token})
     }catch(err){
       console.log(err)
       const {error:serverErrorMsg} = serverError()
