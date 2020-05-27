@@ -4,7 +4,7 @@ const {forbiden, invalidRequest, unauthorized, internalError} = require('./proto
 const {invalidParamError, missingParamError, serverError} = require('./Errors/')
 const {createUser, getAllUsers, updateUser, deleteUser} = require('./controllers/userController')
 const {searchUser} = require('./controllers/searchController')
-const {authUser} = require('./controllers/authController')
+const {checkAuthentication, userAuthentication} = require('./controllers/authController')
 
 router.get('/', (req,res) =>{
   res.send('Hello world!')
@@ -15,13 +15,15 @@ router.post('/rest/api/lead', (req,res) =>{
   res.send("Tnks")
 })
 
+router.route('/login')
+  .post(userAuthentication)
 
 router.route('/search/user')
-  .all(authUser)
+  .all(checkAuthentication)
   .get(searchUser)
 
 router.route('/user')
-  .all(authUser)
+  .all(checkAuthentication)
   .get(getAllUsers)  
   .post(createUser)
   .put(updateUser)
