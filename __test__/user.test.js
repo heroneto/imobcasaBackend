@@ -1,7 +1,7 @@
 const request = require('supertest')
-const server = require('../setup/server')
+const startServer = require('../setup/server')
 const startDatabase = require('../setup/database')
-const app = server()
+const app = startServer()
 
 
 describe('API:USERS tests', () => {
@@ -101,7 +101,7 @@ describe('API:USERS tests', () => {
         email: 'validEmail',
         password: 'validPassword',
         passwordConfirmation: 'validPassowdConfirmation',
-        manager: true
+        manager: 1
       })
     expect(res.status).toEqual(400)
     expect(res.text).toBe('MissingParamError: fullName')
@@ -117,7 +117,7 @@ describe('API:USERS tests', () => {
           email: 'validEmail',
           password: 'validPassword',
           passwordConfirmation: 'validPassowdConfirmation',
-          manager: true
+          manager: 1
         })
       expect(res.status).toEqual(400)
       expect(res.text).toBe('MissingParamError: username')
@@ -133,7 +133,7 @@ describe('API:USERS tests', () => {
           username: 'validUsername',
           password: 'validPassword',
           passwordConfirmation: 'validPassowdConfirmation',
-          manager: true
+          manager: 1
         })
       expect(res.status).toEqual(400)
       expect(res.text).toBe('MissingParamError: email')
@@ -149,7 +149,7 @@ describe('API:USERS tests', () => {
           username: 'validUsername',
           email: 'validEmail',
           passwordConfirmation: 'validPassowdConfirmation',
-          manager: true
+          manager: 1
         })
       expect(res.status).toEqual(400)
       expect(res.text).toBe('MissingParamError: password')
@@ -165,7 +165,7 @@ describe('API:USERS tests', () => {
           username: 'validUsername',
           email: 'validEmail',
           password: 'validPassword',
-          manager: true
+          manager: 1
         })
       expect(res.status).toEqual(400)
       expect(res.text).toBe('MissingParamError: passwordConfirmation')
@@ -198,7 +198,7 @@ describe('API:USERS tests', () => {
           email: 'validEmail',
           password: 'validPassword',
           passwordConfirmation: 'validPassowdConfirmation',
-          manager: true
+          manager: 1
         })
       expect(res.status).toEqual(200)
       expect(res.body).toHaveProperty('user')
@@ -218,7 +218,7 @@ describe('API:USERS tests', () => {
           email: 'validEmail',
           password: 'validPassword',
           passwordConfirmation: 'validPassowdConfirmation',
-          manager: true
+          manager: 1
         })
       expect(res.status).toEqual(400)
       expect(res.text).toBe('MissingParamError: id')
@@ -234,7 +234,7 @@ describe('API:USERS tests', () => {
           fullName: 'validFullName',
           username: 'validUsername',
           email: 'validEmail',
-          manager: true
+          manager: 1
         })
       expect(res.status).toEqual(400)
       expect(res.text).toBe('InvalidParamError: id')
@@ -252,7 +252,7 @@ describe('API:USERS tests', () => {
           email: 'validEmailChanged',
           password: 'validPasswordChanged',
           passwordConfirmation: 'validPassowdConfirmationChanged',
-          manager: false
+          manager: 0
         })
       expect(res.status).toEqual(200)
       expect(res.body).toHaveProperty('user')
