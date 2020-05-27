@@ -21,7 +21,7 @@ function checkToken(token){
 }
 
 module.exports = {
-  authUser: (req,res,next)=>{
+  checkAuthentication: (req,res,next)=>{
     try{
       const {token} = req.query
       if(!token){
@@ -37,6 +37,24 @@ module.exports = {
       }
       next()
     }catch(error){
+      const {error:serverError} = serverError()
+      const {statusCode, body} = internalError(serverError)
+      return res.status(statusCode).send(body)
+    }
+  },
+  userAuthentication: (req,res,next) => {
+    try{
+
+      const {username, password} = req.body
+      const requiredFields = ['username', 'password']
+      for(const field of requiredFields){
+        if(!req.body[`${field}`]){
+          const {error} = missingParamError(field)
+          const {statusCode, body} = invalidRequest(error)
+          return res.status(statusCode).send(body)
+        }
+      }
+    }catch(err){
       const {error:serverError} = serverError()
       const {statusCode, body} = internalError(serverError)
       return res.status(statusCode).send(body)
