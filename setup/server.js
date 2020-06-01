@@ -1,14 +1,18 @@
 const express = require('express')
 const app = express()
+const cors = require('cors')
 const path = require('path')
 require('dotenv').config({path: path.resolve(__dirname, '../.env')})
 const port = process.env.PORT || 3000
 const routes = require('../src/routes')
-
+const cookieParser = require('cookie-parser')
 
 const startServer = () => {
+  //{ credentials: true, origin: 'http://localhost:3000'}
+  app.use(cors({credentials: true, origin: 'http://localhost:3001'}))
   app.use(express.json())
   app.use(express.urlencoded({extended: true}))
+  app.use(cookieParser())
   app.use(routes)
   
   if (process.env.NODE_ENV !== 'test') {

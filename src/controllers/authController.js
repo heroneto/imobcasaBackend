@@ -1,9 +1,14 @@
 const {forbiden, invalidRequest, unauthorized, internalError} = require('../protocols/httpCodes')
 const {invalidParamError, missingParamError, serverError} = require('../Errors/')
 const User = require('../models/').User
+const path = require('path')
+require('dotenv').config({path: path.resolve(__dirname, '../../.env')})
+const jwt = require('jsonwebtoken')
 
-function generateToken(username, password){
-  const token = 123
+function generateToken(id, username){
+  const token = jwt.sign({ id, username }, process.env.JWT_SECRET, {
+    expiresIn: process.env.DB_ENV === 'test' ? '1d' : '7d',
+  });
   return token
 }
 
@@ -39,7 +44,6 @@ module.exports = {
   },
   userAuthentication: async (req,res,next) => {
     try{
-
       const {username, password} = req.body
       const requiredFields = ['username', 'password']
       for(const field of requiredFields){
@@ -60,8 +64,18 @@ module.exports = {
         const {statusCode, body} = unauthorized(error)
         return res.status(statusCode).send(body)
       }
-      const token = generateToken(username, password)
-      return res.status(200).send({token})
+      const token = await generateToken(user.id, user.username)
+      res.status(200)
+      res.cookie('jwt', token, {
+        expires: new Date(Date.now() + 10000),
+        secure: false,
+        httpOnly: true
+      })
+      res.header('Access-Control-Allow-Origin', 'http://localhost:3001')
+      res.header('Access-Control-Allow-Credentials', true);
+      res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+
+      return res.send('ok')
     }catch(err){
       console.log(err)
       const {error:serverErrorMsg} = serverError()
