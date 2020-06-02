@@ -29,7 +29,7 @@ describe('API:AUTH tests', () => {
       console.log(err)
     }    
   })
-  describe('POST:AUTH tests', () => {
+  describe('POST:Login tests', () => {
     it('return 400 if no username was provided', async () => {
       const res = await request(app)
         .post('/login')
@@ -78,7 +78,10 @@ describe('API:AUTH tests', () => {
         password: fakeUser.password
       })
     expect(res.status).toEqual(200)
-    expect(res.body).toHaveProperty('token')
+    expect(res.text).toBe('ok')
+    expect(res.headers).toHaveProperty('set-cookie')
+    token = res.headers['set-cookie']
+    
     })
   })  
 })
