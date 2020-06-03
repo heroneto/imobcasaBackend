@@ -8,7 +8,7 @@ module.exports = {
     "database": "imobcasa_development",
     "host": "127.0.0.1",
     "dialect": "mysql",
-    "operatorsAliases": false,
+    "operatorsAliases": "0",
     "logging": false
   },
   "test": {
@@ -17,7 +17,7 @@ module.exports = {
     "database": "imobcasa_test",
     "host": "127.0.0.1",
     "dialect": "mysql",
-    "operatorsAliases": false,
+    "operatorsAliases": "0",
     "logging": false
   },
   "production": {
@@ -26,7 +26,7 @@ module.exports = {
     "database": "imobcasa",
     "host": process.env.DBHOST,
     "dialect": "mysql",
-    "operatorsAliases": false,
+    "operatorsAliases": "0",
     "logging": false
   }
 }
