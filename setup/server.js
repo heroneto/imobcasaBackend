@@ -6,13 +6,18 @@ require('dotenv').config({path: path.resolve(__dirname, '../.env')})
 const port = process.env.PORT || 3000
 const routes = require('../src/routes')
 const cookieParser = require('cookie-parser')
+const secret = process.env.JWT_SECRET
+const csrf = require('csurf')
 
 const startServer = () => {
-  //{ credentials: true, origin: 'http://localhost:3000'}
   app.use(cors({credentials: true, origin: 'http://localhost:3001'}))
+  const csrfProtection = csrf({
+    cookie: true
+  })
   app.use(express.json())
   app.use(express.urlencoded({extended: true}))
-  app.use(cookieParser())
+  app.use(cookieParser(secret))
+  app.use(csrfProtection)
   app.use(routes)
   
   if (process.env.NODE_ENV !== 'test') {

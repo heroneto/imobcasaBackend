@@ -15,6 +15,10 @@ router.post('/rest/api/lead', (req,res) =>{
   res.send("Tnks")
 })
 
+router.get('/csrf-token', (req, res) => {
+  res.json({ csrfToken: req.csrfToken() });
+})
+
 router.route('/login')
   .post(userAuthentication)
 

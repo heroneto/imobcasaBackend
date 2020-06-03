@@ -7,30 +7,37 @@ const jwt = require('jsonwebtoken')
 
 function generateToken(id, username){
   const token = jwt.sign({ id, username }, process.env.JWT_SECRET, {
-    expiresIn: process.env.DB_ENV === 'test' ? '1d' : '7d',
+    expiresIn: process.env.NODE_ENV === 'prod' ? '7d' : '1m',
   });
   return token
 }
 
-function checkToken(token){
-  if(token === 'validToken'){
-    return true
-  }else{
-    return false
+async function checkToken(token){
+  try{
+    const jwtDecoded = await jwt.verify(token, process.env.JWT_SECRET)
+    const actualTime = new Date().getTime() / 1000
+    if(actualTime > jwtDecoded.exp){
+      console.log("Token expirado")
+      return {...jwtDecoded,valid:false}
+    }    
+    return {...jwtDecoded,valid:true}
+  }catch(err){
+    return {valid:false,err}
   }
+  
 }
 
 module.exports = {
-  checkAuthentication: (req,res,next)=>{
-    try{
-      const {token} = req.query
-      if(!token){
+  checkAuthentication: async (req,res,next)=>{
+    try{    
+      const {jwt} = req.signedCookies
+      if(!jwt){
         const {error} = missingParamError('token')
         const {statusCode, body} = unauthorized(error)
         return res.status(statusCode).send(body)
       }
-      const isAuthenticated = checkToken(token)
-      if(!isAuthenticated){
+      const isAuthenticated = await checkToken(jwt)
+      if(isAuthenticated.valid === false){
         const {error} = invalidParamError('token')
         const {statusCode, body} = unauthorized(error)
         return res.status(statusCode).send(body)
@@ -67,15 +74,12 @@ module.exports = {
       const token = await generateToken(user.id, user.username)
       res.status(200)
       res.cookie('jwt', token, {
-        expires: new Date(Date.now() + 10000),
+        expires: new Date(Date.now() + 8 * 3600000),
         secure: false,
-        httpOnly: true
+        httpOnly: true,
+        signed: true
       })
-      res.header('Access-Control-Allow-Origin', 'http://localhost:3001')
-      res.header('Access-Control-Allow-Credentials', true);
-      res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-
-      return res.send('ok')
+      return res.send({token:token})
     }catch(err){
       console.log(err)
       const {error:serverErrorMsg} = serverError()
