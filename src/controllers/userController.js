@@ -6,7 +6,7 @@ const User = require('../models/').User
 module.exports = {
   createUser: async (req,res)=>{
     try{
-      const requiredFields = ['fullName', 'username', 'email', 'password', 'passwordConfirmation', 'manager']
+      const requiredFields = ['fullName', 'username', 'email', 'password', 'manager']
       for(const field of requiredFields){
         if(!req.body[`${field}`]){
           const {error} = missingParamError(field)
