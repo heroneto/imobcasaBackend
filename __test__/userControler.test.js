@@ -63,4 +63,13 @@ describe('USER CONTROLLER: tests', async () =>{
     expect(res.status).toHaveBeenCalledWith(400)
     expect(res.send).toBeCalledWith('MissingParamError: email')
   })
+  it('POST: Should return 400 if no password has beem send', async()=>{
+    const user = mockFakeUser()
+    delete user.password
+    const res = mockResponse()
+    const req = mockRequest(user)
+    await createUser(req, res)
+    expect(res.status).toHaveBeenCalledWith(400)
+    expect(res.send).toBeCalledWith('MissingParamError: password')
+  })
 })
