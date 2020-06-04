@@ -90,13 +90,14 @@ describe('USER CONTROLLER: tests', async () =>{
     expect(res.status).toHaveBeenCalledWith(400)
     expect(res.send).toBeCalledWith('MissingParamError: manager')
   })
-  it('PUT: Should return 400 if no id has beem send', async()=>{
+  it('PUT: Should return 400 if no id and username has beem send', async()=>{
     const user = mockFakeUser()
+    delete user.username
     const res = mockResponse()
     const req = mockRequest(user)
     await updateUser(req, res)
     expect(res.status).toHaveBeenCalledWith(400)
-    expect(res.send).toBeCalledWith('MissingParamError: id')
+    expect(res.send).toBeCalledWith('MissingParamError: id and username')
   })
   it('PUT: Should return 400 if invalid id and username has beem send', async()=>{
     const user = mockFakeUser()
