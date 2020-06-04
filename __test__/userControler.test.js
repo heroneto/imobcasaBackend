@@ -108,4 +108,22 @@ describe('USER CONTROLLER: tests', async () =>{
     expect(res.status).toHaveBeenCalledWith(400)
     expect(res.send).toBeCalledWith('InvalidParamError: id or username')
   })
+  it('PUT: Should return 200 username has beem updated', async()=>{
+    const user = mockFakeUser()
+    user.id = 1
+    const res = mockResponse()
+    const req = mockRequest(user)
+    await updateUser(req, res)
+    expect(res.status).toHaveBeenCalledWith(200)
+    expect(res.send).toBeCalledWith({user: expect.objectContaining({
+      createdAt: expect.any(Date),
+      email: expect.any(String),
+      fullName: expect.any(String),
+      id: expect.any(Number),
+      manager: expect.any(Boolean),
+      password: expect.any(String),
+      updatedAt: expect.any(Date),
+      username: expect.any(String),
+    })})
+  })
 })
