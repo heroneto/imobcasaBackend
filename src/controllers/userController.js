@@ -68,16 +68,20 @@ module.exports = {
   },
   deleteUser: async (req,res)=>{
     try{
-      console.log(req.cookies)
-      const {id} = req.body
+      const {id, username} = req.body
       if(!id){
         const {error} = missingParamError('id')
         const {statusCode, body} = invalidRequest(error)
         return res.status(statusCode).send(body)
       }
-      const user = await User.findOne({where: {id: id}})
+      const user = await User.findOne({where:{
+        [Op.or]:[
+          {id: id},
+          {username: username}
+        ]}
+      })
       if(!user){
-        const {error} = invalidParamError('id')
+        const {error} = invalidParamError('id or username')
         const {statusCode, body} = invalidRequest(error)
         return res.status(statusCode).send(body)
       }
