@@ -2,13 +2,16 @@ const { getAllUsers, createUser } = require('../src/controllers/userController')
 
 
 
-const fakeUser = {
-  username: "validUser",
-	fullName: "ValidFullName",
-	email: "valid@email.com",
-	password: "validPassword",
-	passwordConfirmation: "validPassword",
-	manager: true
+const mockFakeUser = () => {
+  const fakeUser = {
+    username: "validUser",
+    fullName: "ValidFullName",
+    email: "valid@email.com",
+    password: "validPassword",
+    passwordConfirmation: "validPassword",
+    manager: true
+  }
+  return fakeUser
 }
 
 const mockResponse = () => {
@@ -34,19 +37,19 @@ describe('USER CONTROLLER: tests', async () =>{
     expect(res.json).toHaveBeenCalledWith({users: []})
   })
   it('POST: Should return 400 if no Username has beem send', async() =>{
-    var mockFakeUser = fakeUser
-    delete mockFakeUser.username
+    const user = mockFakeUser()
+    delete user.username
     const res = mockResponse()
-    const req = mockRequest(mockFakeUser)
+    const req = mockRequest(user)
     await createUser(req, res)
     expect(res.status).toHaveBeenCalledWith(400)
     expect(res.send).toBeCalledWith('MissingParamError: username')
   })
   it('POST: Should return 400 if no fullName has beem send', async()=>{
-    var mockFakeUser = fakeUser
-    delete mockFakeUser.fullName
+    const user = mockFakeUser()
+    delete user.fullName
     const res = mockResponse()
-    const req = mockRequest(mockFakeUser)
+    const req = mockRequest(user)
     await createUser(req, res)
     expect(res.status).toHaveBeenCalledWith(400)
     expect(res.send).toBeCalledWith('MissingParamError: fullName')
