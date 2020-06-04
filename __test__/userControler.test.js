@@ -43,8 +43,7 @@ describe('USER CONTROLLER: tests', async () =>{
       password: expect.any(String),
       updatedAt: expect.any(Date),
       username: expect.any(String),
-    })]})
-    
+    })]}) 
   })
   it('POST: Should return 400 if no Username has beem send', async() =>{
     const user = mockFakeUser()
@@ -98,5 +97,14 @@ describe('USER CONTROLLER: tests', async () =>{
     await updateUser(req, res)
     expect(res.status).toHaveBeenCalledWith(400)
     expect(res.send).toBeCalledWith('MissingParamError: id')
+  })
+  it('PUT: Should return 400 if invalid id has beem send', async()=>{
+    const user = mockFakeUser()
+    user.id = 'invalidId'
+    const res = mockResponse()
+    const req = mockRequest(user)
+    await updateUser(req, res)
+    expect(res.status).toHaveBeenCalledWith(400)
+    expect(res.send).toBeCalledWith('InvalidParamError: id')
   })
 })
