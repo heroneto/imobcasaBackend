@@ -1,6 +1,7 @@
 const {forbiden, invalidRequest, unauthorized, internalError} = require('../protocols/httpCodes')
 const {invalidParamError, missingParamError, serverError} = require('../Errors/')
 const User = require('../models/').User
+const { Op } = require("sequelize");
 
 
 module.exports = {
@@ -42,9 +43,14 @@ module.exports = {
         const {statusCode, body} = invalidRequest(error)
         return res.status(statusCode).send(body)
       }
-      const user = await User.findOne({where: {id: id}})
+      const user = await User.findOne({where:{
+        [Op.or]:[
+          {id: id},
+          {username: username}
+        ]}
+      })
       if(!user){
-        const {error} = invalidParamError('id')
+        const {error} = invalidParamError('id or username')
         const {statusCode, body} = invalidRequest(error)
         return res.status(statusCode).send(body)
       }      
