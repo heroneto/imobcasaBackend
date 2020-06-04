@@ -1,5 +1,4 @@
 const { getAllUsers, createUser } = require('../src/controllers/userController')
-var sinon = require('sinon');
 
 
 
