@@ -70,7 +70,7 @@ module.exports = {
   deleteUser: async (req,res)=>{
     try{
       const {id, username} = req.body
-      if(! id && username){
+      if(!id && !username){
         const {error} = missingParamError('id and username')
         const {statusCode, body} = invalidRequest(error)
         return res.status(statusCode).send(body)
