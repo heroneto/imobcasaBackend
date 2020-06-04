@@ -1,4 +1,4 @@
-const { getAllUsers, createUser, updateUser } = require('../src/controllers/userController')
+const { getAllUsers, createUser, updateUser, deleteUser } = require('../src/controllers/userController')
 
 
 
@@ -125,5 +125,23 @@ describe('USER CONTROLLER: tests', async () =>{
       updatedAt: expect.any(Date),
       username: expect.any(String),
     })})
+  })
+  it('DELETE: Should return 400 if no id has beem send', async()=>{
+    const user = mockFakeUser()
+    const res = mockResponse()
+    const req = mockRequest(user)
+    await deleteUser(req, res)
+    expect(res.status).toHaveBeenCalledWith(400)
+    expect(res.send).toBeCalledWith('MissingParamError: id')
+  })
+  it('DELETE: Should return 400 if invalid id and username has beem send', async()=>{
+    const user = mockFakeUser()
+    user.id = 'invalidId'
+    user.username = 'invalidUsername'
+    const res = mockResponse()
+    const req = mockRequest(user)
+    await deleteUser(req, res)
+    expect(res.status).toHaveBeenCalledWith(400)
+    expect(res.send).toBeCalledWith('InvalidParamError: id or username')
   })
 })
