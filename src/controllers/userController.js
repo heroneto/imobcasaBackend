@@ -16,7 +16,7 @@ module.exports = {
         }
       }
       const user = await User.create(req.body)
-      res.status(200).send({user})
+      return res.status(200).json({user})
     }catch(err){
       console.log(err)
       const {error} = serverError()
@@ -59,7 +59,7 @@ module.exports = {
       user.email = email
       user.manager = manager
       await user.save()
-      res.status(200).send({user})
+      return res.status(200).send({user})
     }catch(err){
       console.log(err)
       const {error} = serverError()
@@ -86,7 +86,12 @@ module.exports = {
         const {statusCode, body} = invalidRequest(error)
         return res.status(statusCode).send(body)
       }
-      await User.destroy({where: {id: id}})
+      await User.destroy({where:{
+        [Op.or]:[
+          {id: id},
+          {username: username}
+        ]}
+      })
       res.status(200).send({user})
     }catch(err){
       console.log(err)
