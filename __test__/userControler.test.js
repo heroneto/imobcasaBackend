@@ -72,4 +72,13 @@ describe('USER CONTROLLER: tests', async () =>{
     expect(res.status).toHaveBeenCalledWith(400)
     expect(res.send).toBeCalledWith('MissingParamError: password')
   })
+  it('POST: Should return 400 if no manager has beem send', async()=>{
+    const user = mockFakeUser()
+    delete user.manager
+    const res = mockResponse()
+    const req = mockRequest(user)
+    await createUser(req, res)
+    expect(res.status).toHaveBeenCalledWith(400)
+    expect(res.send).toBeCalledWith('MissingParamError: manager')
+  })
 })
