@@ -32,7 +32,7 @@ describe('USER CONTROLLER: tests', async () =>{
   it('GET: Should return 200', async () =>{
     const res = mockResponse()
     const req = mockRequest()
-    await getAllUsers(req,res)
+    const response = await getAllUsers(req,res)
     expect(res.status).toHaveBeenCalledWith(200)
     expect(res.json).toHaveBeenCalledWith({users:[expect.objectContaining({
       createdAt: expect.any(Date),
@@ -43,7 +43,7 @@ describe('USER CONTROLLER: tests', async () =>{
       password: expect.any(String),
       updatedAt: expect.any(Date),
       username: expect.any(String),
-    })]}) 
+    })]})
   })
   it('POST: Should return 400 if no Username has beem send', async() =>{
     const user = mockFakeUser()
@@ -98,13 +98,14 @@ describe('USER CONTROLLER: tests', async () =>{
     expect(res.status).toHaveBeenCalledWith(400)
     expect(res.send).toBeCalledWith('MissingParamError: id')
   })
-  it('PUT: Should return 400 if invalid id has beem send', async()=>{
+  it('PUT: Should return 400 if invalid id and username has beem send', async()=>{
     const user = mockFakeUser()
     user.id = 'invalidId'
+    user.username = 'invalidUsername'
     const res = mockResponse()
     const req = mockRequest(user)
     await updateUser(req, res)
     expect(res.status).toHaveBeenCalledWith(400)
-    expect(res.send).toBeCalledWith('InvalidParamError: id')
+    expect(res.send).toBeCalledWith('InvalidParamError: id or username')
   })
 })
