@@ -1,4 +1,4 @@
-const { getAllUsers, createUser } = require('../src/controllers/userController')
+const { getAllUsers, createUser, updateUser } = require('../src/controllers/userController')
 
 
 
@@ -34,7 +34,17 @@ describe('USER CONTROLLER: tests', async () =>{
     const req = mockRequest()
     await getAllUsers(req,res)
     expect(res.status).toHaveBeenCalledWith(200)
-    expect(res.json).toHaveBeenCalledWith({users: []})
+    expect(res.json).toHaveBeenCalledWith({users:[expect.objectContaining({
+      createdAt: expect.any(Date),
+      email: expect.any(String),
+      fullName: expect.any(String),
+      id: expect.any(Number),
+      manager: expect.any(Boolean),
+      password: expect.any(String),
+      updatedAt: expect.any(Date),
+      username: expect.any(String),
+    })]})
+    
   })
   it('POST: Should return 400 if no Username has beem send', async() =>{
     const user = mockFakeUser()
@@ -80,5 +90,13 @@ describe('USER CONTROLLER: tests', async () =>{
     await createUser(req, res)
     expect(res.status).toHaveBeenCalledWith(400)
     expect(res.send).toBeCalledWith('MissingParamError: manager')
+  })
+  it('PUT: Should return 400 if no id has beem send', async()=>{
+    const user = mockFakeUser()
+    const res = mockResponse()
+    const req = mockRequest(user)
+    await updateUser(req, res)
+    expect(res.status).toHaveBeenCalledWith(400)
+    expect(res.send).toBeCalledWith('MissingParamError: id')
   })
 })
