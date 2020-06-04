@@ -41,6 +41,14 @@ describe('USER CONTROLLER: tests', async () =>{
     await createUser(req, res)
     expect(res.status).toHaveBeenCalledWith(400)
     expect(res.send).toBeCalledWith('MissingParamError: username')
-
+  })
+  it('POST: Should return 400 if no fullName has beem send', async()=>{
+    var mockFakeUser = fakeUser
+    delete mockFakeUser.fullName
+    const res = mockResponse()
+    const req = mockRequest(mockFakeUser)
+    await createUser(req, res)
+    expect(res.status).toHaveBeenCalledWith(400)
+    expect(res.send).toBeCalledWith('MissingParamError: fullName')
   })
 })
