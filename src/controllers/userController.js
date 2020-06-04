@@ -26,7 +26,7 @@ module.exports = {
   getAllUsers: async (req,res)=>{
     try{
       const users = await User.findAll()
-      res.status(200).send({users: users})
+      return res.status(200).json({users: users})
     }catch(err){
       console.log(err)
       const {error} = serverError()
@@ -62,6 +62,7 @@ module.exports = {
   },
   deleteUser: async (req,res)=>{
     try{
+      console.log(req.cookies)
       const {id} = req.body
       if(!id){
         const {error} = missingParamError('id')
