@@ -1,4 +1,5 @@
 const { searchUser } = require('./searchController')
+const { noResultsError } = require('../Errors/no-result-errors')
 const User = require('../models/').User
 
 const mockFakeUser = () => {
@@ -57,5 +58,17 @@ describe('SEARCH CONTROLLER: tests', async() => {
     await searchUser(req, res)
     expect(res.status).toHaveBeenCalledWith(400)
     expect(res.send).toBeCalledWith('MissingParamError: email, username or id')
+  })
+  it('Should return 200 if no users has been found', async () => {
+    const fakeUser = mockFakeUser()
+    fakeUser.username = 'InvalidUsername'
+    fakeUser.id = 'invalidId'
+    fakeUser.email = 'invalidEmail'
+    const res = mockResponse()
+    const req = mockRequest(fakeUser)
+    await searchUser(req, res)
+    const { error } = noResultsError('no users found')
+    expect(res.status).toHaveBeenCalledWith(200)
+    expect(res.send).toHaveBeenCalledWith(error)
   })
 })
