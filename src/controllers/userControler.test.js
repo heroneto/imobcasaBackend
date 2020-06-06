@@ -1,4 +1,4 @@
-const { getAllUsers, createUser, updateUser, deleteUser } = require('../src/controllers/userController')
+const { getAllUsers, createUser, updateUser, deleteUser } = require('./userController')
 
 const mockFakeUser = () => {
   const fakeUser = {
