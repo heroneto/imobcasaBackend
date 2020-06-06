@@ -25,6 +25,12 @@ const internalError = (error) => {
     body: error
   }
 }
+const successfulRequest = (message) => {
+  return {
+    statusCode: 200,
+    body: message
+  }
+}
 
 
-module.exports = {forbiden, invalidRequest, unauthorized, internalError}
+module.exports = {forbiden, invalidRequest, unauthorized, internalError, successfulRequest}

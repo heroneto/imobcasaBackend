@@ -1,5 +1,5 @@
-const {forbiden, invalidRequest, unauthorized, internalError} = require('../protocols/httpCodes')
-const {invalidParamError, missingParamError, serverError} = require('../Errors/')
+const {forbiden, invalidRequest, unauthorized, internalError, successfulRequest} = require('../protocols/httpCodes')
+const {invalidParamError, missingParamError, serverError, noResultsError} = require('../Errors/')
 const User = require('../models/').User
 
 module.exports = {
@@ -13,8 +13,8 @@ module.exports = {
       }
       const users = await User.findAll({where: {id: id}}) || await User.findAll({where: {username: username}})  || await User.findAll({where: {email: email}})
       if(users.length == 0){
-        const {error} = invalidParamError('no users found')
-        const {statusCode, body} = invalidRequest(error)
+        const {error} = noResultsError('no users found')
+        const {statusCode, body} = successfulRequest(error)
         return res.status(statusCode).send(body)
       }
       res.status(200).send({users})
