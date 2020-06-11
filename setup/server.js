@@ -8,14 +8,19 @@ const routes = require('../src/routes')
 const cookieParser = require('cookie-parser')
 const secret = process.env.JWT_SECRET
 const csrf = require('csurf')
+const csrfProtection = csrf({
+  cookie: true
+})
 
 const startServer = () => {
   app.use(cors({credentials: true, origin: 'http://localhost:3001'}))
-  const csrfProtection = csrf({
-    cookie: true
-  })
   app.use(express.json())
   app.use(express.urlencoded({extended: true}))
+
+  app.post('/rest/api/lead', (req,res) =>{
+    console.log(req.body)
+    res.send("Tnks")
+  })
   app.use(cookieParser(secret))
   app.use(csrfProtection)
   app.use(routes)
