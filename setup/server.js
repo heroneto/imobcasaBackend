@@ -18,16 +18,15 @@ const startServer = () => {
   app.use(express.json())
   app.use(express.urlencoded({extended: true}))
 
-  app.post('/rest/api/lead', (req,res) =>{
-    console.log(req.body)
-    res.send('ok')
-  })
-
-  app.get('/rest/api/webhook/register', (req,res)=>{
+  app.get('/rest/api/webhook', (req,res)=>{
     if(req.query['hub.verify_token'] === token){
       const challenge  = req.query['hub.challenge']
       res.send(challenge)
-    }    
+    }
+  })
+  app.post('/rest/api/webhook', (req,res)=>{  
+    console.log(req.header)
+    console.log(req.query)
     console.log(req.body)
   })
   app.use(cookieParser(secret))
