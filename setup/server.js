@@ -23,7 +23,7 @@ const startServer = () => {
     res.send('ok')
   })
 
-  app.post('/rest/api/webhook/register', (req,res)=>{
+  app.get('/rest/api/webhook/register', (req,res)=>{
     if(req['hub.verify_token'] === token){
       const challenge  = req['hub.challenge']
       res.send(challenge)
