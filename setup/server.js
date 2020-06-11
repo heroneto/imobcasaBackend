@@ -11,6 +11,7 @@ const csrf = require('csurf')
 const csrfProtection = csrf({
   cookie: true
 })
+const token = "teste"
 
 const startServer = () => {
   app.use(cors({credentials: true, origin: 'http://localhost:3001'}))
@@ -19,7 +20,15 @@ const startServer = () => {
 
   app.post('/rest/api/lead', (req,res) =>{
     console.log(req.body)
-    res.send("Tnks")
+    res.send('ok')
+  })
+
+  app.post('/rest/api/webhook/register', (req,res)=>{
+    if(req['hub.verify_token'] === token){
+      const challenge  = req['hub.challenge']
+      res.send(challenge)
+    }    
+    console.log(req.body)
   })
   app.use(cookieParser(secret))
   app.use(csrfProtection)
