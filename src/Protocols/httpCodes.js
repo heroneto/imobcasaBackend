@@ -31,6 +31,6 @@ const successfulRequest = (message) => {
     body: message
   }
 }
-
+//
 
 module.exports = {forbiden, invalidRequest, unauthorized, internalError, successfulRequest}

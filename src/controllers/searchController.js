@@ -1,4 +1,4 @@
-const {forbiden, invalidRequest, unauthorized, internalError, successfulRequest} = require('../protocols/httpCodes')
+const {forbiden, invalidRequest, unauthorized, internalError, successfulRequest} = require('../Protocols/httpCodes')
 const {invalidParamError, missingParamError, serverError, noResultsError} = require('../Errors/')
 const User = require('../models/').User
 

@@ -1,4 +1,4 @@
-const {forbiden, invalidRequest, unauthorized, internalError} = require('../protocols/httpCodes')
+const {forbiden, invalidRequest, unauthorized, internalError} = require('../Protocols/httpCodes')
 const {invalidParamError, missingParamError, serverError} = require('../Errors/')
 const User = require('../models/').User
 const { Op } = require("sequelize");
