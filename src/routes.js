@@ -1,6 +1,5 @@
 var express = require('express')
 var router = express.Router()
-const {forbiden, invalidRequest, unauthorized, internalError} = require('./protocols/httpCodes')
 const {invalidParamError, missingParamError, serverError} = require('./Errors/')
 const {createUser, getAllUsers, updateUser, deleteUser} = require('./controllers/userController')
 const {searchUser} = require('./controllers/searchController')
