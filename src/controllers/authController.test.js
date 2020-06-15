@@ -15,11 +15,12 @@ const mockFakeUser = () => {
 }
 
 const mockResponse = () => {
-  const res = {};
-  res.status = jest.fn().mockReturnValue(res);
-  res.json = jest.fn().mockReturnValue(res);
-  res.send = jest.fn().mockReturnValue(res);
-  return res;
+  const res = {}
+  res.status = jest.fn().mockReturnValue(res)
+  res.json = jest.fn().mockReturnValue(res)
+  res.send = jest.fn().mockReturnValue(res)
+  res.cookie = jest.fn().mockReturnValue(res)
+  return res
 };
 
 const mockRequest = (body) => {
@@ -87,5 +88,13 @@ describe('AUTH CONTROLLER: tests', async() => {
     const { error } = invalidParamError('password')
     expect(res.status).toHaveBeenCalledWith(401)
     expect(res.send).toBeCalledWith(error)
+  }),
+  it('Should return 200 if valid password and username has been send', async () => {
+    const {username, password} = mockFakeUser()
+    const req = mockRequest({username, password})
+    const res = mockResponse()
+    await userAuthentication(req, res)
+    expect(res.status).toHaveBeenCalledWith(200)
+    expect(res.send).toHaveBeenCalledWith({token: expect.any(String)})
   })
 })
