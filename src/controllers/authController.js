@@ -5,13 +5,6 @@ const path = require('path')
 require('dotenv').config({path: path.resolve(__dirname, '../../.env')})
 const jwt = require('jsonwebtoken')
 
-function generateToken(id, username){
-  const token = jwt.sign({ id, username }, process.env.JWT_SECRET, {
-    expiresIn: process.env.NODE_ENV === 'prod' ? '7d' : '1m',
-  });
-  return token
-}
-
 async function checkToken(token){
   try{
     const jwtDecoded = await jwt.verify(token, process.env.JWT_SECRET)
@@ -24,7 +17,6 @@ async function checkToken(token){
   }catch(err){
     return {valid:false,err}
   }
-  
 }
 
 module.exports = {
@@ -71,7 +63,7 @@ module.exports = {
         const {statusCode, body} = unauthorized(error)
         return res.status(statusCode).send(body)
       }
-      const token = await generateToken(user.id, user.username)
+      const token = await user.generateToken(user.id, user.username)
       res.status(200)
       res.cookie('jwt', token, {
         expires: new Date(Date.now() + 8 * 3600000),
