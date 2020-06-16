@@ -14,6 +14,11 @@ const mockFakeUser = () => {
   return fakeUser
 }
 
+const mockNext = () => {
+  const next = jest.fn()
+  return next
+}
+
 const mockResponse = () => {
   const res = {}
   res.status = jest.fn().mockReturnValue(res)
@@ -35,6 +40,12 @@ const mockRequestJwtToken = (jwt) => {
     jwt
   }
   return request
+}
+
+const mockJwtToken = async (username) => {
+  const user = await User.findOne({where: {username: username}})  
+  const token = await user.generateToken(user.id, user.username)
+  return token
 }
 
 
@@ -125,6 +136,16 @@ describe('AUTH CONTROLLER: tests', async() => {
       expect(res.status).toHaveBeenCalledWith(401)
       expect(res.send).toBeCalledWith(error)      
     });
+    it('should call next if valid jwt token was provided', async () => {
+      const fakeUser = mockFakeUser()
+      const jwt = await mockJwtToken(fakeUser.username)
+      const req = mockRequestJwtToken(jwt)
+      const res = mockResponse()
+      const next = mockNext()
+      await checkAuthentication(req, res, next)
+      expect(res.status).not.toHaveBeenCalledWith(401)
+      expect(next).toHaveBeenCalled()
+    })
   });
   
 })
