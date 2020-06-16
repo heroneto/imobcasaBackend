@@ -7,10 +7,10 @@ const env = process.env.NODE_ENV || 'development'
 
 
 const devUser = {
-  username: "Vagner",
-	fullName: "Vagner Zanella",
-	email: "vagner@email.com",
-	password: "123Mudar",
+  username: "admin",
+	fullName: "Administrador",
+	email: "admin@email.com",
+	password: "admin",
 	manager: true
 }
 

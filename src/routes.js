@@ -9,11 +9,6 @@ router.get('/', (req,res) =>{
   res.send('Hello world!')
 })
 
-// router.post('/rest/api/lead', (req,res) =>{
-//   console.log(req.body)
-//   res.send("Tnks")
-// })
-
 router.get('/csrf-token', (req, res) => {
   res.json({ csrfToken: req.csrfToken() });
 })
