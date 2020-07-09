@@ -20,9 +20,10 @@ const mockResponse = () => {
   return res;
 }
 
-const mockRequest = (body) => {
+const mockRequest = (body, query) => {
   const request = {}
   request.body = body
+  request.query = query
   return request
 }
 
@@ -41,7 +42,7 @@ beforeAll(async () => {
 describe('LEAD CONTROLLER: tests', () => {
   it('GET: Should return 400 if no id has been send', async () => {
     const res = mockResponse()
-    const req = mockRequest({})
+    const req = mockRequest({}, {})
     await getLead(req, res)
     expect(res.status).toHaveBeenCalledWith(400)
     const { error } = missingParamError("id")
@@ -49,7 +50,7 @@ describe('LEAD CONTROLLER: tests', () => {
   })
   it('GET: Should return 400 is invalid id has been send', async () => {
     const res = mockResponse()
-    const req = mockRequest({id: "InvalidId"})
+    const req = mockRequest({}, {id: "InvalidId"})
     await getLead(req, res)
     expect(res.status).toBeCalledWith(400)
     const { error } = invalidParamError('id')
@@ -57,7 +58,7 @@ describe('LEAD CONTROLLER: tests', () => {
   })
   it('GET: Should return 200 if user has been found', async () => {
     const res = mockResponse()
-    const req = mockRequest({id: 1})
+    const req = mockRequest({}, {id:1})
     await getLead(req, res)
     expect(res.status).toHaveBeenCalledWith(200)
     expect(res.send).toBeCalledWith(expect.objectContaining({
