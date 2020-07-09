@@ -75,5 +75,25 @@ describe('LEAD CONTROLLER: tests', () => {
     expect(res.status).toHaveBeenCalledWith(400)
     const {error} = missingParamError('name')
     expect(res.send).toHaveBeenCalledWith(error)
+  }),
+  it('POST: Should return 400 if no phone has been send', async () => {
+    const res = mockResponse()
+    const fakeLead = mockFakeLead()
+    delete fakeLead.phone
+    const req = mockRequest(fakeLead)
+    await createLead(req, res)
+    expect(res.status).toHaveBeenCalledWith(400)
+    const {error} = missingParamError('phone')
+    expect(res.send).toHaveBeenCalledWith(error)
+  }),
+  it('POST: Should return 400 if no source has been send', async () => {
+    const res = mockResponse()
+    const fakeLead = mockFakeLead()
+    delete fakeLead.source
+    const req = mockRequest(fakeLead)
+    await createLead(req, res)
+    expect(res.status).toHaveBeenCalledWith(400)
+    const {error} = missingParamError('source')
+    expect(res.send).toHaveBeenCalledWith(error)
   })
 })
