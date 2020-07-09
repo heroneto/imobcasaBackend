@@ -1,4 +1,4 @@
-const {getLead} = require('./leadController')
+const {getLead, createLead} = require('./leadController')
 const { invalidParamError, missingParamError } = require('../Errors/')
 const {Leads} = require('../models/')
 const startDatabase = require('../../setup/database')
@@ -55,7 +55,7 @@ describe('LEAD CONTROLLER: tests', () => {
     const { error } = invalidParamError('id')
     expect(res.send).toBeCalledWith(error)
   })
-  it('GET: Should return 200', async () => {
+  it('GET: Should return 200 if user has been found', async () => {
     const res = mockResponse()
     const req = mockRequest({id: 1})
     await getLead(req, res)
@@ -65,6 +65,15 @@ describe('LEAD CONTROLLER: tests', () => {
       phone: expect.any(String),
       source: expect.any(String)
     }))
+  }),
+  it('POST: Should return 400 if no name has been send', async () => {
+    const res = mockResponse()
+    const fakeLead = mockFakeLead()
+    delete fakeLead.name
+    const req = mockRequest(fakeLead)
+    await createLead(req, res)
+    expect(res.status).toHaveBeenCalledWith(400)
+    const {error} = missingParamError('name')
+    expect(res.send).toHaveBeenCalledWith(error)
   })
-
 })
