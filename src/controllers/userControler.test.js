@@ -182,7 +182,7 @@ describe('USER CONTROLLER: tests', async () =>{
       email: expect.any(String),
       fullName: expect.any(String),
       id: expect.any(Number),
-      manager: expect.any(Boolean),
+      admin: expect.any(Boolean),
       password: expect.any(String),
       updatedAt: expect.any(Date),
       username: expect.any(String),
