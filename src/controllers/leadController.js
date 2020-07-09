@@ -5,7 +5,7 @@ const { Leads } = require('../models/')
 module.exports = {
   getLead: async (req,res) => {
     try{
-      const {id} = req.body
+      const {id} = req.query
       if(!id){
         const {error} = missingParamError('id')
         const {statusCode, body} = invalidRequest(error)
