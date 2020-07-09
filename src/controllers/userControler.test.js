@@ -1,5 +1,5 @@
 const { getAllUsers, createUser, updateUser, deleteUser } = require('./userController')
-
+const startDatabase = require('../../setup/database')
 const mockFakeUser = () => {
   const fakeUser = {
     username: "validUser",
@@ -7,7 +7,7 @@ const mockFakeUser = () => {
     email: "valid@email.com",
     password: "validPassword",
     passwordConfirmation: "validPassword",
-    manager: true
+    admin: true
   }
   return fakeUser
 }
@@ -26,6 +26,13 @@ const mockRequest = (body) => {
   return request
 }
 
+beforeAll(async () => {
+  try{
+    await startDatabase()
+  }catch(err){
+    console.log(err.toString())
+  }
+})
 
 describe('USER CONTROLLER: tests', async () =>{
   it('POST: Should return 400 if no Username has beem send', async() =>{
@@ -64,14 +71,14 @@ describe('USER CONTROLLER: tests', async () =>{
     expect(res.status).toHaveBeenCalledWith(400)
     expect(res.send).toBeCalledWith('MissingParamError: password')
   })
-  it('POST: Should return 400 if no manager has beem send', async()=>{
+  it('POST: Should return 400 if no admin attribute has beem send', async()=>{
     const user = mockFakeUser()
-    delete user.manager
+    delete user.admin
     const res = mockResponse()
     const req = mockRequest(user)
     await createUser(req, res)
     expect(res.status).toHaveBeenCalledWith(400)
-    expect(res.send).toBeCalledWith('MissingParamError: manager')
+    expect(res.send).toBeCalledWith('MissingParamError: admin')
   })
   it('POST: Should return 200 if user has been created', async () =>{
     const user = mockFakeUser()
@@ -84,7 +91,7 @@ describe('USER CONTROLLER: tests', async () =>{
       email: expect.any(String),
       fullName: expect.any(String),
       id: expect.any(Number),
-      manager: expect.any(Boolean),
+      admin: expect.any(Boolean),
       password: expect.any(String),
       updatedAt: expect.any(Date),
       username: expect.any(String),
