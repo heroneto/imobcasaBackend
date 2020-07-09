@@ -16,7 +16,8 @@ module.exports = {
     "password": "root",
     "database": "imobcasa_test",
     "host": "127.0.0.1",
-    "dialect": "mysql",
+    "dialect": "sqlite",
+    "storage": "memory",
     "operatorsAliases": "0",
     "logging": false
   },
