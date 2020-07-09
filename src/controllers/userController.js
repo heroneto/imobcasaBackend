@@ -37,7 +37,7 @@ module.exports = {
   },
   updateUser: async (req,res)=>{
     try{
-      const {id, fullName, username, email, manager} = req.body
+      const {id, fullName, username, email, admin} = req.body
       if(!id && !username){
         const {error} = missingParamError('id and username')
         const {statusCode, body} = invalidRequest(error)
@@ -57,7 +57,7 @@ module.exports = {
       user.fullName = fullName
       user.username = username
       user.email = email
-      user.manager = manager
+      user.admin = admin
       await user.save()
       return res.status(200).send({user})
     }catch(err){
