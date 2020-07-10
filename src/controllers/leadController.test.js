@@ -29,7 +29,7 @@ const mockRequest = (body, query) => {
 
 beforeAll(async () => {
   try{
-    startDatabase()
+    await startDatabase()
     const fakeLead = mockFakeLead()
     await Leads.create(fakeLead)
   }catch(err){
@@ -96,5 +96,19 @@ describe('LEAD CONTROLLER: tests', () => {
     expect(res.status).toHaveBeenCalledWith(400)
     const {error} = missingParamError('source')
     expect(res.send).toHaveBeenCalledWith(error)
+  })
+  it('POST: Should return 200 if lead has been created', async () => {
+    const res = mockResponse()
+    const fakeLead = mockFakeLead()
+    const req = mockRequest(fakeLead)
+    await createLead(req, res)
+    expect(res.status).toHaveBeenCalledWith(200)
+    expect(res.send).toBeCalledWith(expect.objectContaining({
+      name: expect.any(String),
+      phone: expect.any(String),
+      source: expect.any(String),
+      createdAt: expect.any(Date),
+      updatedAt: expect.any(Date),
+    }))
   })
 })
