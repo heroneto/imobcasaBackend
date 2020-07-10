@@ -52,7 +52,7 @@ afterAll(async () => {
   }
 })
 
-describe('SEARCH CONTROLLER: tests', async() => {
+describe('SEARCH CONTROLLER: tests', () => {
   it('Should return error 400 if no required Fields has beem send', async () => {
     const fakeUser = mockFakeUser()
     const res = mockResponse()

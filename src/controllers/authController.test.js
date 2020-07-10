@@ -73,8 +73,8 @@ afterAll(async () => {
 })
 
 
-describe('AUTH CONTROLLER: tests', async() => {
-  describe('USERAUTHENTICATION', async () => {
+describe('AUTH CONTROLLER: tests', () => {
+  describe('USERAUTHENTICATION', () => {
     it('Should return 400 if no username was provided', async () => {
       const {password} = mockFakeUser()
       const req = mockRequest({password})
@@ -121,7 +121,7 @@ describe('AUTH CONTROLLER: tests', async() => {
     })
   }),
 
-  describe('CHECKAUTHENTICATION', async () => {
+  describe('CHECKAUTHENTICATION', () => {
     it('should return 401 if no jwt token was provided', async () => {
       const req = {signedCookies: ''}
       const res = mockResponse()
