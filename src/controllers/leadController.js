@@ -1,6 +1,6 @@
 const {forbiden, invalidRequest, unauthorized, internalError} = require('../Protocols/httpCodes')
 const {invalidParamError, missingParamError, serverError} = require('../Errors/')
-const { Leads } = require('../models/')
+const {Leads} = require('../models')
 
 module.exports = {
   getLead: async (req,res) => {
@@ -41,7 +41,10 @@ module.exports = {
           return res.status(statusCode).send(body)
         }
       }
-      return res.status(200).send('ok')
+
+      const lead = await Leads.create(req.body)
+      
+      return res.status(200).send(lead)
     }catch(err){
       console.log(err)
       const {error} = serverError()
