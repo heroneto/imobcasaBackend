@@ -4,7 +4,8 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     phone: DataTypes.STRING,
     source: DataTypes.STRING,
-    userId: DataTypes.INTEGER
+    userId: DataTypes.INTEGER,
+    statusId: DataTypes.INTEGER
   }, {});
   Leads.associate = function(models) {
     // associations can be defined here
@@ -15,6 +16,14 @@ module.exports = (sequelize, DataTypes) => {
       },
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE'
+    }),
+    Leads.hasOne(models.Status, {
+      foreignKey: {
+        name: 'id',
+        type: DataTypes.INTEGER
+      },
+      onDelete: 'CASCADE',
+      onDelete: 'CASCADE'
     })
   };
   return Leads;
