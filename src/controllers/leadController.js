@@ -86,7 +86,12 @@ module.exports = {
         const {statusCode, body} = invalidRequest(error)
         return res.status(statusCode).send(body)
       }
-      return res.status(200).send('ok')
+      if(await Leads.destroy({where: {id: req.query.id}}) === 0){
+        const {error} = invalidParamError('id')
+        const {statusCode, body} = invalidRequest(error)
+        return res.status(statusCode).send(body)
+      }      
+      return res.status(200)
     }catch(err){
       console.log(err)
       const {error} = serverError()
