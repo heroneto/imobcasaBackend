@@ -78,5 +78,20 @@ module.exports = {
       const {statusCode, body} = internalError(error)
       return res.status(statusCode).send(body)
     }
+  },
+  deleteLead: async (req, res) => {
+    try{
+      if(!req.query.id){
+        const {error} = missingParamError('id')
+        const {statusCode, body} = invalidRequest(error)
+        return res.status(statusCode).send(body)
+      }
+      return res.status(200).send('ok')
+    }catch(err){
+      console.log(err)
+      const {error} = serverError()
+      const {statusCode, body} = internalError(error)
+      return res.status(statusCode).send(body)
+    }
   }
 }
