@@ -150,15 +150,17 @@ describe('LEAD CONTROLLER: tests', () => {
       const { error } = invalidParamError('id')
       expect(res.send).toBeCalledWith(error)
     })
-    // it('PUT: Should return 200 updated', async () => {
-    //   const res = mockResponse()
-    //   const fakeLead  = mockFakeLead()
-    //   fakeLead.id = leadId
-    //   const req = mockRequest(fakeLead, '')
-    //   await updateLead(req, res)
-    //   expect(res.status).toHaveBeenCalledWith(200)
-    // })
+    it('PUT: Should return 200 updated', async () => {
+      const res = mockResponse()
+      const fakeLead  = mockFakeLead()
+      fakeLead.id = leadId
+      fakeLead.name = 'updatedName'
+      fakeLead.phone = 'updatedPhone'
+      fakeLead.source = 'updatedSource'
+      const req = mockRequest(fakeLead, '')
+      await updateLead(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.send).toBeCalledWith(expect.objectContaining(fakeLead))
+    })
   })
-  
- 
 })
