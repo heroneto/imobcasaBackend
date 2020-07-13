@@ -65,13 +65,13 @@ module.exports = {
         return res.status(statusCode).send(body)
       }
       const Lead = await Leads.findOne({where: { id: req.body.id}})
-      console.log(Lead)
       if(!Lead || Lead === undefined){
         const {error} = invalidParamError('id')
         const {statusCode, body} = invalidRequest(error)
         return res.status(statusCode).send(body)
       }
-      return res.status(200).send('ok')
+      Lead.update(req.body)
+      return res.status(200).send(Lead)
     }catch(err){
       console.log(err)
       const {error} = serverError()
