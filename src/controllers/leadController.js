@@ -22,7 +22,6 @@ module.exports = {
         const {statusCode, body} = invalidRequest(error)
         return res.status(statusCode).send(body)
       }
-      
       return res.status(200).send(lead)
     }catch(err){
       console.log(err)
@@ -42,9 +41,17 @@ module.exports = {
         }
       }
       
-      const lead = await Leads.create(req.body)
-      
-      return res.status(200).send(lead)
+      const [lead, created] = await Leads.findOrCreate({
+        where: {
+          phone: req.body.phone
+        },
+        defaults: {
+          ...req.body,
+          statusId: 1
+        }
+      })
+
+      return res.status(200).send({lead, created})
     }catch(err){
       console.log(err)
       const {error} = serverError()
