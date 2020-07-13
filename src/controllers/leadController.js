@@ -56,8 +56,13 @@ module.exports = {
     try{
       if(!req.body){
         const {error} = missingBodyContent()
-          const {statusCode, body} = invalidRequest(error)
-          return res.status(statusCode).send(body)
+        const {statusCode, body} = invalidRequest(error)
+        return res.status(statusCode).send(body)
+      }
+      if(!req.body.id){
+        const {error} = missingParamError('id')
+        const {statusCode, body} = invalidRequest(error)
+        return res.status(statusCode).send(body)
       }
       return res.status(200).send('ok')
     }catch(err){
