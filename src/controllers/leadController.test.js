@@ -164,6 +164,13 @@ describe('LEAD CONTROLLER: tests', () => {
     })
   })
   describe('DELETE LEAD', () => {
+    let leadId = ''
+    beforeAll(async ()=>{
+      const lead = await Leads.findAll()
+      if(lead.length > 0){
+        leadId = lead[0].id
+      }
+    }),
     it('Should return 400 if no ID has been send', async () => {
       const req = mockRequest('', '')
       const res = mockResponse()
@@ -171,6 +178,20 @@ describe('LEAD CONTROLLER: tests', () => {
       expect(res.status).toHaveBeenCalledWith(400)
       const {error} = missingParamError('id')
       expect(res.send).toBeCalledWith(error)
+    }),
+    it('Should return 400 if invalid ID has been send', async () => {
+      const req = mockRequest('', {id: 9999})
+      const res = mockResponse()
+      await deleteLead(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      const {error} = invalidParamError('id')
+      expect(res.send).toBeCalledWith(error)
+    }),
+    it('Should return 200', async () => {
+      const req = mockRequest('', {id: leadId})
+      const res = mockResponse()
+      await deleteLead(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
     })
   })
 })
