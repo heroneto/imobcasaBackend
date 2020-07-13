@@ -139,7 +139,25 @@ describe('LEAD CONTROLLER: tests', () => {
       expect(res.status).toHaveBeenCalledWith(400)
       const { error } = missingParamError('id')
       expect(res.send).toBeCalledWith(error)
+    }),
+    it('PUT: Should return 400 if invalid id has been send', async () => {
+      const res = mockResponse()
+      const fakeLead  = mockFakeLead()
+      fakeLead.id = 'FakeId'
+      const req = mockRequest(fakeLead, '')
+      await updateLead(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      const { error } = invalidParamError('id')
+      expect(res.send).toBeCalledWith(error)
     })
+    // it('PUT: Should return 200 updated', async () => {
+    //   const res = mockResponse()
+    //   const fakeLead  = mockFakeLead()
+    //   fakeLead.id = leadId
+    //   const req = mockRequest(fakeLead, '')
+    //   await updateLead(req, res)
+    //   expect(res.status).toHaveBeenCalledWith(200)
+    // })
   })
   
  
