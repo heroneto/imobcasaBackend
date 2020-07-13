@@ -116,12 +116,28 @@ describe('LEAD CONTROLLER: tests', () => {
     })
   }),
   describe('PUT LEAD', () => {
+    let leadId = ''
+    beforeAll(async ()=>{
+      const lead = await Leads.findAll()
+      if(lead.length > 0){
+        leadId = lead[0].id
+      }
+    }),
     it('PUT: Should return 400 if no body has been send', async () => {
       const res = mockResponse()
-      const req = mockResponse({}, {})
+      const req = mockRequest()
       await updateLead(req, res)
       expect(res.status).toHaveBeenCalledWith(400)
       const { error } = missingBodyContent()
+      expect(res.send).toBeCalledWith(error)
+    })
+    it('PUT: Should return 400 if no id has been send', async () => {
+      const res = mockResponse()
+      const fakeLead  = mockFakeLead()
+      const req = mockRequest(fakeLead, '')
+      await updateLead(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      const { error } = missingParamError('id')
       expect(res.send).toBeCalledWith(error)
     })
   })
