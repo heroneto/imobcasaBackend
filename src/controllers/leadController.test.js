@@ -1,5 +1,5 @@
-const {getLead, createLead} = require('./leadController')
-const { invalidParamError, missingParamError } = require('../Errors/')
+const {getLead, createLead, updateLead} = require('./leadController')
+const { invalidParamError, missingParamError, missingBodyContent } = require('../Errors/')
 const {Leads} = require('../models/')
 const startDatabase = require('../../setup/database')
 
@@ -40,75 +40,91 @@ beforeAll(async () => {
 
 
 describe('LEAD CONTROLLER: tests', () => {
-  it('GET: Should return 400 if no id has been send', async () => {
-    const res = mockResponse()
-    const req = mockRequest({}, {})
-    await getLead(req, res)
-    expect(res.status).toHaveBeenCalledWith(400)
-    const { error } = missingParamError("id")
-    expect(res.send).toBeCalledWith(error)
+  describe('GET LEAD', () => {
+    it('GET: Should return 400 if no id has been send', async () => {
+      const res = mockResponse()
+      const req = mockRequest({}, {})
+      await getLead(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      const { error } = missingParamError("id")
+      expect(res.send).toBeCalledWith(error)
+    })
+    it('GET: Should return 400 is invalid id has been send', async () => {
+      const res = mockResponse()
+      const req = mockRequest({}, {id: "InvalidId"})
+      await getLead(req, res)
+      expect(res.status).toBeCalledWith(400)
+      const { error } = invalidParamError('id')
+      expect(res.send).toBeCalledWith(error)
+    })
+    it('GET: Should return 200 if user has been found', async () => {
+      const res = mockResponse()
+      const req = mockRequest({}, {id:1})
+      await getLead(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.send).toBeCalledWith(expect.objectContaining({
+        name: expect.any(String),
+        phone: expect.any(String),
+        source: expect.any(String)
+      }))
+    })
   })
-  it('GET: Should return 400 is invalid id has been send', async () => {
-    const res = mockResponse()
-    const req = mockRequest({}, {id: "InvalidId"})
-    await getLead(req, res)
-    expect(res.status).toBeCalledWith(400)
-    const { error } = invalidParamError('id')
-    expect(res.send).toBeCalledWith(error)
-  })
-  it('GET: Should return 200 if user has been found', async () => {
-    const res = mockResponse()
-    const req = mockRequest({}, {id:1})
-    await getLead(req, res)
-    expect(res.status).toHaveBeenCalledWith(200)
-    expect(res.send).toBeCalledWith(expect.objectContaining({
-      name: expect.any(String),
-      phone: expect.any(String),
-      source: expect.any(String)
-    }))
+  describe('POST LEAD', () => {
+    it('POST: Should return 400 if no name has been send', async () => {
+      const res = mockResponse()
+      const fakeLead = mockFakeLead()
+      delete fakeLead.name
+      const req = mockRequest(fakeLead)
+      await createLead(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      const {error} = missingParamError('name')
+      expect(res.send).toHaveBeenCalledWith(error)
+    }),
+    it('POST: Should return 400 if no phone has been send', async () => {
+      const res = mockResponse()
+      const fakeLead = mockFakeLead()
+      delete fakeLead.phone
+      const req = mockRequest(fakeLead)
+      await createLead(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      const {error} = missingParamError('phone')
+      expect(res.send).toHaveBeenCalledWith(error)
+    }),
+    it('POST: Should return 400 if no source has been send', async () => {
+      const res = mockResponse()
+      const fakeLead = mockFakeLead()
+      delete fakeLead.source
+      const req = mockRequest(fakeLead)
+      await createLead(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      const {error} = missingParamError('source')
+      expect(res.send).toHaveBeenCalledWith(error)
+    })
+    it('POST: Should return 200 if lead has been created', async () => {
+      const res = mockResponse()
+      const fakeLead = mockFakeLead()
+      const req = mockRequest(fakeLead)
+      await createLead(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.send).toBeCalledWith(expect.objectContaining({
+        name: expect.any(String),
+        phone: expect.any(String),
+        source: expect.any(String),
+        createdAt: expect.any(Date),
+        updatedAt: expect.any(Date),
+      }))
+    })
   }),
-  it('POST: Should return 400 if no name has been send', async () => {
-    const res = mockResponse()
-    const fakeLead = mockFakeLead()
-    delete fakeLead.name
-    const req = mockRequest(fakeLead)
-    await createLead(req, res)
-    expect(res.status).toHaveBeenCalledWith(400)
-    const {error} = missingParamError('name')
-    expect(res.send).toHaveBeenCalledWith(error)
-  }),
-  it('POST: Should return 400 if no phone has been send', async () => {
-    const res = mockResponse()
-    const fakeLead = mockFakeLead()
-    delete fakeLead.phone
-    const req = mockRequest(fakeLead)
-    await createLead(req, res)
-    expect(res.status).toHaveBeenCalledWith(400)
-    const {error} = missingParamError('phone')
-    expect(res.send).toHaveBeenCalledWith(error)
-  }),
-  it('POST: Should return 400 if no source has been send', async () => {
-    const res = mockResponse()
-    const fakeLead = mockFakeLead()
-    delete fakeLead.source
-    const req = mockRequest(fakeLead)
-    await createLead(req, res)
-    expect(res.status).toHaveBeenCalledWith(400)
-    const {error} = missingParamError('source')
-    expect(res.send).toHaveBeenCalledWith(error)
+  describe('PUT LEAD', () => {
+    it('PUT: Should return 400 if no body has been send', async () => {
+      const res = mockResponse()
+      const req = mockResponse({}, {})
+      await updateLead(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      const { error } = missingBodyContent()
+      expect(res.send).toBeCalledWith(error)
+    })
   })
-  it('POST: Should return 200 if lead has been created', async () => {
-    const res = mockResponse()
-    const fakeLead = mockFakeLead()
-    const req = mockRequest(fakeLead)
-    await createLead(req, res)
-    expect(res.status).toHaveBeenCalledWith(200)
-    expect(res.send).toBeCalledWith(expect.objectContaining({
-      name: expect.any(String),
-      phone: expect.any(String),
-      source: expect.any(String),
-      createdAt: expect.any(Date),
-      updatedAt: expect.any(Date),
-    }))
-  })
+  
+ 
 })
