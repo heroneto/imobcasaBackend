@@ -1,4 +1,4 @@
-const {getLead, createLead, updateLead} = require('./leadController')
+const {getLead, createLead, updateLead, deleteLead} = require('./leadController')
 const { invalidParamError, missingParamError, missingBodyContent } = require('../Errors/')
 const {Leads} = require('../models/')
 const startDatabase = require('../../setup/database')
@@ -161,6 +161,16 @@ describe('LEAD CONTROLLER: tests', () => {
       await updateLead(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
       expect(res.send).toBeCalledWith(expect.objectContaining(fakeLead))
+    })
+  })
+  describe('DELETE LEAD', () => {
+    it('Should return 400 if no ID has been send', async () => {
+      const req = mockRequest('', '')
+      const res = mockResponse()
+      await deleteLead(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      const {error} = missingParamError('id')
+      expect(res.send).toBeCalledWith(error)
     })
   })
 })
