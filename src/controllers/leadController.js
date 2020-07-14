@@ -44,13 +44,9 @@ module.exports = {
       const [lead, created] = await Leads.findOrCreate({
         where: {
           phone: req.body.phone
-        },
-        defaults: {
-          ...req.body,
-          statusId: 1
         }
       })
-
+      await lead.update({...req.body, statusId: 1})
       return res.status(200).send({lead, created})
     }catch(err){
       console.log(err)
