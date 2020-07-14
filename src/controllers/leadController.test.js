@@ -27,18 +27,6 @@ const mockRequest = (body, query) => {
   return request
 }
 
-// beforeAll(async () => {
-//   try{
-//     await startDatabase()
-//     const fakeLead = mockFakeLead()
-//     await Leads.create(fakeLead)
-//   }catch(err){
-//     console.log(err.toString())
-//   }
-// })
-
-
-
 describe('LEAD CONTROLLER: tests', () => {
   describe('GET LEAD', () => {
     let leadId = ''
@@ -138,10 +126,12 @@ describe('LEAD CONTROLLER: tests', () => {
     it('POST: Should return 200 if existing lead has been updated', async () => {
       const res = mockResponse()
       const fakeLead = mockFakeLead()
+      fakeLead.name = 'updateLeadName'
+      fakeLead.statusId = 1
       const req = mockRequest(fakeLead)
       await createLead(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
-      expect(res.send).toHaveBeenCalledWith(expect.objectContaining({created:false}))
+      expect(res.send).toHaveBeenCalledWith(expect.objectContaining({created: false, lead: expect.any(Object)}))
     })
   })
   describe('PUT LEAD', () => {
