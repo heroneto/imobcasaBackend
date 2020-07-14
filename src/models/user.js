@@ -11,7 +11,8 @@ module.exports = (sequelize, DataTypes) => {
     username: DataTypes.STRING,
     email: DataTypes.STRING,
     password: DataTypes.STRING,
-    admin: DataTypes.BOOLEAN
+    admin: DataTypes.BOOLEAN,
+    lastLeadReceivedTime: DataTypes.DATE
   }, {
     freezeTableName: true,
     hooks: {
