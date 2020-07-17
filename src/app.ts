@@ -1,9 +1,8 @@
-const server = require('./setup/server')
-const startDatabase = require('./setup/database')
+import { serverSetup, databaseSetup } from './setup'
 
 async function startApp(){
-  await startDatabase()
-  await server()
+  await databaseSetup()
+  await serverSetup()
 }
 
 

@@ -1,11 +1,11 @@
 import {Sequelize}  from 'sequelize'
-import config from '../config/database'
-import models from '../models'
+import config from '../../config/database'
+import models from '../../models'
 import path from 'path'
 import * as dotenv from 'dotenv'
 dotenv.config({path: path.resolve(__dirname, '../.env')})
 import Umzug from 'umzug'
-import { migrationsConfig, seedConfig } from '../config/databaseMigrations'
+import { migrationsConfig, seedConfig } from '../../config/databaseMigrations'
 const env = process.env.NODE_ENV.trim()
 
 const devUser = {
@@ -15,7 +15,7 @@ const devUser = {
 	admin: true
 }
 
-const startDatabase = async () => {
+export default async function databaseSetup(){
   try{
     const sequelize = new Sequelize(config[env]) 
     const migrator = new Umzug(migrationsConfig(Sequelize, sequelize))
@@ -36,5 +36,3 @@ const startDatabase = async () => {
     console.log(err)
   }
 }
-
-module.exports = startDatabase

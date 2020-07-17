@@ -1,7 +1,7 @@
 const { userAuthentication, checkAuthentication } = require('./authController')
 const { invalidParamError, missingParamError } = require('../Errors/')
 const User = require('../models/').User
-const startDatabase = require('../setup/database')
+const {databaseSetup} = require('../setup/')
 
 const mockFakeUser = () => {
   const fakeUser = {
@@ -53,7 +53,7 @@ const mockJwtToken = async (username) => {
 
 beforeAll(async () => {
   try{
-    startDatabase()
+    databaseSetup()
     const fakeUser = mockFakeUser()
     await User.create(fakeUser)
   }catch(err){

@@ -1,19 +1,21 @@
-const express = require('express')
+import express from 'express'
+import cors from 'cors'
+import path from 'path'
+import * as dotenv from 'dotenv'
+dotenv.config({path: path.resolve(__dirname, '../.env')})
+import routes from '../../routes'
+import cookieParser from 'cookie-parser'
+import csrf from 'csurf'
+
 const app = express()
-const cors = require('cors')
-const path = require('path')
-require('dotenv').config({path: path.resolve(__dirname, '../.env')})
 const port = process.env.PORT || 8000
-const routes = require('../routes')
-const cookieParser = require('cookie-parser')
 const secret = process.env.JWT_SECRET
-const csrf = require('csurf')
 const csrfProtection = csrf({
   cookie: true
 })
 const token = "teste"
 
-const startServer = () => {
+export default async function serverSetup(){
   app.use(cors({credentials: true, origin: 'http://localhost:3001'}))
   app.use(express.json())
   app.use(express.urlencoded({extended: true}))
@@ -41,7 +43,3 @@ const startServer = () => {
   
   return app
 }
-
-
-
-module.exports = startServer

@@ -1,5 +1,6 @@
 const { getAllUsers, createUser, updateUser, deleteUser } = require('./userController')
-const startDatabase = require('../setup/database')
+const {databaseSetup} = require('../setup/')
+
 const mockFakeUser = () => {
   const fakeUser = {
     username: "validUser",
@@ -28,7 +29,7 @@ const mockRequest = (body) => {
 
 beforeAll(async () => {
   try{
-    await startDatabase()
+    await databaseSetup()
   }catch(err){
     console.log(err.toString())
   }
