@@ -1,11 +1,12 @@
-const {Sequelize} = require('sequelize')
-const config = require('../config/database')
-const models = require('../models')
-const path = require('path')
-require('dotenv').config({path: path.resolve(__dirname, '../.env')})
-const Umzug = require('umzug')
+import {Sequelize}  from 'sequelize'
+import config from '../config/database'
+import models from '../models'
+import path from 'path'
+import * as dotenv from 'dotenv'
+dotenv.config({path: path.resolve(__dirname, '../.env')})
+import Umzug from 'umzug'
+import { migrationsConfig, seedConfig } from '../config/databaseMigrations'
 const env = process.env.NODE_ENV.trim()
-const { migrationsConfig, seedConfig } = require('../config/databaseMigrations')
 
 const devUser = {
   username: "admin",
@@ -22,9 +23,6 @@ const startDatabase = async () => {
     
     await migrator.up()
     await seeder.up()
-    // if(env !== 'test'){
-    //   await seeder.up()
-    // }
         
     if(env === 'development'){
         const User = models.User

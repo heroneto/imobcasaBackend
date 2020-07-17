@@ -3,8 +3,8 @@ const app = express()
 const cors = require('cors')
 const path = require('path')
 require('dotenv').config({path: path.resolve(__dirname, '../.env')})
-const port = process.env.PORT || 3000
-const routes = require('../src/routes')
+const port = process.env.PORT || 8000
+const routes = require('../routes')
 const cookieParser = require('cookie-parser')
 const secret = process.env.JWT_SECRET
 const csrf = require('csurf')
