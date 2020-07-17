@@ -1,6 +1,6 @@
 const {Sequelize} = require('sequelize')
 const config = require('../config/database')
-const models = require('../src/models')
+const models = require('../models')
 const path = require('path')
 require('dotenv').config({path: path.resolve(__dirname, '../.env')})
 const Umzug = require('umzug')
@@ -21,9 +21,10 @@ const startDatabase = async () => {
     const seeder = new Umzug(seedConfig(Sequelize, sequelize))
     
     await migrator.up()
-    if(env !== 'test'){
-      await seeder.up()
-    }
+    await seeder.up()
+    // if(env !== 'test'){
+    //   await seeder.up()
+    // }
         
     if(env === 'development'){
         const User = models.User

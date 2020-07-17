@@ -27,5 +27,11 @@ router.route('/user')
   .put(updateUser)
   .delete(deleteUser)
 
+router.route('/lead')
+  .all(checkAuthentication)
+  .get()
+  .post()
+  .put()
+  .delete()
 
 module.exports = router

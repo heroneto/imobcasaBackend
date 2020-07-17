@@ -1,5 +1,5 @@
 const { getAllUsers, createUser, updateUser, deleteUser } = require('./userController')
-const startDatabase = require('../../setup/database')
+const startDatabase = require('../setup/database')
 const mockFakeUser = () => {
   const fakeUser = {
     username: "validUser",
@@ -102,7 +102,7 @@ describe('USER CONTROLLER: tests', async () =>{
     const req = mockRequest()
     await getAllUsers(req,res)
     expect(res.status).toHaveBeenCalledWith(200)
-    expect(res.json).toHaveBeenCalledWith([expect.objectContaining({
+    expect(res.json).toHaveBeenCalledWith(expect.arrayContaining([expect.objectContaining({
       createdAt: expect.any(Date),
       email: expect.any(String),
       fullName: expect.any(String),
@@ -111,7 +111,7 @@ describe('USER CONTROLLER: tests', async () =>{
       password: expect.any(String),
       updatedAt: expect.any(Date),
       username: expect.any(String),
-    })])
+    })]))
   })
   it('PUT: Should return 400 if no id and username has beem send', async()=>{
     const user = mockFakeUser()

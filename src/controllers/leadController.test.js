@@ -1,7 +1,7 @@
 const {getLead, createLead, updateLead, deleteLead} = require('./leadController')
 const { invalidParamError, missingParamError, missingBodyContent } = require('../Errors/')
 const {Leads} = require('../models/')
-const startDatabase = require('../../setup/database')
+const startDatabase = require('../setup/database')
 
 const mockFakeLead = () => {
   const fakeLead = {
@@ -127,7 +127,7 @@ describe('LEAD CONTROLLER: tests', () => {
       const res = mockResponse()
       const fakeLead = mockFakeLead()
       fakeLead.name = 'updateLeadName'
-      fakeLead.statusId = 1
+      fakeLead.statusId = 3
       const req = mockRequest(fakeLead)
       await createLead(req, res)
       expect(res.status).toHaveBeenCalledWith(200)

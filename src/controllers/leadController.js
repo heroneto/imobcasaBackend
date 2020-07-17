@@ -46,7 +46,9 @@ module.exports = {
           phone: req.body.phone
         }
       })
-      await lead.update({...req.body, statusId: 1})
+      if(!created){
+        await lead.update({...req.body})
+      }      
       return res.status(200).send({lead, created})
     }catch(err){
       console.log(err)

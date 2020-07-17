@@ -1,7 +1,7 @@
 const { userAuthentication, checkAuthentication } = require('./authController')
 const { invalidParamError, missingParamError } = require('../Errors/')
 const User = require('../models/').User
-const startDatabase = require('../../setup/database')
+const startDatabase = require('../setup/database')
 
 const mockFakeUser = () => {
   const fakeUser = {
