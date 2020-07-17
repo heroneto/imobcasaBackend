@@ -6,7 +6,8 @@
   "scripts": {
     "start": "set NODE_ENV=production && node dist/app.js",
     "test": "jest --watch --runInBand --detectOpenHandles --forceExit",
-    "dev": "nodemon src/app.ts"
+    "dev": "nodemon src/app.ts",
+    "build": "sucrase ./src -d ./dist --transforms typescript,imports && find ./src -name '*.js' | xargs -0 cp {} ./dist"
   },
   "keywords": [],
   "author": "",

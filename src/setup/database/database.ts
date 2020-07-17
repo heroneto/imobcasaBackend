@@ -1,5 +1,5 @@
 import {Sequelize}  from 'sequelize'
-import config from '../../config/database'
+import config from '../../config/database.config'
 import models from '../../models'
 import path from 'path'
 import * as dotenv from 'dotenv'
