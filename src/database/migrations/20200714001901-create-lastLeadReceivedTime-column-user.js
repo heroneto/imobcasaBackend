@@ -1,7 +1,5 @@
 'use strict';
 
-const { query } = require("express");
-
 module.exports = {
   up: (queryInterface, Sequelize) => {
    return queryInterface.sequelize.transaction((t) => {
