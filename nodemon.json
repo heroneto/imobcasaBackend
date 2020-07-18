@@ -1,7 +1,7 @@
 {
-  "watch": ["src_new"],
-  "ext": "ts, js",
+  "watch": ["src"],
+  "ext": "js",
   "execMap": {
-    "ts": "node src/app.js"
+    "js": "node src/app.js"
   }
 }
