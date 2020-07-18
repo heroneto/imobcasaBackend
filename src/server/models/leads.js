@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE'
     }),
-    Leads.hasOne(models.Status, {
+    Leads.hasOne(models.leadstatuses, {
       foreignKey: {
         name: 'id',
         type: DataTypes.INTEGER
