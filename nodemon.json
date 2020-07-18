@@ -1,7 +1,7 @@
 {
-  "watch": ["src"],
+  "watch": ["src_new"],
   "ext": "ts, js",
   "execMap": {
-    "ts": "set NODE_ENV=development && sucrase-node src/app.ts"
+    "ts": "node src/app.js"
   }
 }
