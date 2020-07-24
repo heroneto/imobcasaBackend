@@ -144,6 +144,36 @@ describe("Task Type Tests", () => {
         const res = mockResponse()
         await updateTaskType(req, res)
         expect(res.status).toHaveBeenCalledWith(400)
+      }),
+      test("Should return 400 if no name has been send", async () => {
+        const taskType = mockTaskType()
+        delete taskType.name  
+        const req = mockRequest(taskType, {id})
+        const res = mockResponse()
+        await updateTaskType(req,res)
+        expect(res.status).toHaveBeenCalledWith(400)
+        const { error } = missingParamError('name')
+        expect(res.send).toHaveBeenCalledWith(error)
+      }),
+      test("Should return 400 if no description has been send", async () => {
+        const taskType = mockTaskType()
+        delete taskType.description  
+        const req = mockRequest(taskType, {id})
+        const res = mockResponse()
+        await updateTaskType(req,res)
+        expect(res.status).toHaveBeenCalledWith(400)
+        const { error } = missingParamError('description')
+        expect(res.send).toHaveBeenCalledWith(error)
+      })
+      test("Should return 400 if no active has been send", async () => {
+        const taskType = mockTaskType()
+        delete taskType.active  
+        const req = mockRequest(taskType, {id})
+        const res = mockResponse()
+        await updateTaskType(req,res)
+        expect(res.status).toHaveBeenCalledWith(400)
+        const { error } = missingParamError('active')
+        expect(res.send).toHaveBeenCalledWith(error)
       })
     })
 })
