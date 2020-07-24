@@ -215,6 +215,13 @@ describe("Task Type Tests", () => {
         const res = mockResponse()
         await deleteTaskType(req, res)
         expect(res.status).toHaveBeenCalledWith(400)
+      }),
+      test("Should return 200 task has been deleted", async () => {
+        const req = mockRequest({}, {id})
+        const res = mockResponse()
+        await deleteTaskType(req, res)
+        expect(res.status).toHaveBeenCalledWith(200)
+        expect(res.send).toHaveBeenCalledWith({numDeleted: 1})
       })
     })
 })
