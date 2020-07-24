@@ -36,6 +36,16 @@ describe("Task Type Tests", () => {
           expect(res.status).toHaveBeenCalledWith(400)
           const { error } = missingParamError('name')
           expect(res.send).toHaveBeenCalledWith(error)
+        }),
+        test("Should return 400 if no description has been send", async () => {
+          const taskType = mockTaskType()
+          delete taskType.description  
+          const req = mockRequest(taskType)
+          const res = mockResponse()
+          await createTask(req,res)
+          expect(res.status).toHaveBeenCalledWith(400)
+          const { error } = missingParamError('description')
+          expect(res.send).toHaveBeenCalledWith(error)
         })
     })
 })
