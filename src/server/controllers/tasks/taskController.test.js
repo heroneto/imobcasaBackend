@@ -1,5 +1,5 @@
 const { createTask } = require('./taskController')
-const { missingParamError } = require('../config').errors
+const { missingParamError, invalidParamError } = require('../config').errors
 const Tasks = require('../../models').tasks
 const LeadStatus = require('../../models').leadstatuses
 const User = require('../../models').User
@@ -36,7 +36,7 @@ return request
 }
 
 describe("Task controller tests", () => {
-
+  const ids = {}
   beforeAll(async () => {
     try{
       const leadstatus = await LeadStatus.create({
@@ -45,18 +45,21 @@ describe("Task controller tests", () => {
         createdAt: new Date(),
         updatedAt: new Date()
       })
+      ids.leadstatusid = leadstatus.id
       const tasktype = await Tasktype.create({
         name: "valid task type",
         description: "valid task type description",
         createdAt: new Date(),
         updatedAt: new Date()
       })
+      ids.tasktypeid = tasktype.id
       const taskstatus = await TaskStatus.create({
         name: "valid task status",
         description: "valid task status description",
         createdAt: new Date(),
         updatedAt: new Date()
       })
+      ids.taskstatusid = taskstatus.id
       const user = await User.create({
         fullName: "valid user",
         username: "valid useraname",
@@ -66,7 +69,7 @@ describe("Task controller tests", () => {
         createdAt: new Date(),
         updatedAt: new Date()
       })
-
+      ids.userid = user.id
       const lead = await Leads.create({
         name: "valid Lead",
         phone: "valid phone number",
@@ -76,7 +79,7 @@ describe("Task controller tests", () => {
         updatedAt: new Date(),
         statusid: leadstatus.id
       })
-
+      ids.leadid = lead.id
     }catch(err){
       console.log(err)
     }
@@ -153,6 +156,14 @@ describe("Task controller tests", () => {
       const { error } = missingParamError('title')
       expect(res.send).toHaveBeenCalledWith(error)
     })
-    
+    test("Should return 400 if invalid tasktypeid has been send", async () => {
+      const taskMock = mockTask(ids.userid, ids.leadid, ids.taskstatusid, 'invalidtasktypeid')
+      const req = mockRequest(taskMock)
+      const res = mockResponse()
+      await createTask(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      const { error } = invalidParamError('tasktypeid')
+      expect(res.send).toHaveBeenCalledWith(error)
+    })
   })
 })
