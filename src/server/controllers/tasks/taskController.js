@@ -1,7 +1,5 @@
-const { invalidParamError } = require('../config/Errors')
-
-const { invalidRequest } = require('../config/').protocols
-const {  missingParamError } = require('../config/').errors
+const { invalidRequest, internalError } = require('../config/').protocols
+const {  missingParamError, invalidParamError} = require('../config/').errors
 const Tasks = require('../../models').tasks
 const LeadStatus = require('../../models').leadstatuses
 const User = require('../../models').User
@@ -23,20 +21,17 @@ module.exports = {
           }
       }
       const {userid, leadid, statusid, tasktypeid, title} = req.body
-      const tasktype = await Tasktype.findOne({where:{id: tasktypeid}})
-      if(!tasktype){
-        const {error} = invalidParamError('tasktypeid')
-        const { statusCode, body } = invalidRequest(error)
-        return res.status(statusCode).send(body)
-      }
-      const status = await TaskStatus.findOne({where:{id: statusid}})
-      if(!status){
-        const {error} = invalidParamError('statusid')
-        const { statusCode, body } = invalidRequest(error)
-        return res.status(statusCode).send(body)
-      }
+      const task = await Tasks.create({userid, leadid, statusid, tasktypeid, title})
+      console.log(task)
       return res.status(200).send('ok')
     }catch(err){
+      if(err.name === 'SequelizeForeignKeyConstraintError'){ 
+        const fields = err.fields
+        const {error} = invalidParamError(fields)
+        console.log(error)
+        const { statusCode, body } = invalidRequest(error)
+        return res.status(statusCode).send(body)
+      }
       const { statusCode, body } = internalError(err)
       return res.status(statusCode).send(body)
     }
