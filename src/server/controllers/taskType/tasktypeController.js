@@ -54,11 +54,31 @@ module.exports = {
               return res.status(statusCode).send(body)
             }
         }
-        return res.status(200).send('ok')
+        const {name, description, active } = req.body
+        const tasktype = await tasktypeModel.findOne({where:{id:id}})
+        tasktype.name = name
+        tasktype.description = description
+        tasktype.active = active
+        tasktype.updatedAt = new Date()
+        await tasktype.save()
+        return res.status(200).send(tasktype)
       }catch(err){
         console.log(err)
         const { statusCode, body } = internalError(err)
         return res.status(statusCode).send(body)
+      }
+    },
+    deleteTaskType: async (req,res) => {
+      try{
+        const { id } = req.query
+        if(!id){
+          const {error} = missingParamError('id')
+          const {statusCode, body} = invalidRequest(error)
+          return res.status(statusCode).send(body)
+        }
+        return res.status(200).send('ok')
+      }catch(err){
+
       }
     }
 }
