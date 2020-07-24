@@ -6,7 +6,6 @@ module.exports = {
       return Promise.all([
         queryInterface.addColumn('tasks', 'tasktypeid', {
          type: Sequelize.INTEGER,
-         allowNull: false,
          references: {
            model: 'tasktypes',
            key: 'id'
