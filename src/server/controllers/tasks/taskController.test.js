@@ -110,6 +110,9 @@ describe("Task controller tests", () => {
       const res = mockResponse()
       await createTask(req, res)
       expect(res.status).toHaveBeenCalledWith(400)
+      const { error } = missingParamError('userid')
+      expect(res.send).toHaveBeenCalledWith(error)
     })
+    
   })
 })
