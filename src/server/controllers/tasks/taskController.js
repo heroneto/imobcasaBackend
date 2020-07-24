@@ -29,6 +29,12 @@ module.exports = {
         const { statusCode, body } = invalidRequest(error)
         return res.status(statusCode).send(body)
       }
+      const status = await TaskStatus.findOne({where:{id: statusid}})
+      if(!status){
+        const {error} = invalidParamError('statusid')
+        const { statusCode, body } = invalidRequest(error)
+        return res.status(statusCode).send(body)
+      }
       return res.status(200).send('ok')
     }catch(err){
       const { statusCode, body } = internalError(err)
