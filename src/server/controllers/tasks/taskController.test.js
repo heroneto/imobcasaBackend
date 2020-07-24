@@ -53,13 +53,13 @@ describe("Task controller tests", () => {
         updatedAt: new Date()
       })
       ids.tasktypeid = tasktype.id
-      const taskstatus = await TaskStatus.create({
+      const status = await TaskStatus.create({
         name: "valid task status",
         description: "valid task status description",
         createdAt: new Date(),
         updatedAt: new Date()
       })
-      ids.taskstatusid = taskstatus.id
+      ids.statusid = status.id
       const user = await User.create({
         fullName: "valid user",
         username: "valid useraname",
@@ -157,7 +157,7 @@ describe("Task controller tests", () => {
       expect(res.send).toHaveBeenCalledWith(error)
     })
     test("Should return 400 if invalid tasktypeid has been send", async () => {
-      const taskMock = mockTask(ids.userid, ids.leadid, ids.taskstatusid, 'invalidtasktypeid')
+      const taskMock = mockTask(ids.userid, ids.leadid, ids.statusid, 'invalidtasktypeid')
       const req = mockRequest(taskMock)
       const res = mockResponse()
       await createTask(req, res)
@@ -165,5 +165,15 @@ describe("Task controller tests", () => {
       const { error } = invalidParamError('tasktypeid')
       expect(res.send).toHaveBeenCalledWith(error)
     })
+    test("Should return 400 if invalid statusid has been send", async () => {
+      const taskMock = mockTask(ids.userid, ids.leadid, "invalidstatusid", ids.tasktypeid)
+      const req = mockRequest(taskMock)
+      const res = mockResponse()
+      await createTask(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      const { error } = invalidParamError('statusid')
+      expect(res.send).toHaveBeenCalledWith(error)
+    })
+
   })
 })
