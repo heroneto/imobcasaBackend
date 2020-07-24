@@ -25,6 +25,7 @@ async function database(){
     
     await migrator.up()
     await seeder.up()
+    
         
     if(env === 'development'){
         const User = models.User
