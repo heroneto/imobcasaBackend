@@ -263,5 +263,13 @@ describe("Task controller tests", () => {
         expect(res.send).toHaveBeenCalledWith(error)
       })
     }
+    test('Should return 200 if task has been updated', async() => {
+      const taskMock = mockTask(ids.userid, ids.leadid, ids.statusid, ids.tasktypeid)
+      const req = mockRequest(taskMock, {id: taskid})
+      const res = mockResponse()
+      await updateTask(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.send).toHaveBeenCalledWith(expect.objectContaining(taskResponseModel()))
+    })
   })
 })
