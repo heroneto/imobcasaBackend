@@ -309,5 +309,12 @@ describe("Task controller tests", () => {
       const {error} = invalidParamError('id')
       expect(res.send).toHaveBeenLastCalledWith(error)
     })
+    test("Should return 200 if valid task id has been send", async () => {
+      const req = mockRequest({}, {id: taskid})
+      const res = mockResponse()
+      await deleteTask(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.send).toHaveBeenLastCalledWith(expect.objectContaining(taskResponseModel()))
+    })
   })
 })
