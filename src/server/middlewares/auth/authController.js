@@ -1,6 +1,6 @@
 const {forbiden, invalidRequest, unauthorized, internalError} = require('../../controllers/config').protocols
 const {invalidParamError, missingParamError, serverError} = require('../../controllers/config').errors
-const User = require('../../models').User
+const User = require('../../models').users
 const path = require('path')
 require('dotenv').config({path: path.resolve(process.cwd(), '.env')})
 const jwt = require('jsonwebtoken')

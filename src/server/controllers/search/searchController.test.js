@@ -1,6 +1,6 @@
 const { searchUser } = require('./searchController')
 const { noResultsError, missingParamError } = require('../config').errors
-const User = require('../../models/').User
+const User = require('../../models/').users
 const databaseSetup = require('../../../database')
 
 const mockFakeUser = () => {

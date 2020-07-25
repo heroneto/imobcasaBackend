@@ -1,6 +1,6 @@
 const {forbiden, invalidRequest, unauthorized, internalError, successfulRequest} = require('../config').protocols
 const {invalidParamError, missingParamError, serverError, noResultsError} = require('../config').errors
-const User = require('../../models').User
+const User = require('../../models').users
 
 module.exports = {
   searchUser: async (req,res)=>{

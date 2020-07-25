@@ -35,7 +35,7 @@ beforeAll(async () => {
   }
 })
 
-describe('USER CONTROLLER: tests', async () =>{
+describe('USER CONTROLLER: tests', () =>{
   it('POST: Should return 400 if no Username has beem send', async() =>{
     const user = mockFakeUser()
     delete user.username
