@@ -4,15 +4,15 @@ const jwt = require('jsonwebtoken')
 const path = require('path')
 require('dotenv').config({path: path.resolve(__dirname, '../../.env')})
 
+
 module.exports = (sequelize, DataTypes) => {
-  const user = sequelize.define('users', {
+  const User = sequelize.define('User', {
     fullName: DataTypes.STRING,
     username: DataTypes.STRING,
     email: DataTypes.STRING,
     password: DataTypes.STRING,
     admin: DataTypes.BOOLEAN,
-    lastLeadReceivedTime: DataTypes.STRING,
-    active: DataTypes.BOOLEAN
+    lastLeadReceivedTime: DataTypes.DATE
   }, {
     freezeTableName: true,
     hooks: {
@@ -21,18 +21,21 @@ module.exports = (sequelize, DataTypes) => {
           user.password = bcrypt.hashSync(user.password, salt)
         }
       },
-  });
-  user.prototype.validPassword = async function(password) {
+  })
+  User.prototype.validPassword = async function(password) {
     return await bcrypt.compareSync(password, this.password)
   }
-  user.prototype.generateToken = async function(id, username) {
+  User.prototype.generateToken = async function(id, username) {
     const token = jwt.sign({ id, username }, process.env.JWT_SECRET, {
       expiresIn: process.env.NODE_ENV === 'production' ? '1d' : '1m',
     });
     return token
   }
-  user.associate = function(models) {
+  User.associate = function(models) {
     // associations can be defined here
+    User.hasMany(models.Leads, {
+      foreignKey: 'userid'
+    })
   };
-  return user;
+  return User;
 };

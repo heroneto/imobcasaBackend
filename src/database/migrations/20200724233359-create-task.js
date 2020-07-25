@@ -17,28 +17,36 @@ module.exports = {
       userid: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'User',
+          model: 'users',
           key: 'id'
         },
-        allowNull: false
       },
       leadid: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'Leads',
+          model: 'leads',
           key: 'id'
         },
-        allowNull: false
       },
       statusid: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        references: {
+          model: 'taskstatuses',
+          key: 'id'
+        },
       },
       startdate: {
         type: Sequelize.DATE
       },
       resolutiondate: {
         type: Sequelize.DATE
+      },
+      tasktypeid: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'tasktypes',
+          key: 'id'
+        },
       },
       createdAt: {
         allowNull: false,

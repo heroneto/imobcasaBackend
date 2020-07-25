@@ -4,7 +4,6 @@ module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.sequelize.transaction((t) => {
       return Promise.all([
-        queryInterface.bulkDelete('tasks', null, {}),
         queryInterface.bulkInsert('tasks', [
           {
             title: 'Demo task title',

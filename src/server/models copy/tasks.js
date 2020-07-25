@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
     resolutiondate: DataTypes.DATE
   }, {});
   tasks.associate = function(models) {
-    tasks.hasOne(models.leadstatuses, {
+    tasks.hasOne(models.taskstatus, {
       foreignKey: {
         name: 'id',
         type: DataTypes.INTEGER
