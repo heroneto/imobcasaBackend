@@ -1,6 +1,6 @@
 const {getLead, createLead, updateLead, deleteLead} = require('./leadController')
 const { invalidParamError, missingParamError, missingBodyContent } = require('../config/').errors
-const {Leads} = require('../../models')
+const Leads = require('../../models').lead
 const databaseSetup = require('../../../database')
 
 const mockFakeLead = () => {
