@@ -66,6 +66,14 @@ module.exports = {
         const {statusCode, body} = invalidRequest(error)
         return res.status(statusCode).send(body)
       }
+      const requiredFields = ['userid', 'leadid', 'statusid', 'tasktypeid', 'title']
+      for(const field of requiredFields){
+          if(!req.body[`${field}`]){
+            const {error} = missingParamError(field)
+            const {statusCode, body} = invalidRequest(error)
+            return res.status(statusCode).send(body)
+          }
+      }
       return res.status(200).send('ok')
     }catch(err){
       console.log(err)
