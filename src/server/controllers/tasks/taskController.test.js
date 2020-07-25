@@ -196,5 +196,19 @@ describe("Task controller tests", () => {
       const { error } = invalidParamError(['userid'])
       expect(res.send).toHaveBeenCalledWith(error)
     })
+    test("Should return 200 if task has been created", async () => {
+      const taskMock = mockTask(ids.userid, ids.leadid, ids.statusid, ids.tasktypeid)
+      const req = mockRequest(taskMock)
+      const res = mockResponse()
+      await createTask(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.send).toHaveBeenCalledWith(expect.objectContaining({
+            updatedAt: expect.any(Date),
+            createdAt: expect.any(Date),
+            id: expect.any(Number),
+            ...taskMock
+          })
+        )
+    })
   })
 })
