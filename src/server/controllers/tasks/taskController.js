@@ -80,9 +80,23 @@ module.exports = {
         const {statusCode, body} = invalidRequest(error)
         return res.status(statusCode).send(body)
       }
-      return res.status(200).send('ok')
+      task.title = req.body.title
+      task.description = req.body.description
+      task.userid = req.body.userid
+      task.leadid = req.body.leadid
+      task.statusid = req.body.statusid
+      task.tasktypeid = req.body.tasktypeid
+      task.startdate = req.body.startdate
+      task.resolutiondate = req.body.resolutiondate
+      await task.save()
+      return res.status(200).send(task)
     }catch(err){
-      console.log(err)
+      if(err.name === 'SequelizeForeignKeyConstraintError'){ 
+        const fields = err.fields
+        const {error} = invalidParamError(fields)
+        const { statusCode, body } = invalidRequest(error)
+        return res.status(statusCode).send(body)
+      }
       const { statusCode, body } = internalError(err)
       return res.status(statusCode).send(body)
     }
