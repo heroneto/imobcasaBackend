@@ -175,7 +175,16 @@ describe("Task controller tests", () => {
       expect(res.status).toHaveBeenCalledWith(400)
       const { error } = invalidParamError(['statusid'])
       expect(res.send).toHaveBeenCalledWith(error)
+    })
+    test("Should return 400 if invalid leadid has been send", async () => {
+      const invalidRamdonId  = Math.round(Math.random()*200)*Math.round(Math.random()*200)
+      const taskMock = mockTask(ids.userid, invalidRamdonId, ids.statusid, ids.tasktypeid)
+      const req = mockRequest(taskMock)
+      const res = mockResponse()
+      await createTask(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      const { error } = invalidParamError(['leadid'])
+      expect(res.send).toHaveBeenCalledWith(error)
     })  
-
   })
 })
