@@ -115,7 +115,8 @@ module.exports = {
         const {statusCode, body} = invalidRequest(error)
         return res.status(statusCode).send(body)
       }
-      return res.status(200).send('ok')
+      const taskDestroyed = await task.destroy({where: {id: id}})
+      return res.status(200).send(taskDestroyed)
     }catch(err){
       const { statusCode, body } = internalError(err)
       return res.status(statusCode).send(body)
