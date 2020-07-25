@@ -221,12 +221,7 @@ describe("Task controller tests", () => {
       const res = mockResponse()
       await createTask(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
-      expect(res.send).toHaveBeenCalledWith(expect.objectContaining({
-            updatedAt: expect.any(Date),
-            createdAt: expect.any(Date),
-            id: expect.any(Number),
-            ...taskMock
-          })
+      expect(res.send).toHaveBeenCalledWith(expect.objectContaining(taskResponseModel())
         )
     })
   })
