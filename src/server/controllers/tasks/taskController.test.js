@@ -299,6 +299,15 @@ describe("Task controller tests", () => {
       expect(res.status).toHaveBeenCalledWith(400)
       const {error} = missingParamError('id')
       expect(res.send).toHaveBeenLastCalledWith(error)
+    }),
+    test("Should return 400 if invalid task id has been send", async () => {
+      const invalidRamdonId  = generateInvalidId()
+      const req = mockRequest({}, {id: invalidRamdonId})
+      const res = mockResponse()
+      await deleteTask(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      const {error} = invalidParamError('id')
+      expect(res.send).toHaveBeenLastCalledWith(error)
     })
   })
 })
