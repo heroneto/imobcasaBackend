@@ -28,7 +28,7 @@ async function database(){
     
         
     if(env === 'development'){
-        const User = models.User
+        const User = models.users
         await User.findOrCreate({
           where: {username: devUser.username},
           defaults: devUser
