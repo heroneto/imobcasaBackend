@@ -1,6 +1,6 @@
 const {forbiden, invalidRequest, unauthorized, internalError} = require('../config').protocols
 const {invalidParamError, missingParamError, serverError} = require('../config').errors
-const User = require('../../models').User
+const User = require('../../models').users
 const { Op } = require("sequelize");
 
 
