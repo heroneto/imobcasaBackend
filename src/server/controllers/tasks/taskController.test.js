@@ -240,5 +240,28 @@ describe("Task controller tests", () => {
         expect(res.send).toHaveBeenCalledWith(error)
       })
     }
+    test(`Should return 400 if invalid id has been send`, async () => {
+      const invalidRamdonId  = generateInvalidId()
+      const taskMock = mockTask("userid", "leadid", "statusid", "tasktypeid")
+      const req = mockRequest(taskMock, {id: invalidRamdonId})
+      const res = mockResponse()
+      await updateTask(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      const { error } = invalidParamError(['id'])
+      expect(res.send).toHaveBeenCalledWith(error)
+    })
+    // for(const field of fieldsWithValidation){
+    //   test(`Should return 400 if invalid ${field} has been send`, async () => {
+    //     const invalidRamdonId  = generateInvalidId()
+    //     const taskMock = mockTask(ids.userid, ids.leadid, ids.statusid, ids.tasktypeid)
+    //     taskMock[`${field}`] = invalidRamdonId
+    //     const req = mockRequest(taskMock, {id: taskid})
+    //     const res = mockResponse()
+    //     await updateTask(req, res)
+    //     expect(res.status).toHaveBeenCalledWith(400)
+    //     const { error } = invalidParamError([`${field}`])
+    //     expect(res.send).toHaveBeenCalledWith(error)
+    //   })
+    // }
   })
 })
