@@ -1,6 +1,6 @@
 const {forbiden, invalidRequest, unauthorized, internalError} = require('../config').protocols
 const {invalidParamError, missingParamError, serverError, missingBodyContent} = require('../config').errors
-const {Leads} = require('../../models')
+const Leads = require('../../models').lead
 
 module.exports = {
   getLead: async (req,res) => {

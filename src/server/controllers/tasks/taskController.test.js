@@ -105,7 +105,6 @@ describe("Task controller tests", () => {
         console.log(err)
       }
     })
-
     test("Should return 400 if no userid has been send", async () => {
       const taskMock = mockTask("userid", "leadid", "statusid", "tasktypeid")
       delete taskMock.userid
