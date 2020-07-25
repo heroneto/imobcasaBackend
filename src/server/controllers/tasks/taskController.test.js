@@ -35,6 +35,10 @@ request.query = query || {}
 return request
 }
 
+const generateInvalidId = () => {
+  return Math.round(Math.random()*200)*Math.round(Math.random()*200)
+}
+
 describe("Task controller tests", () => {
   const ids = {}
   beforeAll(async () => {
@@ -156,7 +160,7 @@ describe("Task controller tests", () => {
       expect(res.send).toHaveBeenCalledWith(error)
     })
     test("Should return 400 if invalid tasktypeid has been send", async () => {
-      const invalidRamdonId  = Math.round(Math.random()*200)*Math.round(Math.random()*200)
+      const invalidRamdonId  = generateInvalidId()
       const taskMock = mockTask(ids.userid, ids.leadid, ids.statusid, invalidRamdonId)
       const req = mockRequest(taskMock)
       const res = mockResponse()
@@ -166,7 +170,7 @@ describe("Task controller tests", () => {
       expect(res.send).toHaveBeenCalledWith(error)
     })
     test("Should return 400 if invalid statusid has been send", async () => {
-      const invalidRamdonId  = Math.round(Math.random()*200)*Math.round(Math.random()*200)
+      const invalidRamdonId  = generateInvalidId()
       const taskMock = mockTask(ids.userid, ids.leadid, invalidRamdonId, ids.tasktypeid)
       const req = mockRequest(taskMock)
       const res = mockResponse()
@@ -176,7 +180,7 @@ describe("Task controller tests", () => {
       expect(res.send).toHaveBeenCalledWith(error)
     })
     test("Should return 400 if invalid leadid has been send", async () => {
-      const invalidRamdonId  = Math.round(Math.random()*200)*Math.round(Math.random()*200)
+      const invalidRamdonId  = generateInvalidId()
       const taskMock = mockTask(ids.userid, invalidRamdonId, ids.statusid, ids.tasktypeid)
       const req = mockRequest(taskMock)
       const res = mockResponse()
@@ -186,7 +190,7 @@ describe("Task controller tests", () => {
       expect(res.send).toHaveBeenCalledWith(error)
     })
     test("Should return 400 if invalid userid has been send", async () => {
-      const invalidRamdonId  = Math.round(Math.random()*200)*Math.round(Math.random()*200)
+      const invalidRamdonId  = generateInvalidId()
       const taskMock = mockTask(invalidRamdonId, ids.leadid, ids.statusid, ids.tasktypeid)
       const req = mockRequest(taskMock)
       const res = mockResponse()
@@ -235,6 +239,15 @@ describe("Task controller tests", () => {
       await getTask(req, res)
       expect(res.status).toHaveBeenCalledWith(400)
       const {error} = missingParamError('id')
+      expect(res.send).toHaveBeenLastCalledWith(error)
+    })
+    test("Should return 400 if invalid task id has been send", async () => {
+      const invalidRamdonId  = generateInvalidId()
+      const req = mockRequest({}, {id: invalidRamdonId})
+      const res = mockResponse()
+      await getTask(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      const {error} = invalidParamError('id')
       expect(res.send).toHaveBeenLastCalledWith(error)
     })
   })
