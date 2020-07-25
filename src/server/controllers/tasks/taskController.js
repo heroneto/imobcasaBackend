@@ -51,7 +51,7 @@ module.exports = {
         const {statusCode, body} = invalidRequest(error)
         return res.status(statusCode).send(body)
       }
-      return res.status(200).send('ok')
+      return res.status(200).send(task)
     }catch(err){
       console.log(err)
       const { statusCode, body } = internalError(err)
