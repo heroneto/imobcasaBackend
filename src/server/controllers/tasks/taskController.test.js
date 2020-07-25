@@ -39,6 +39,22 @@ const generateInvalidId = () => {
   return Math.round(Math.random()*200)*Math.round(Math.random()*200)
 }
 
+const taskResponseModel = () => {
+  return {
+    id: expect.any(Number),
+    title: expect.any(String),
+    description: expect.any(String),
+    createdAt: expect.any(Date),
+    updatedAt: expect.any(Date),
+    leadid: expect.any(Number),
+    userid: expect.any(Number),
+    startdate: expect.any(Date),
+    resolutiondate: expect.any(Date),
+    tasktypeid: expect.any(Number),
+    statusid: expect.any(Number)
+  }
+}
+
 describe("Task controller tests", () => {
   const ids = {}
   beforeAll(async () => {
@@ -249,6 +265,13 @@ describe("Task controller tests", () => {
       expect(res.status).toHaveBeenCalledWith(400)
       const {error} = invalidParamError('id')
       expect(res.send).toHaveBeenLastCalledWith(error)
+    })
+    test("Should return 200 if valid task id has been send", async () => {
+      const req = mockRequest({}, {id: taskid})
+      const res = mockResponse()
+      await getTask(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.send).toHaveBeenLastCalledWith(expect.objectContaining(taskResponseModel()))
     })
   })
 })
