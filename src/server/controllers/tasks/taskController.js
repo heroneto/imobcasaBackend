@@ -20,12 +20,11 @@ module.exports = {
             return res.status(statusCode).send(body)
           }
       }
-      const {userid, leadid, statusid, tasktypeid, title} = req.body
-      const task = await Tasks.create({userid, leadid, statusid, tasktypeid, title})
+      const task = await Tasks.create(req.body)
       if(!task){
         throw new Error("error")
       }
-      return res.status(200).send('ok')
+      return res.status(200).send(task)
     }catch(err){
       if(err.name === 'SequelizeForeignKeyConstraintError'){ 
         const fields = err.fields
