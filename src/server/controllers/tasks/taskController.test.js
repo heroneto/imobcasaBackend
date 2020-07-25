@@ -1,9 +1,9 @@
 const { createTask } = require('./taskController')
 const { missingParamError, invalidParamError } = require('../config').errors
-const Tasks = require('../../models').tasks
-const LeadStatus = require('../../models').leadstatuses
-const User = require('../../models').User
-const Leads = require('../../models').Leads
+const Tasks = require('../../models').task
+const LeadStatus = require('../../models').leadstatus
+const User = require('../../models').users
+const Leads = require('../../models').lead
 const Tasktype = require('../../models').tasktype
 const TaskStatus = require('../../models').taskstatus
 
@@ -157,7 +157,8 @@ describe("Task controller tests", () => {
       expect(res.send).toHaveBeenCalledWith(error)
     })
     test("Should return 400 if invalid tasktypeid has been send", async () => {
-      const taskMock = mockTask(ids.userid, ids.leadid, ids.statusid, 1)
+      const invalidRamdonId  = Math.round(Math.random()*200)*Math.round(Math.random()*200)
+      const taskMock = mockTask(ids.userid, ids.leadid, ids.statusid, invalidRamdonId)
       const req = mockRequest(taskMock)
       const res = mockResponse()
       await createTask(req, res)
@@ -165,25 +166,16 @@ describe("Task controller tests", () => {
       const { error } = invalidParamError(['tasktypeid'])
       expect(res.send).toHaveBeenCalledWith(error)
     })
-    // test("Should return 400 if invalid statusid has been send", async () => {
-    //   const taskMock = mockTask(ids.userid, ids.leadid, "invalidstatusid", ids.tasktypeid)
-    //   const req = mockRequest(taskMock)
-    //   const res = mockResponse()
-    //   await createTask(req, res)
-    //   expect(res.status).toHaveBeenCalledWith(400)
-    //   const { error } = invalidParamError('statusid')
-    //   expect(res.send).toHaveBeenCalledWith(error)
-    // })
-    // test("Should return 400 if invalid leadid has been send", async () => {
-    //   const taskMock = mockTask(ids.userid, "invalidleadid", ids.statusid, ids.tasktypeid)
-    //   const req = mockRequest(taskMock)
-    //   const res = mockResponse()
-    //   await createTask(req, res)
-    //   expect(res.status).toHaveBeenCalledWith(400)
-    //   const { error } = invalidParamError('leadid')
-    //   expect(res.send).toHaveBeenCalledWith(error)
-    // })
-    
+    test("Should return 400 if invalid statusid has been send", async () => {
+      const invalidRamdonId  = Math.round(Math.random()*200)*Math.round(Math.random()*200)
+      const taskMock = mockTask(ids.userid, ids.leadid, invalidRamdonId, ids.tasktypeid)
+      const req = mockRequest(taskMock)
+      const res = mockResponse()
+      await createTask(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      const { error } = invalidParamError(['statusid'])
+      expect(res.send).toHaveBeenCalledWith(error)
+    })  
 
   })
 })
