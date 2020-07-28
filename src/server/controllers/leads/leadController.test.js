@@ -1,4 +1,4 @@
-const {getLead, createLead, updateLead, deleteLead} = require('./leadController')
+const {getLead, createLead, updateLead, deleteLead, getAllLeads} = require('./leadController')
 const { invalidParamError, missingParamError, missingBodyContent } = require('../config/').errors
 const Leads = require('../../models').lead
 const databaseSetup = require('../../../database')
@@ -47,7 +47,7 @@ describe('LEAD CONTROLLER: tests', () => {
       console.log(err)
     }
   })
-  describe('GET LEAD', () => {
+  describe('GET Leads', () => {
     it('GET: Should return 400 if no id has been send', async () => {
       const res = mockResponse()
       const req = mockRequest({}, {})
@@ -76,7 +76,7 @@ describe('LEAD CONTROLLER: tests', () => {
       }))
     })
   })
-  describe('POST LEAD', () => {
+  describe('POST Leads', () => {
     const requiredFields = ['name', 'phone', 'source']
     for(const field of requiredFields){
       it(`Should return 400 if no ${field} has been send`, async () => {
@@ -101,7 +101,7 @@ describe('LEAD CONTROLLER: tests', () => {
       expect(res.send).toHaveBeenCalledWith(expect.objectContaining({created: false, lead: expect.any(Object)}))
     })
   })
-  describe('PUT LEAD', () => {
+  describe('PUT Leads', () => {
     it('PUT: Should return 400 if no body has been send', async () => {
       const res = mockResponse()
       const req = mockRequest()
@@ -142,7 +142,7 @@ describe('LEAD CONTROLLER: tests', () => {
       expect(res.send).toBeCalledWith(expect.objectContaining(fakeLead))
     })
   })
-  describe('DELETE LEAD', () => {
+  describe('DELETE Leads', () => {
     it('Should return 400 if no ID has been send', async () => {
       const req = mockRequest('', '')
       const res = mockResponse()
@@ -164,6 +164,15 @@ describe('LEAD CONTROLLER: tests', () => {
       const res = mockResponse()
       await deleteLead(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
+    })
+  })
+  describe('GETALL Leads', () => {
+    test('Should return 200 with all leads', async () => {
+      const req = mockRequest({}, {})
+      const res = mockResponse()
+      await getAllLeads(req,res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.send).toHaveBeenCalledWith(expect.objectContaining({leads: expect.any(Array)}))
     })
   })
 })
