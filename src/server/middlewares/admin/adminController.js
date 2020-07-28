@@ -26,13 +26,12 @@ module.exports = {
       }
       const userDecoded = await getUserFromToken(jwt)
       const user = await User.findOne({where: {id: userDecoded.id}})
-      console.log(user.admin)
       if(!user.admin){
         const {error} = invalidParamError('jwt')
         const {statusCode, body} = forbiden(error)
         return res.status(statusCode).send(body)
       }
-      return res.status(200).send('ok')
+      return res.status(200).send(true)
     }catch(err){
       console.log(err)
     }
