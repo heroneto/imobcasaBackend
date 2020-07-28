@@ -28,26 +28,26 @@ const mockRequest = (body, query) => {
 }
 
 describe('LEAD CONTROLLER: tests', () => {
+  let leadId = ''
+  beforeAll(async ()=>{
+    try{
+      await databaseSetup()
+      const fakeLead = mockFakeLead()
+      const Lead = await Leads.create(fakeLead)
+      leadId = Lead.id
+    }catch(err){
+      console.log(err.toString())
+    }
+  }),
+  afterAll(async () => {
+    try{
+      const fakeLead = mockFakeLead()
+      await Leads.destroy({where: {}})
+    }catch(err){
+      console.log(err)
+    }
+  })
   describe('GET LEAD', () => {
-    let leadId = ''
-    beforeAll(async ()=>{
-      try{
-        await databaseSetup()
-        const fakeLead = mockFakeLead()
-        const Lead = await Leads.create(fakeLead)
-        leadId = Lead.id
-      }catch(err){
-        console.log(err.toString())
-      }
-    }),
-    afterAll(async () => {
-      try{
-        const fakeLead = mockFakeLead()
-        await Leads.destroy({where: {}})
-      }catch(err){
-        console.log(err)
-      }
-    })
     it('GET: Should return 400 if no id has been send', async () => {
       const res = mockResponse()
       const req = mockRequest({}, {})
@@ -77,22 +77,6 @@ describe('LEAD CONTROLLER: tests', () => {
     })
   })
   describe('POST LEAD', () => {
-    let phone = ''
-    let leadId = ''
-    beforeAll(async ()=>{
-      const fakeLead = mockFakeLead()
-      const Lead = await Leads.create(fakeLead)
-      leadId = Lead.id
-      phone = Lead.phone
-    })
-    afterAll(async () => {
-      try{
-        const fakeLead = mockFakeLead()
-        await Leads.destroy({where: {phone: fakeLead.phone}})
-      }catch(err){
-        console.log(err)
-      }
-    })
     const requiredFields = ['name', 'phone', 'source']
     for(const field of requiredFields){
       it(`Should return 400 if no ${field} has been send`, async () => {
@@ -118,20 +102,6 @@ describe('LEAD CONTROLLER: tests', () => {
     })
   })
   describe('PUT LEAD', () => {
-    let leadId = ''
-    beforeAll(async ()=>{
-      const fakeLead = mockFakeLead()
-      const Lead = await Leads.create(fakeLead)
-      leadId = Lead.id
-    })
-    afterAll(async () => {
-      try{
-        const fakeLead = mockFakeLead()
-        await Leads.destroy({where: {phone: fakeLead.phone}})
-      }catch(err){
-        console.log(err)
-      }
-    })
     it('PUT: Should return 400 if no body has been send', async () => {
       const res = mockResponse()
       const req = mockRequest()
@@ -173,20 +143,6 @@ describe('LEAD CONTROLLER: tests', () => {
     })
   })
   describe('DELETE LEAD', () => {
-    let leadId = ''
-    beforeAll(async ()=>{
-      const fakeLead = mockFakeLead()
-      const Lead = await Leads.create(fakeLead)
-      leadId = Lead.id
-    })
-    afterAll(async () => {
-      try{
-        const fakeLead = mockFakeLead()
-        await Leads.destroy({where: {phone: fakeLead.phone}})
-      }catch(err){
-        console.log(err)
-      }
-    })
     it('Should return 400 if no ID has been send', async () => {
       const req = mockRequest('', '')
       const res = mockResponse()
