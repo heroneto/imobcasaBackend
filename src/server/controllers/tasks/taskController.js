@@ -148,5 +148,15 @@ module.exports = {
       const { statusCode, body } = internalError(err)
       return res.status(statusCode).send(body)
     }
+  },
+  getAllTasks: async (req,res) => {
+    try{
+      const tasks = await Tasks.findAll()
+      return res.status(200).send({tasks: tasks})
+    }catch(err){
+      console.log(err)
+      const { statusCode, body } = internalError(err)
+      return res.status(statusCode).send(body)
+    }
   }
 }
