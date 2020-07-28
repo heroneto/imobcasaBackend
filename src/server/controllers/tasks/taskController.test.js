@@ -402,7 +402,7 @@ describe("Task controller tests", () => {
       expect(res.send).toHaveBeenLastCalledWith(error)
     })
 
-    test("should return 300 if invalid userid has been send", async () => {
+    test("should return 400 if invalid userid has been send", async () => {
       const req = mockRequest({}, {userid: "invaliduserid"})
       const res = mockResponse()
       await getAllTasks(req, res)
@@ -411,6 +411,24 @@ describe("Task controller tests", () => {
       expect(res.send).toHaveBeenLastCalledWith(error)
     })
 
+    
+    test("Should return 403 if no user has no admin privileges", async () => {
+      const user = await User.create({
+        fullName: "no privileges valid user",
+        username: " no privileges valid useraname",
+        email: " no privileges validEmail",
+        password: "123456",
+        admin: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      })
+      const req = mockRequest({}, {userid: user.id})
+      const res = mockResponse()
+      await getAllTasks(req, res)
+      expect(res.status).toHaveBeenCalledWith(403)
+      const {error} = invalidParamError('userid')
+      expect(res.send).toHaveBeenLastCalledWith(error)
+    })
     test("Should return 200 with all tasks in array", async () => {
       const req = mockRequest({}, {userid: ids.userid})
       const res = mockResponse()
