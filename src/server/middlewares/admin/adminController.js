@@ -3,6 +3,7 @@ const { invalidRequest, forbiden } = require('../../controllers/config').protoco
 const User = require('../../models').users
 const jwt = require('jsonwebtoken')
 const path = require('path')
+const { nextTick } = require('process')
 require('dotenv').config({path: path.resolve(process.cwd(), '.env')})
 
 async function getUserFromToken(token){
@@ -16,7 +17,7 @@ async function getUserFromToken(token){
 
 
 module.exports = {
-  checkAdminPrivileges: async (req, res) => {
+  checkAdminPrivileges: async (req, res, next) => {
     try{
       const {jwt} = req.signedCookies
       if(!jwt){
@@ -31,7 +32,7 @@ module.exports = {
         const {statusCode, body} = forbiden(error)
         return res.status(statusCode).send(body)
       }
-      return res.status(200).send(true)
+      next()
     }catch(err){
       console.log(err)
     }
