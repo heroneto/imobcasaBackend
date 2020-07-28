@@ -1,4 +1,4 @@
-const { createTask, getTask, updateTask, deleteTask } = require('./taskController')
+const { createTask, getTask, updateTask, deleteTask, searchTasks } = require('./taskController')
 const { missingParamError, invalidParamError } = require('../config').errors
 const Tasks = require('../../models').task
 const LeadStatus = require('../../models').leadstatus
@@ -157,7 +157,7 @@ describe("Task controller tests", () => {
     }
   })
 
-  describe("GET task", () => {
+  describe("SEARCH task", () => {
     let taskid = ""
     beforeAll(async () => {
       try{
@@ -316,5 +316,35 @@ describe("Task controller tests", () => {
       expect(res.status).toHaveBeenCalledWith(200)
       expect(res.send).toHaveBeenLastCalledWith(expect.objectContaining(taskResponseModel()))
     })
+  })
+
+  describe("SEACH Task", () => {
+    let taskid = ""
+    beforeAll(async () => {
+      try{
+        const taskMock = mockTask(ids.userid, ids.leadid, ids.statusid, ids.tasktypeid)
+        const task = await Tasks.create(taskMock)
+        taskid = task.id
+      }catch(err){
+        console.log(err)
+      }
+    })
+    afterAll(async () => {
+      try{
+        await Tasks.destroy({where: {}})
+      }catch(err){
+        console.log(err)
+      }
+    })
+
+    test("Should return 400 if no user id and lead id has been send", async () => {
+      const req = mockRequest({}, {})
+      const res = mockResponse()
+      await searchTasks(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      const {error} = missingParamError('userid and leadid')
+      expect(res.send).toHaveBeenLastCalledWith(error)
+    })
+
   })
 })
