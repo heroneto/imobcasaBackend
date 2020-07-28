@@ -71,7 +71,7 @@ module.exports = {
         httpOnly: true,
         signed: true
       })
-      return res.send({token:token})
+      return res.send({token:token, admin: user.admin, active: user.active})
     }catch(err){
       console.log(err)
       const {error:serverErrorMsg} = serverError()
