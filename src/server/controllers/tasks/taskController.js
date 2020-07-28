@@ -157,6 +157,12 @@ module.exports = {
         const {statusCode, body} = invalidRequest(error)
         return res.status(statusCode).send(body)
       }
+      if(userid == undefined || typeof(userid) !== "number"){
+        const {error} = invalidParamError('userid')
+        const {statusCode, body} = invalidRequest(error)
+        return res.status(statusCode).send(body)
+      }
+      
       const tasks = await Tasks.findAll()
       return res.status(200).send({tasks: tasks})
     }catch(err){
