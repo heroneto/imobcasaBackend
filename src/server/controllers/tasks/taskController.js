@@ -130,18 +130,18 @@ module.exports = {
         const {statusCode, body} = invalidRequest(error)
         return res.status(statusCode).send(body)
       }
-      if(userid !== undefined){
+      if(userid !== undefined && typeof(userid) == "number"){
         const tasks =  await Tasks.findAll({where: { userid }})
         return res.status(200).send({tasks: tasks})
       }
-      if(leadid !== undefined){
+      if(leadid !== undefined && typeof(leadid) == "number"){
         const tasks = await Tasks.findAll({where: { leadid }})
         return res.status(200).send({tasks: tasks})
       }
 
-      // const {error} = invalidParamError('userid or leadid')
-      // const {statusCode, body} = invalidRequest(error)
-      // return res.status(statusCode).send(body)
+      const {error} = invalidParamError('userid or leadid')
+      const {statusCode, body} = invalidRequest(error)
+      return res.status(statusCode).send(body)
       
     }catch(err){
       console.log(err)
