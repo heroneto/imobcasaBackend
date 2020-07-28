@@ -130,9 +130,20 @@ module.exports = {
         const {statusCode, body} = invalidRequest(error)
         return res.status(statusCode).send(body)
       }
-      return res.status(200).send('ok')
+      const tasks =  userid ? await Tasks.findAll({where: { userid }}) :
+        leadid ? await Tasks.findAll({where: { userid }}) : 
+        null
+      // console.log(tasks)
+      // if(!tasks){
+      //   const {error} = invalidParamError('userid and leadid')
+      //   const {statusCode, body} = invalidRequest(error)
+      //   return res.status(statusCode).send(body)
+      // }
+      return res.status(200).send({tasks: tasks})
     }catch(err){
-
+      console.log(err)
+      const { statusCode, body } = internalError(err)
+      return res.status(statusCode).send(body)
     }
   }
 }
