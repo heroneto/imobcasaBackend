@@ -27,6 +27,19 @@ const mockRequest = (body) => {
   return request
 }
 
+const getUserModelExpected = () => {
+  return {
+    createdAt: expect.any(Date),
+    email: expect.any(String),
+    fullName: expect.any(String),
+    id: expect.any(Number),
+    admin: expect.any(Boolean),
+    password: expect.any(String),
+    updatedAt: expect.any(Date),
+    username: expect.any(String),
+  }
+}
+
 beforeAll(async () => {
   try{
     await databaseSetup()
@@ -55,7 +68,57 @@ describe('USER CONTROLLER: tests', () =>{
       const req = mockRequest(user)
       await createUser(req,res)
       expect(res.status).toHaveBeenCalledWith(200)
-      expect(res.json).toHaveBeenCalledWith({user:expect.objectContaining({
+      expect(res.json).toHaveBeenCalledWith({user:expect.objectContaining(getUserModelExpected())})
+    })
+  })
+  
+  describe('GET User tests', () => {
+    it('GET: Should return 200', async () =>{
+      const res = mockResponse()
+      const req = mockRequest()
+      await getAllUsers(req,res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.json).toHaveBeenCalledWith(expect.arrayContaining([expect.objectContaining({
+        createdAt: expect.any(Date),
+        email: expect.any(String),
+        fullName: expect.any(String),
+        id: expect.any(Number),
+        admin: expect.any(Boolean),
+        password: expect.any(String),
+        updatedAt: expect.any(Date),
+        username: expect.any(String),
+      })]))
+    })
+  })
+
+  describe('PUT User tests', () => {
+    it('PUT: Should return 400 if no id and username has beem send', async()=>{
+      const user = mockFakeUser()
+      delete user.username
+      const res = mockResponse()
+      const req = mockRequest(user)
+      await updateUser(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.send).toBeCalledWith('MissingParamError: id and username')
+    })
+    it('PUT: Should return 400 if invalid id and username has beem send', async()=>{
+      const user = mockFakeUser()
+      user.id = 'invalidId'
+      user.username = 'invalidUsername'
+      const res = mockResponse()
+      const req = mockRequest(user)
+      await updateUser(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.send).toBeCalledWith('InvalidParamError: id or username')
+    })
+    it('PUT: Should return 200 username has beem updated', async()=>{
+      const user = mockFakeUser()
+      user.id = 1
+      const res = mockResponse()
+      const req = mockRequest(user)
+      await updateUser(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.send).toBeCalledWith({user: expect.objectContaining({
         createdAt: expect.any(Date),
         email: expect.any(String),
         fullName: expect.any(String),
@@ -67,96 +130,47 @@ describe('USER CONTROLLER: tests', () =>{
       })})
     })
   })
-  
-  it('GET: Should return 200', async () =>{
-    const res = mockResponse()
-    const req = mockRequest()
-    await getAllUsers(req,res)
-    expect(res.status).toHaveBeenCalledWith(200)
-    expect(res.json).toHaveBeenCalledWith(expect.arrayContaining([expect.objectContaining({
-      createdAt: expect.any(Date),
-      email: expect.any(String),
-      fullName: expect.any(String),
-      id: expect.any(Number),
-      admin: expect.any(Boolean),
-      password: expect.any(String),
-      updatedAt: expect.any(Date),
-      username: expect.any(String),
-    })]))
+
+  describe('Delete user tests', () => {
+    it('DELETE: Should return 400 if no id and username has beem send', async()=>{
+      const user = mockFakeUser()
+      delete user.id
+      delete user.username
+      const res = mockResponse()
+      const req = mockRequest(user)
+      await deleteUser(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.send).toBeCalledWith('MissingParamError: id and username')
+    })
+    it('DELETE: Should return 400 if invalid id and username has beem send', async()=>{
+      const user = mockFakeUser()
+      user.id = 'invalidId'
+      user.username = 'invalidUsername'
+      const res = mockResponse()
+      const req = mockRequest(user)
+      await deleteUser(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.send).toBeCalledWith('InvalidParamError: id or username')
+    })
+    it('DELETE: Should return 200 username has beem deleted', async()=>{
+      const user = mockFakeUser()
+      user.id = 1
+      const res = mockResponse()
+      const req = mockRequest(user)
+      await deleteUser(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.send).toBeCalledWith({user: expect.objectContaining({
+        createdAt: expect.any(Date),
+        email: expect.any(String),
+        fullName: expect.any(String),
+        id: expect.any(Number),
+        admin: expect.any(Boolean),
+        password: expect.any(String),
+        updatedAt: expect.any(Date),
+        username: expect.any(String),
+      })})
+    })
   })
-  it('PUT: Should return 400 if no id and username has beem send', async()=>{
-    const user = mockFakeUser()
-    delete user.username
-    const res = mockResponse()
-    const req = mockRequest(user)
-    await updateUser(req, res)
-    expect(res.status).toHaveBeenCalledWith(400)
-    expect(res.send).toBeCalledWith('MissingParamError: id and username')
-  })
-  it('PUT: Should return 400 if invalid id and username has beem send', async()=>{
-    const user = mockFakeUser()
-    user.id = 'invalidId'
-    user.username = 'invalidUsername'
-    const res = mockResponse()
-    const req = mockRequest(user)
-    await updateUser(req, res)
-    expect(res.status).toHaveBeenCalledWith(400)
-    expect(res.send).toBeCalledWith('InvalidParamError: id or username')
-  })
-  it('PUT: Should return 200 username has beem updated', async()=>{
-    const user = mockFakeUser()
-    user.id = 1
-    const res = mockResponse()
-    const req = mockRequest(user)
-    await updateUser(req, res)
-    expect(res.status).toHaveBeenCalledWith(200)
-    expect(res.send).toBeCalledWith({user: expect.objectContaining({
-      createdAt: expect.any(Date),
-      email: expect.any(String),
-      fullName: expect.any(String),
-      id: expect.any(Number),
-      admin: expect.any(Boolean),
-      password: expect.any(String),
-      updatedAt: expect.any(Date),
-      username: expect.any(String),
-    })})
-  })
-  it('DELETE: Should return 400 if no id and username has beem send', async()=>{
-    const user = mockFakeUser()
-    delete user.id
-    delete user.username
-    const res = mockResponse()
-    const req = mockRequest(user)
-    await deleteUser(req, res)
-    expect(res.status).toHaveBeenCalledWith(400)
-    expect(res.send).toBeCalledWith('MissingParamError: id and username')
-  })
-  it('DELETE: Should return 400 if invalid id and username has beem send', async()=>{
-    const user = mockFakeUser()
-    user.id = 'invalidId'
-    user.username = 'invalidUsername'
-    const res = mockResponse()
-    const req = mockRequest(user)
-    await deleteUser(req, res)
-    expect(res.status).toHaveBeenCalledWith(400)
-    expect(res.send).toBeCalledWith('InvalidParamError: id or username')
-  })
-  it('DELETE: Should return 200 username has beem deleted', async()=>{
-    const user = mockFakeUser()
-    user.id = 1
-    const res = mockResponse()
-    const req = mockRequest(user)
-    await deleteUser(req, res)
-    expect(res.status).toHaveBeenCalledWith(200)
-    expect(res.send).toBeCalledWith({user: expect.objectContaining({
-      createdAt: expect.any(Date),
-      email: expect.any(String),
-      fullName: expect.any(String),
-      id: expect.any(Number),
-      admin: expect.any(Boolean),
-      password: expect.any(String),
-      updatedAt: expect.any(Date),
-      username: expect.any(String),
-    })})
-  })
+
+
 })
