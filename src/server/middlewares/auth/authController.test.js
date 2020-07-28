@@ -10,7 +10,9 @@ const mockFakeUser = () => {
     email: "valid@email.com",
     password: "validPassword",
     passwordConfirmation: "validPassword",
-    manager: true
+    admin: true,
+    active: true,
+    lastLeadReceivedTime: new Date().getTime()
   }
   return fakeUser
 }
@@ -96,32 +98,19 @@ describe('AUTH CONTROLLER: tests', () => {
         expect(res.send).toBeCalledWith(error)
       })
     }
-    // it('Should return 401 if invalid username has been send', async () => {
-    //   const {password} = mockFakeUser()
-    //   const req = mockRequest({username:'invalidUsername',password })
-    //   const res = mockResponse()
-    //   await userAuthentication(req, res)
-    //   const { error } = invalidParamError('username')
-    //   expect(res.status).toHaveBeenCalledWith(401)
-    //   expect(res.send).toBeCalledWith(error)
-    // }),
-    // it('Should return 401 if invalid password has been send', async () => {
-    //   const {username} = mockFakeUser()
-    //   const req = mockRequest({username, password: 'invalidPassword' })
-    //   const res = mockResponse()
-    //   await userAuthentication(req, res)
-    //   const { error } = invalidParamError('password')
-    //   expect(res.status).toHaveBeenCalledWith(401)
-    //   expect(res.send).toBeCalledWith(error)
-    // }),
     it('Should return 200 if valid password and username has been send', async () => {
       const {username, password} = mockFakeUser()
       const req = mockRequest({username, password})
       const res = mockResponse()
       await userAuthentication(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
-      expect(res.send).toHaveBeenCalledWith({token: expect.any(String)})
-    })
+      expect(res.send).toHaveBeenCalledWith({
+        token: expect.any(String), 
+        admin: expect.any(Boolean), 
+        active: expect.any(Boolean)
+      })
+    }
+    )
   }),
 
   describe('CHECKAUTHENTICATION', () => {
