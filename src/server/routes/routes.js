@@ -2,6 +2,7 @@ var express = require('express')
 var router = express.Router()
 const {createUser, getAllUsers, updateUser, deleteUser} = require('../controllers').user
 const {searchUser} = require('../controllers').search
+const { createTask, getTask, updateTask, deleteTask } = require('../controllers').tasks
 const {checkAuthentication, userAuthentication} = require('../middlewares').auth
 
 router.get('/', (req,res) =>{
@@ -28,9 +29,13 @@ router.route('/user')
 
 router.route('/lead')
   .all(checkAuthentication)
-  .get()
-  .post()
-  .put()
-  .delete()
+
+
+router.route('/task')
+  .all(checkAuthentication)
+  .get(getTask)
+  .post(createTask)
+  .put(updateTask)
+  .delete(deleteTask)
 
 module.exports = router
