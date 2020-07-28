@@ -165,16 +165,7 @@ describe('USER CONTROLLER: tests', () =>{
       const req = mockRequest(user)
       await deleteUser(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
-      expect(res.send).toBeCalledWith({user: expect.objectContaining({
-        createdAt: expect.any(Date),
-        email: expect.any(String),
-        fullName: expect.any(String),
-        id: expect.any(Number),
-        admin: expect.any(Boolean),
-        password: expect.any(String),
-        updatedAt: expect.any(Date),
-        username: expect.any(String),
-      })})
+      expect(res.send).toBeCalledWith({user: expect.objectContaining(getUserModelExpected())})
     })
   })
 
