@@ -151,6 +151,12 @@ module.exports = {
   },
   getAllTasks: async (req,res) => {
     try{
+      const {userid} = req.query
+      if(!userid){
+        const {error} = missingParamError('userid')
+        const {statusCode, body} = invalidRequest(error)
+        return res.status(statusCode).send(body)
+      }
       const tasks = await Tasks.findAll()
       return res.status(200).send({tasks: tasks})
     }catch(err){
