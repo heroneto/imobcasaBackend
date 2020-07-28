@@ -1,15 +1,40 @@
 const {getLead, createLead, updateLead, deleteLead, getAllLeads} = require('./leadController')
 const { invalidParamError, missingParamError, missingBodyContent } = require('../config/').errors
+const User = require('../../models').users
 const Leads = require('../../models').lead
+const LeadStatus = require('../../models').leadstatus
 const databaseSetup = require('../../../database')
 
-const mockFakeLead = () => {
+const mockFakeLead = (userid, statusid) => {
   const fakeLead = {
     name: "validLead",
     phone: "999123491234",
     source: "validSource",
+    userid,
+    statusid
   }
   return fakeLead
+}
+
+const mockFakeUser = () => {
+  const fakeUser = {
+    username: "validUser",
+    fullName: "ValidFullName",
+    email: "valid@email.com",
+    password: "validPassword",
+    passwordConfirmation: "validPassword",
+    admin: true,
+    active: true,
+    lastLeadReceivedTime: "123456"
+  }
+  return fakeUser
+}
+
+const mockLeadStatus = () => {
+  return {
+    name: 'To do',
+    description: 'Represents an item that is in the queue for execution'
+  }
 }
 
 const mockResponse = () => {
@@ -27,12 +52,27 @@ const mockRequest = (body, query) => {
   return request
 }
 
+
+const getLeadModelExpected = () => {
+  return {
+    name: expect.any(String),
+    phone: expect.any(String),
+    source: expect.any(String),
+    userid: expect.any(Number),
+    statusid: expect.any(Number)
+  }
+}
+
 describe('LEAD CONTROLLER: tests', () => {
   let leadId = ''
   beforeAll(async ()=>{
     try{
       await databaseSetup()
-      const fakeLead = mockFakeLead()
+      const fakeUser = mockFakeUser()
+      const user = await User.create(fakeUser)
+      const fakeLeadStatus = mockLeadStatus()
+      const leadStatus = await LeadStatus.create(fakeLeadStatus)
+      const fakeLead = mockFakeLead(user.id, leadStatus.id)
       const Lead = await Leads.create(fakeLead)
       leadId = Lead.id
     }catch(err){
@@ -41,7 +81,6 @@ describe('LEAD CONTROLLER: tests', () => {
   }),
   afterAll(async () => {
     try{
-      const fakeLead = mockFakeLead()
       await Leads.destroy({where: {}})
     }catch(err){
       console.log(err)
@@ -139,7 +178,7 @@ describe('LEAD CONTROLLER: tests', () => {
       const req = mockRequest(fakeLead, '')
       await updateLead(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
-      expect(res.send).toBeCalledWith(expect.objectContaining(fakeLead))
+      expect(res.send).toBeCalledWith(expect.objectContaining(getLeadModelExpected()))
     })
   })
   describe('DELETE Leads', () => {
@@ -175,4 +214,7 @@ describe('LEAD CONTROLLER: tests', () => {
       expect(res.send).toHaveBeenCalledWith(expect.objectContaining({leads: expect.any(Array)}))
     })
   })
+  // describe('SEARCH leads', () => {
+  //   test()
+  // })
 })
