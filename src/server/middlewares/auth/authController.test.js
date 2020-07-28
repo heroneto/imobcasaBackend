@@ -84,24 +84,36 @@ describe('AUTH CONTROLLER: tests', () => {
         expect(res.send).toBeCalledWith(error)
       })  
     }
-    it('Should return 401 if invalid username has been send', async () => {
-      const {password} = mockFakeUser()
-      const req = mockRequest({username:'invalidUsername',password })
-      const res = mockResponse()
-      await userAuthentication(req, res)
-      const { error } = invalidParamError('username')
-      expect(res.status).toHaveBeenCalledWith(401)
-      expect(res.send).toBeCalledWith(error)
-    }),
-    it('Should return 401 if invalid password has been send', async () => {
-      const {username} = mockFakeUser()
-      const req = mockRequest({username, password: 'invalidPassword' })
-      const res = mockResponse()
-      await userAuthentication(req, res)
-      const { error } = invalidParamError('password')
-      expect(res.status).toHaveBeenCalledWith(401)
-      expect(res.send).toBeCalledWith(error)
-    }),
+    for(const field of requiredFields){
+      it(`Should return 401 if ${field} username has been send`, async () => {
+        const fakeUser = mockFakeUser()
+        fakeUser[`${field}`] = 'invalidParameter'
+        const req = mockRequest(fakeUser)
+        const res = mockResponse()
+        await userAuthentication(req, res)
+        const { error } = invalidParamError(field)
+        expect(res.status).toHaveBeenCalledWith(401)
+        expect(res.send).toBeCalledWith(error)
+      })
+    }
+    // it('Should return 401 if invalid username has been send', async () => {
+    //   const {password} = mockFakeUser()
+    //   const req = mockRequest({username:'invalidUsername',password })
+    //   const res = mockResponse()
+    //   await userAuthentication(req, res)
+    //   const { error } = invalidParamError('username')
+    //   expect(res.status).toHaveBeenCalledWith(401)
+    //   expect(res.send).toBeCalledWith(error)
+    // }),
+    // it('Should return 401 if invalid password has been send', async () => {
+    //   const {username} = mockFakeUser()
+    //   const req = mockRequest({username, password: 'invalidPassword' })
+    //   const res = mockResponse()
+    //   await userAuthentication(req, res)
+    //   const { error } = invalidParamError('password')
+    //   expect(res.status).toHaveBeenCalledWith(401)
+    //   expect(res.send).toBeCalledWith(error)
+    // }),
     it('Should return 200 if valid password and username has been send', async () => {
       const {username, password} = mockFakeUser()
       const req = mockRequest({username, password})
