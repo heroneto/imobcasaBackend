@@ -121,6 +121,19 @@ module.exports = {
       const { statusCode, body } = internalError(err)
       return res.status(statusCode).send(body)
     }
+  },
+  searchTasks: async (req,res) => {
+    try{
+      const {userid, leadid} = req.query
+      if(!userid && !leadid){
+        const {error} = missingParamError('userid and leadid')
+        const {statusCode, body} = invalidRequest(error)
+        return res.status(statusCode).send(body)
+      }
+      return res.status(200).send('ok')
+    }catch(err){
+
+    }
   }
 }
 
