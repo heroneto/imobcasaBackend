@@ -81,6 +81,16 @@ describe("AdminController tests", () => {
       const {error} = invalidParamError('jwt')
       expect(res.send).toHaveBeenCalledWith(error)
     })
+    test('Should return 200 and true in body if user has admin privileges', async () => {
+      const token = {
+        jwt: user.tokenAdmin
+      }
+      const req = mockRequest({}, {}, token)
+      const res = mockResponse()
+      await checkAdminPrivileges(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.send).toHaveBeenCalledWith(true)
+    })
   })
 
 })
