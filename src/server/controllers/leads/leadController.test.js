@@ -43,7 +43,7 @@ describe('LEAD CONTROLLER: tests', () => {
     afterAll(async () => {
       try{
         const fakeLead = mockFakeLead()
-        await Leads.destroy({where: {phone: fakeLead.phone}})
+        await Leads.destroy({where: {}})
       }catch(err){
         console.log(err)
       }
@@ -64,7 +64,7 @@ describe('LEAD CONTROLLER: tests', () => {
       const { error } = invalidParamError('id')
       expect(res.send).toBeCalledWith(error)
     })
-    it('GET: Should return 200 if user has been found', async () => {
+    it('GET: Should return 200 if lead has been found', async () => {
       const res = mockResponse()
       const req = mockRequest({}, {id:leadId})
       await getLead(req, res)
@@ -93,37 +93,20 @@ describe('LEAD CONTROLLER: tests', () => {
         console.log(err)
       }
     })
-    it('POST: Should return 400 if no name has been send', async () => {
-      const res = mockResponse()
-      const fakeLead = mockFakeLead()
-      delete fakeLead.name
-      const req = mockRequest(fakeLead)
-      await createLead(req, res)
-      expect(res.status).toHaveBeenCalledWith(400)
-      const {error} = missingParamError('name')
-      expect(res.send).toHaveBeenCalledWith(error)
-    }),
-    it('POST: Should return 400 if no phone has been send', async () => {
-      const res = mockResponse()
-      const fakeLead = mockFakeLead()
-      delete fakeLead.phone
-      const req = mockRequest(fakeLead)
-      await createLead(req, res)
-      expect(res.status).toHaveBeenCalledWith(400)
-      const {error} = missingParamError('phone')
-      expect(res.send).toHaveBeenCalledWith(error)
-    }),
-    it('POST: Should return 400 if no source has been send', async () => {
-      const res = mockResponse()
-      const fakeLead = mockFakeLead()
-      delete fakeLead.source
-      const req = mockRequest(fakeLead)
-      await createLead(req, res)
-      expect(res.status).toHaveBeenCalledWith(400)
-      const {error} = missingParamError('source')
-      expect(res.send).toHaveBeenCalledWith(error)
-    })
-    it('POST: Should return 200 if existing lead has been updated', async () => {
+    const requiredFields = ['name', 'phone', 'source']
+    for(const field of requiredFields){
+      it(`Should return 400 if no ${field} has been send`, async () => {
+        const res = mockResponse()
+        const fakeLead = mockFakeLead()
+        delete fakeLead[`${field}`]
+        const req = mockRequest(fakeLead)
+        await createLead(req, res)
+        expect(res.status).toHaveBeenCalledWith(400)
+        const {error} = missingParamError(field)
+        expect(res.send).toHaveBeenCalledWith(error)
+      })
+    }
+    it('Should return 200 if existing lead has been updated', async () => {
       const res = mockResponse()
       const fakeLead = mockFakeLead()
       fakeLead.name = 'updateLeadName'
