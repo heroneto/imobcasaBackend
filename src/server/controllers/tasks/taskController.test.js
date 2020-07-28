@@ -1,4 +1,4 @@
-const { createTask, getTask, updateTask, deleteTask, searchTasks } = require('./taskController')
+const { createTask, getTask, updateTask, deleteTask, searchTasks, getAllTasks } = require('./taskController')
 const { missingParamError, invalidParamError } = require('../config').errors
 const Tasks = require('../../models').task
 const LeadStatus = require('../../models').leadstatus
@@ -372,5 +372,33 @@ describe("Task controller tests", () => {
     })
     
 
+  })
+
+  describe("GETALL Tasks", () => {
+    let taskid = ""
+    beforeAll(async () => {
+      try{
+        const taskMock = mockTask(ids.userid, ids.leadid, ids.statusid, ids.tasktypeid)
+        const task = await Tasks.create(taskMock)
+        taskid = task.id
+      }catch(err){
+        console.log(err)
+      }
+    })
+    afterAll(async () => {
+      try{
+        await Tasks.destroy({where: {}})
+      }catch(err){
+        console.log(err)
+      }
+    })
+
+    test("Should return 200 with all tasks in array", async () => {
+      const req = mockRequest({}, {})
+      const res = mockResponse()
+      await getAllTasks(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.send).toHaveBeenLastCalledWith(expect.objectContaining({tasks: expect.any(Array)}))
+    })
   })
 })
