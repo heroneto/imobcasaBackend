@@ -1,4 +1,4 @@
-const { invalidRequest, internalError } = require('../config/').protocols
+const { invalidRequest, internalError, forbiden } = require('../config/').protocols
 const {  missingParamError, invalidParamError} = require('../config/').errors
 const Tasks = require('../../models').task
 const LeadStatus = require('../../models').leadstatus
@@ -162,7 +162,12 @@ module.exports = {
         const {statusCode, body} = invalidRequest(error)
         return res.status(statusCode).send(body)
       }
-      
+      const user = await User.findOne({where: {id: userid}})
+      if(!user.admin){
+        const {error} = invalidParamError('userid')
+        const {statusCode, body} = forbiden(error)
+        return res.status(statusCode).send(body)
+      }
       const tasks = await Tasks.findAll()
       return res.status(200).send({tasks: tasks})
     }catch(err){
