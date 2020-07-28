@@ -20,12 +20,10 @@ const mockRequest = (body, query, signedCookies) => {
   return request
 }
 
-// const mockJwtToken = async (username) => {
-//   const user = await User.findOne({where: {username: username}})  
-//   const token = await user.generateToken(user.id, user.username)
-//   return token
-// }
-
+const mockNext = () => {
+  const next = jest.fn()
+  return next
+}
 
 const mockFakeUser = (admin) => {
   return {
@@ -81,15 +79,16 @@ describe("AdminController tests", () => {
       const {error} = invalidParamError('jwt')
       expect(res.send).toHaveBeenCalledWith(error)
     })
-    test('Should return 200 and true in body if user has admin privileges', async () => {
+    test('Should call next function if user has admin privileges', async () => {
       const token = {
         jwt: user.tokenAdmin
       }
       const req = mockRequest({}, {}, token)
       const res = mockResponse()
-      await checkAdminPrivileges(req, res)
-      expect(res.status).toHaveBeenCalledWith(200)
-      expect(res.send).toHaveBeenCalledWith(true)
+      const next = mockNext()
+      await checkAdminPrivileges(req, res, next)
+      expect(res.status).not.toHaveBeenCalledWith(403)
+      expect(next).toHaveBeenCalled()
     })
   })
 
