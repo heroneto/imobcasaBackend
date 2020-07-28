@@ -393,8 +393,17 @@ describe("Task controller tests", () => {
       }
     })
 
-    test("Should return 200 with all tasks in array", async () => {
+    test("Should return 400 if no userid has been send", async () => {
       const req = mockRequest({}, {})
+      const res = mockResponse()
+      await getAllTasks(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      const {error} = missingParamError('userid')
+      expect(res.send).toHaveBeenLastCalledWith(error)
+    })
+
+    test("Should return 200 with all tasks in array", async () => {
+      const req = mockRequest({}, {userid: ids.userid})
       const res = mockResponse()
       await getAllTasks(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
