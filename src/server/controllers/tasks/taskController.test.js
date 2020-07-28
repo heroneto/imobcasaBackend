@@ -353,6 +353,14 @@ describe("Task controller tests", () => {
       expect(res.status).toHaveBeenCalledWith(200)
       expect(res.send).toHaveBeenLastCalledWith(expect.objectContaining({tasks: expect.any(Array)}))
     })
+
+    test("Should return 200 with array of results if leadid has been send", async() => {
+      const req = mockRequest({}, {leadid: ids.leadid})
+      const res = mockResponse()
+      await searchTasks(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.send).toHaveBeenLastCalledWith(expect.objectContaining({tasks: expect.any(Array)}))
+    })
     
 
   })
