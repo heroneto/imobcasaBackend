@@ -130,16 +130,19 @@ module.exports = {
         const {statusCode, body} = invalidRequest(error)
         return res.status(statusCode).send(body)
       }
-      const tasks =  userid ? await Tasks.findAll({where: { userid }}) :
-        leadid ? await Tasks.findAll({where: { userid }}) : 
-        null
-      // console.log(tasks)
-      // if(!tasks){
-      //   const {error} = invalidParamError('userid and leadid')
-      //   const {statusCode, body} = invalidRequest(error)
-      //   return res.status(statusCode).send(body)
-      // }
-      return res.status(200).send({tasks: tasks})
+      if(userid !== undefined){
+        const tasks =  await Tasks.findAll({where: { userid }})
+        return res.status(200).send({tasks: tasks})
+      }
+      if(leadid !== undefined){
+        const tasks = await Tasks.findAll({where: { leadid }})
+        return res.status(200).send({tasks: tasks})
+      }
+
+      // const {error} = invalidParamError('userid or leadid')
+      // const {statusCode, body} = invalidRequest(error)
+      // return res.status(statusCode).send(body)
+      
     }catch(err){
       console.log(err)
       const { statusCode, body } = internalError(err)
@@ -147,5 +150,3 @@ module.exports = {
     }
   }
 }
-
-
