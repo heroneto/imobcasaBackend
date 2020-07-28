@@ -402,6 +402,15 @@ describe("Task controller tests", () => {
       expect(res.send).toHaveBeenLastCalledWith(error)
     })
 
+    test("should return 300 if invalid userid has been send", async () => {
+      const req = mockRequest({}, {userid: "invaliduserid"})
+      const res = mockResponse()
+      await getAllTasks(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      const {error} = invalidParamError('userid')
+      expect(res.send).toHaveBeenLastCalledWith(error)
+    })
+
     test("Should return 200 with all tasks in array", async () => {
       const req = mockRequest({}, {userid: ids.userid})
       const res = mockResponse()
