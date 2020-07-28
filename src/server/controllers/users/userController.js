@@ -59,7 +59,7 @@ module.exports = {
       user.email = email
       user.admin = admin
       await user.save()
-      return res.status(200).send({user})
+      return res.status(200).send(user)
     }catch(err){
       console.log(err)
       const {error} = serverError()
