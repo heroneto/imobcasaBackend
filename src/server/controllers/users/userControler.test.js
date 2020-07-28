@@ -8,7 +8,9 @@ const mockFakeUser = () => {
     email: "valid@email.com",
     password: "validPassword",
     passwordConfirmation: "validPassword",
-    admin: true
+    admin: true,
+    active: true,
+    lastLeadReceivedTime: new Date().getTime()
   }
   return fakeUser
 }
@@ -49,6 +51,14 @@ beforeAll(async () => {
 })
 
 describe('USER CONTROLLER: tests', () =>{
+  beforeAll(() => {
+    try{
+
+    }catch(err){
+      console.log(err)
+    }
+  })
+
   describe('POST User tests', () => {
     const requiredFields = ['fullName', 'username', 'email', 'password', 'admin']
     for(const field of requiredFields){
