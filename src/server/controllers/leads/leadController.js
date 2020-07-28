@@ -103,5 +103,16 @@ module.exports = {
       const {statusCode, body} = internalError(error)
       return res.status(statusCode).send(body)
     }
+  },
+  getAllLeads: async (req,res) => {
+    try{
+      const leads = await Leads.findAll()
+      res.status(200).send({leads: leads})
+    }catch(err){
+      console.log(err)
+      const {error} = serverError()
+      const {statusCode, body} = internalError(error)
+      return res.status(statusCode).send(body)
+    }
   }
 }
