@@ -49,8 +49,6 @@ const mockJwtToken = async (username) => {
   return token
 }
 
-
-
 beforeAll(async () => {
   try{
     databaseSetup()
@@ -64,9 +62,7 @@ beforeAll(async () => {
 afterAll(async () => {
   try{
     const fakeUser = mockFakeUser()
-    await User.destroy({where: {
-      username: fakeUser.username
-    }})
+    await User.destroy({where: {}})
   }catch(err){
     console.log(err.toString())
   }
@@ -75,24 +71,19 @@ afterAll(async () => {
 
 describe('AUTH CONTROLLER: tests', () => {
   describe('USERAUTHENTICATION', () => {
-    it('Should return 400 if no username was provided', async () => {
-      const {password} = mockFakeUser()
-      const req = mockRequest({password})
-      const res = mockResponse()
-      await userAuthentication(req, res)
-      const { error } = missingParamError('username')
-      expect(res.status).toHaveBeenCalledWith(400)
-      expect(res.send).toBeCalledWith(error)
-    }),
-    it('Should return 400 if no password was provided', async () => {
-      const {username} = mockFakeUser()
-      const req = mockRequest({username})
-      const res = mockResponse()
-      await userAuthentication(req, res)
-      const { error } = missingParamError('password')
-      expect(res.status).toHaveBeenCalledWith(400)
-      expect(res.send).toBeCalledWith(error)
-    }),
+    const requiredFields = ['username', 'password']
+    for(const field of requiredFields){
+      it(`Should return 400 if no ${field} was provided`, async () => {
+        const fakeUser = mockFakeUser()
+        delete fakeUser[`${field}`]
+        const req = mockRequest(fakeUser)
+        const res = mockResponse()
+        await userAuthentication(req, res)
+        const { error } = missingParamError(field)
+        expect(res.status).toHaveBeenCalledWith(400)
+        expect(res.send).toBeCalledWith(error)
+      })  
+    }
     it('Should return 401 if invalid username has been send', async () => {
       const {password} = mockFakeUser()
       const req = mockRequest({username:'invalidUsername',password })
