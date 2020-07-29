@@ -1,4 +1,4 @@
-const {getLead, createLead, updateLead, deleteLead, getAllLeads} = require('./leadController')
+const {getLead, createLead, updateLead, deleteLead, getAllLeads, searchLeads} = require('./leadController')
 const { invalidParamError, missingParamError, missingBodyContent } = require('../config/').errors
 const User = require('../../models').users
 const Leads = require('../../models').lead
@@ -82,6 +82,8 @@ describe('LEAD CONTROLLER: tests', () => {
   afterAll(async () => {
     try{
       await Leads.destroy({where: {}})
+      await LeadStatus.destroy({where: {}})
+      await User.destroy({where: {}})
     }catch(err){
       console.log(err)
     }
@@ -214,7 +216,14 @@ describe('LEAD CONTROLLER: tests', () => {
       expect(res.send).toHaveBeenCalledWith(expect.objectContaining({leads: expect.any(Array)}))
     })
   })
-  // describe('SEARCH leads', () => {
-  //   test()
-  // })
+  describe('SEARCH leads', () => {
+    test(`Should return 400 if no search paramters has been send`, async () => {
+      const req = mockRequest({}, {})
+      const res = mockResponse()
+      await searchLeads(req,res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      const {error} = missingParamError('userid, phone and name')
+      expect(res.send).toHaveBeenCalledWith(error)
+    })
+  })
 })
