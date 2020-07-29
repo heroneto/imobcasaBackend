@@ -123,6 +123,14 @@ module.exports = {
         const { statusCode, body } = invalidRequest(error)
         return res.status(statusCode).send(body)
       }
+      if(userid !== undefined && typeof(userid) === 'number'){
+        const leads = await Leads.findAll({where: {userid: userid}})
+        return res.status(200).send(leads)
+      }
+      if(phone !== undefined){
+        const leads = await Leads.findAll({where: {phone}})
+        return res.status(200).send(leads)
+      }
       const leads = await Leads.findAll({where: {userid: userid}}) || await Leads.findAll({where: {phone}})  || await Leads.findAll({where: {name}})
       res.status(200).send(leads)
     }catch(err){
