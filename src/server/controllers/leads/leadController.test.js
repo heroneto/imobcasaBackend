@@ -220,6 +220,7 @@ describe('LEAD CONTROLLER: tests', () => {
   })
   describe('SEARCH leads', () => {
     const ids = {}
+    const lead = {}
     beforeAll(async ()=>{
       try{
         await databaseSetup()
@@ -230,8 +231,10 @@ describe('LEAD CONTROLLER: tests', () => {
         const leadStatus = await LeadStatus.create(fakeLeadStatus)
         ids.leadstausid = leadStatus.id
         const fakeLead = mockFakeLead(user.id, leadStatus.id)
-        const Lead = await Leads.create(fakeLead)
-        ids.leadid = Lead.id
+        const leadCreated = await Leads.create(fakeLead)
+        ids.leadid = leadCreated.id
+        lead.phone = leadCreated.phone
+        lead.name = leadCreated.name
       }catch(err){
         console.log(err.toString())
       }
@@ -255,6 +258,13 @@ describe('LEAD CONTROLLER: tests', () => {
     })
     test('Should return 200 with leads finded if userid has been send', async () => {
       const req = mockRequest({userid: ids.userid}, {})
+      const res = mockResponse()
+      await searchLeads(req,res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.send).toHaveBeenCalledWith([expect.any(Object)])
+    })
+    test('Should return 200 with leads finded if phone lead has been send', async () => {
+      const req = mockRequest({phone: lead.phone}, {})
       const res = mockResponse()
       await searchLeads(req,res)
       expect(res.status).toHaveBeenCalledWith(200)
