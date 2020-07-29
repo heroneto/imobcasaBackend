@@ -270,5 +270,12 @@ describe('LEAD CONTROLLER: tests', () => {
       expect(res.status).toHaveBeenCalledWith(200)
       expect(res.send).toHaveBeenCalledWith([expect.any(Object)])
     })
+    test('Should return 200 with leads finded if name lead has been send', async () => {
+      const req = mockRequest({name: lead.name}, {})
+      const res = mockResponse()
+      await searchLeads(req,res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.send).toHaveBeenCalledWith([expect.any(Object)])
+    })
   })
 })
