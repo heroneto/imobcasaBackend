@@ -114,5 +114,21 @@ module.exports = {
       const {statusCode, body} = internalError(error)
       return res.status(statusCode).send(body)
     }
+  },
+  searchLeads: async (req,res) => {
+    try{
+      const { userid, phone, name } = req.body
+      if(!userid && !phone && !name){
+        const { error } = missingParamError('userid, phone and name')
+        const { statusCode, body } = invalidRequest(error)
+        return res.status(statusCode).send(body)
+      }
+      res.status(200).send('ok')
+    }catch(err){
+      console.log(err)
+      const {error} = serverError()
+      const {statusCode, body} = internalError(error)
+      return res.status(statusCode).send(body) 
+    }
   }
 }
