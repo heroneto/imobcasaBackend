@@ -135,8 +135,10 @@ module.exports = {
         const leads = await Leads.findAll({where: {name}})
         return res.status(200).send(leads)
       }
-      const leads = await Leads.findAll({where: {userid: userid}}) || await Leads.findAll({where: {phone}})  || await Leads.findAll({where: {name}})
-      res.status(200).send(leads)
+      
+      const { error } = invalidParamError('userid, phone and name')
+      const { statusCode, body } = invalidRequest(error)
+      return res.status(statusCode).send(body)
     }catch(err){
       console.log(err)
       const {error} = serverError()
