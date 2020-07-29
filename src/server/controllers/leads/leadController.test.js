@@ -64,17 +64,19 @@ const getLeadModelExpected = () => {
 }
 
 describe('LEAD CONTROLLER: tests', () => {
-  let leadId = ''
+  const ids = {}
   beforeAll(async ()=>{
     try{
       await databaseSetup()
       const fakeUser = mockFakeUser()
       const user = await User.create(fakeUser)
+      ids.userid = user.id
       const fakeLeadStatus = mockLeadStatus()
       const leadStatus = await LeadStatus.create(fakeLeadStatus)
+      ids.leadstausid = leadStatus.id
       const fakeLead = mockFakeLead(user.id, leadStatus.id)
       const Lead = await Leads.create(fakeLead)
-      leadId = Lead.id
+      ids.leadid = Lead.id
     }catch(err){
       console.log(err.toString())
     }
@@ -107,7 +109,7 @@ describe('LEAD CONTROLLER: tests', () => {
     })
     it('GET: Should return 200 if lead has been found', async () => {
       const res = mockResponse()
-      const req = mockRequest({}, {id:leadId})
+      const req = mockRequest({}, {id:ids.leadid})
       await getLead(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
       expect(res.send).toBeCalledWith(expect.objectContaining({
@@ -173,7 +175,7 @@ describe('LEAD CONTROLLER: tests', () => {
     it('PUT: Should return 200 updated', async () => {
       const res = mockResponse()
       const fakeLead  = mockFakeLead()
-      fakeLead.id = leadId
+      fakeLead.id = ids.leadid
       fakeLead.name = 'updatedName'
       fakeLead.phone = 'updatedPhone'
       fakeLead.source = 'updatedSource'
@@ -201,7 +203,7 @@ describe('LEAD CONTROLLER: tests', () => {
       expect(res.send).toBeCalledWith(error)
     }),
     it('Should return 200', async () => {
-      const req = mockRequest('', {id: leadId})
+      const req = mockRequest('', {id: ids.leadid})
       const res = mockResponse()
       await deleteLead(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
@@ -217,6 +219,32 @@ describe('LEAD CONTROLLER: tests', () => {
     })
   })
   describe('SEARCH leads', () => {
+    const ids = {}
+    beforeAll(async ()=>{
+      try{
+        await databaseSetup()
+        const fakeUser = mockFakeUser()
+        const user = await User.create(fakeUser)
+        ids.userid = user.id
+        const fakeLeadStatus = mockLeadStatus()
+        const leadStatus = await LeadStatus.create(fakeLeadStatus)
+        ids.leadstausid = leadStatus.id
+        const fakeLead = mockFakeLead(user.id, leadStatus.id)
+        const Lead = await Leads.create(fakeLead)
+        ids.leadid = Lead.id
+      }catch(err){
+        console.log(err.toString())
+      }
+    }),
+    afterAll(async () => {
+      try{
+        await Leads.destroy({where: {}})
+        await LeadStatus.destroy({where: {}})
+        await User.destroy({where: {}})
+      }catch(err){
+        console.log(err)
+      }
+    })
     test(`Should return 400 if no search paramters has been send`, async () => {
       const req = mockRequest({}, {})
       const res = mockResponse()
@@ -224,6 +252,13 @@ describe('LEAD CONTROLLER: tests', () => {
       expect(res.status).toHaveBeenCalledWith(400)
       const {error} = missingParamError('userid, phone and name')
       expect(res.send).toHaveBeenCalledWith(error)
+    })
+    test('Should return 200 with leads finded if userid has been send', async () => {
+      const req = mockRequest({userid: ids.userid}, {})
+      const res = mockResponse()
+      await searchLeads(req,res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.send).toHaveBeenCalledWith([expect.any(Object)])
     })
   })
 })
