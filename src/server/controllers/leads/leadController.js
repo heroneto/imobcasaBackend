@@ -123,7 +123,8 @@ module.exports = {
         const { statusCode, body } = invalidRequest(error)
         return res.status(statusCode).send(body)
       }
-      res.status(200).send('ok')
+      const leads = await Leads.findAll({where: {userid: userid}}) || await Leads.findAll({where: {phone}})  || await Leads.findAll({where: {name}})
+      res.status(200).send(leads)
     }catch(err){
       console.log(err)
       const {error} = serverError()
