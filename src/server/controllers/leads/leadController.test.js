@@ -59,7 +59,10 @@ const getLeadModelExpected = () => {
     phone: expect.any(String),
     source: expect.any(String),
     userid: expect.any(Number),
-    statusid: expect.any(Number)
+    statusid: expect.any(Number),
+    id: expect.any(Number),
+    createdAt: expect.any(Date),
+    updatedAt: expect.any(Date)
   }
 }
 
@@ -133,7 +136,7 @@ describe('LEAD CONTROLLER: tests', () => {
         expect(res.send).toHaveBeenCalledWith(error)
       })
     }
-    it('Should return 200 if existing lead has been updated', async () => {
+    it('Should return 200 if existing lead already exists', async () => {
       const res = mockResponse()
       const fakeLead = mockFakeLead()
       fakeLead.name = 'updateLeadName'
@@ -142,6 +145,15 @@ describe('LEAD CONTROLLER: tests', () => {
       await createLead(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
       expect(res.send).toHaveBeenCalledWith(expect.objectContaining({created: false, lead: expect.any(Object)}))
+    })
+    it('Should return 200 if lead was created', async() => {
+      const res = mockResponse()
+      const fakeLead = mockFakeLead(ids.userid, ids.leadstausid)
+      fakeLead.phone = "9999999999"
+      const req = mockRequest(fakeLead)
+      await createLead(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.send).toBeCalledWith(expect.objectContaining(getLeadModelExpected()))
     })
   })
   describe('PUT Leads', () => {
@@ -275,7 +287,7 @@ describe('LEAD CONTROLLER: tests', () => {
       const res = mockResponse()
       await searchLeads(req,res)
       expect(res.status).toHaveBeenCalledWith(200)
-      expect(res.send).toHaveBeenCalledWith([expect.any(Object)])
+      expect(res.send).toHaveBeenCalledWith(expect.arrayContaining([expect.any(Object)]))
     })
   })
 })
