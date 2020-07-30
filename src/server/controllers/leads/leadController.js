@@ -41,15 +41,16 @@ module.exports = {
         }
       }
       
-      const [lead, created] = await Leads.findOrCreate({
-        where: {
-          phone: req.body.phone
-        }
-      })
-      if(!created){
-        await lead.update({...req.body})
-      }      
-      return res.status(200).send({lead, created})
+      const leadExists = await Leads.findOne({where: {
+        phone: req.body.phone
+      }})
+
+      if(leadExists){
+        return res.status(200).send({created:false, lead: leadExists})
+      }
+      const lead = await Leads.create(req.body)
+      return res.status(200).send(lead)    
+      
     }catch(err){
       console.log(err)
       const {error} = serverError()
