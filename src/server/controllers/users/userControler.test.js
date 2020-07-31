@@ -1,6 +1,6 @@
 const { getAllUsers, createUser, updateUser, deleteUser, getUser } = require('./userController')
 const databaseSetup = require('../../../database')
-const { missingParamError } = require('../config/Errors')
+const { missingParamError, noResultsError } = require('../config/Errors')
 const User = require('../../models').users
 
 const mockFakeUser = () => {
@@ -197,6 +197,14 @@ describe('USER CONTROLLER: tests', () =>{
       await getUser(req, res)
       expect(res.status).toHaveBeenCalledWith(400)
       const { error } = missingParamError('id')
+      expect(res.send).toHaveBeenCalledWith(error)
+    })
+    test("Should return 204 if id has been send but no user has been found", async () => {
+      const req = mockRequest({}, {id: userId+5})
+      const res = mockResponse()
+      await getUser(req, res)
+      expect(res.status).toHaveBeenCalledWith(204)
+      const {error} = noResultsError('user')
       expect(res.send).toHaveBeenCalledWith(error)
     })
   })
