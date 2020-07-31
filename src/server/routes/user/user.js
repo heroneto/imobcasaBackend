@@ -18,7 +18,7 @@ router.route('/user')
   .put(updateUser)
   .delete(deleteUser)
 
-router.route('./user/details')
+router.route('/user/details')
   .all(checkAuthentication)
   .get(getUser)
 

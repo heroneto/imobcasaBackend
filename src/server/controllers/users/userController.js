@@ -8,7 +8,7 @@ const { Op } = require("sequelize");
 module.exports = {
   createUser: async (req,res)=>{
     try{
-      const requiredFields = ['fullName', 'username', 'email', 'password', '  ']
+      const requiredFields = ['fullName', 'username', 'email', 'password', 'admin']
       for(const field of requiredFields){
         if(!req.body[`${field}`]){
           const {error} = missingParamError(field)
