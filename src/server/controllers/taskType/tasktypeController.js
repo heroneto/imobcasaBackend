@@ -81,5 +81,15 @@ module.exports = {
       }catch(err){
 
       }
+    },
+    getAllTaskTypes: async (req,res) => {
+      try{
+        const taskTypes = await tasktypeModel.findAll()
+        return res.status(200).send(taskTypes)
+      }catch(err){
+        console.log(err)
+        const { statusCode, body } = internalError(err)
+        return res.status(statusCode).send(body)
+      }
     }
 }
