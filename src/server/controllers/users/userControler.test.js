@@ -148,7 +148,7 @@ describe('USER CONTROLLER: tests', () =>{
       const req = mockRequest(user)
       await deleteUser(req, res)
       expect(res.status).toHaveBeenCalledWith(400)
-      expect(res.send).toBeCalledWith('MissingParamError: id and username')
+      expect(res.send).toBeCalledWith('MissingParamError: id')
     })
     test('DELETE: Should return 400 if invalid id and username has beem send', async()=>{
       const user = mockFakeUser()
@@ -160,11 +160,9 @@ describe('USER CONTROLLER: tests', () =>{
       expect(res.status).toHaveBeenCalledWith(400)
       expect(res.send).toBeCalledWith('InvalidParamError: id or username')
     })
-    test('DELETE: Should return 200 username has beem deleted', async()=>{
-      const user = mockFakeUser()
-      user.id = 1
+    test('DELETE: Should return 200 username has beem deleted by id', async() =>{
       const res = mockResponse()
-      const req = mockRequest(user)
+      const req = mockRequest({id: userId}, {})
       await deleteUser(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
       expect(res.send).toBeCalledWith({user: expect.objectContaining(getUserModelExpected())})
