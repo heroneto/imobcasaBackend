@@ -1,4 +1,4 @@
-const { createTaskType, getTaskType, updateTaskType, deleteTaskType } = require('./tasktypeController');
+const { createTaskType, getTaskType, updateTaskType, deleteTaskType, getAllTaskTypes } = require('./tasktypeController');
 const { missingParamError } = require('../config/Errors');
 const tasktypeModel = require('../../models').tasktype
 
@@ -222,6 +222,33 @@ describe("Task Type Tests", () => {
         await deleteTaskType(req, res)
         expect(res.status).toHaveBeenCalledWith(200)
         expect(res.send).toHaveBeenCalledWith({numDeleted: 1})
+      })
+    })
+    describe("GET ALL task types", () => {
+      let id = ""
+      beforeAll( async ()=>{
+        try{
+          const tasktype = await tasktypeModel.create(mockTaskType())
+          id = tasktype.id
+        }catch(err){
+          console.log(err)
+        }
+      })
+      afterAll(async () => {
+        try{
+          await tasktypeModel.destroy({where: {
+            id: id
+          }})
+        }catch(err){
+          console.log(err)
+        }
+      })
+      test("Should return 200 with all task types", async () =>{
+        const req = mockRequest({}, {})
+        const res = mockResponse()
+        await getAllTaskTypes(req, res)
+        expect(res.status).toHaveBeenCalledWith(200)
+        expect(res.send).toHaveBeenCalledWith(expect.arrayContaining([expect.any(Object)]))
       })
     })
 })
