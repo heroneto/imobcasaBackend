@@ -115,7 +115,7 @@ module.exports = {
         const {statusCode, body} = noContent(error)
         return res.status(statusCode).send(body)
       }
-      return res.status(200).send('ok')
+      return res.status(200).send(user)
     }catch(err){
       console.log(err)
       const {error} = serverError()
