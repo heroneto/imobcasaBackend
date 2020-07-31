@@ -99,5 +99,21 @@ module.exports = {
       const {statusCode, body} = internalError(error)
       return res.status(statusCode).send(body)
     }  
+  },
+  getUser: async (req, res) => {
+    try{
+      const {id} = req.query
+      if(!id){
+        const {error} = missingParamError('id')
+        const {statusCode, body} = invalidRequest(error)
+        return res.status(statusCode).send(body)
+      }
+      return res.status(200).send('ok')
+    }catch(err){
+      console.log(err)
+      const {error} = serverError()
+      const {statusCode, body} = internalError(error)
+      return res.status(statusCode).send(body)
+    }
   }
 }
