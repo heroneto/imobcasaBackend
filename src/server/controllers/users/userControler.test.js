@@ -207,6 +207,13 @@ describe('USER CONTROLLER: tests', () =>{
       const {error} = noResultsError('user')
       expect(res.send).toHaveBeenCalledWith(error)
     })
+    test('Should return 200 if user has been found', async () => {
+      const req = mockRequest({}, {id: userId})
+      const res = mockResponse()
+      await getUser(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.send).toHaveBeenCalledWith(expect.objectContaining(getUserModelExpected()))
+    })
   })
 
 })
