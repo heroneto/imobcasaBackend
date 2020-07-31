@@ -8,7 +8,7 @@ const { Op } = require("sequelize");
 module.exports = {
   createUser: async (req,res)=>{
     try{
-      const requiredFields = ['fullName', 'username', 'email', 'password', 'admin']
+      const requiredFields = ['fullName', 'username', 'email', 'password', '  ']
       for(const field of requiredFields){
         if(!req.body[`${field}`]){
           const {error} = missingParamError(field)
@@ -70,28 +70,26 @@ module.exports = {
   },
   deleteUser: async (req,res)=>{
     try{
-      const {id, username} = req.body
-      if(!id && !username){
-        const {error} = missingParamError('id and username')
+      const {id} = req.body
+      if(!id){
+        const {error} = missingParamError('id')
         const {statusCode, body} = invalidRequest(error)
         return res.status(statusCode).send(body)
       }
-      const user = await User.findOne({where:{
-        [Op.or]:[
-          {id: id},
-          {username: username}
-        ]}
+      const user = await User.findOne({where:
+        {
+          id: id
+        }
       })
       if(!user){
         const {error} = invalidParamError('id or username')
         const {statusCode, body} = invalidRequest(error)
         return res.status(statusCode).send(body)
       }
-      await User.destroy({where:{
-        [Op.or]:[
-          {id: id},
-          {username: username}
-        ]}
+      await User.destroy({where:
+        {
+          id: id
+        }
       })
       res.status(200).send({user})
     }catch(err){
