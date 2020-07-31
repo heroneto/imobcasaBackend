@@ -31,6 +31,20 @@ const successfulRequest = (message) => {
     body: message
   }
 }
+
+const noContent = (message) => {
+  return {
+    statusCode: 204,
+    body: message
+  }
+}
 //
 
-module.exports = {forbiden, invalidRequest, unauthorized, internalError, successfulRequest}
+module.exports = {
+  forbiden, 
+  invalidRequest, 
+  unauthorized, 
+  internalError,
+  successfulRequest, 
+  noContent
+}

@@ -1,7 +1,8 @@
-const {forbiden, invalidRequest, unauthorized, internalError} = require('../config').protocols
-const {invalidParamError, missingParamError, serverError} = require('../config').errors
+const {forbiden, invalidRequest, unauthorized, internalError, noContent} = require('../config').protocols
+const {invalidParamError, missingParamError, serverError, noResultsError} = require('../config').errors
 const User = require('../../models').users
 const { Op } = require("sequelize");
+
 
 
 module.exports = {
@@ -106,6 +107,12 @@ module.exports = {
       if(!id){
         const {error} = missingParamError('id')
         const {statusCode, body} = invalidRequest(error)
+        return res.status(statusCode).send(body)
+      }
+      const user = await User.findOne({where: {id: id}})
+      if(!user){
+        const {error} = noResultsError('user')
+        const {statusCode, body} = noContent(error)
         return res.status(statusCode).send(body)
       }
       return res.status(200).send('ok')
