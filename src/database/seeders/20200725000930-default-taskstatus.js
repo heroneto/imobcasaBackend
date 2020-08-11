@@ -10,8 +10,8 @@ module.exports = {
       updatedAt: new Date()
     },
     {
-      name: 'Doing',
-      description: 'Represents an item that is running',
+      name: 'Delayed',
+      description: 'Represents that item is overdue',
       createdAt: new Date(),
       updatedAt: new Date()
     },
