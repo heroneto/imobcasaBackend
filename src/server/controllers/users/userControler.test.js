@@ -40,7 +40,6 @@ const getUserModelExpected = () => {
     fullName: expect.any(String),
     id: expect.any(Number),
     admin: expect.any(Boolean),
-    password: expect.any(String),
     updatedAt: expect.any(Date),
     username: expect.any(String),
     lastLeadReceivedTime: expect.any(String)
@@ -85,7 +84,7 @@ describe('USER CONTROLLER: tests', () =>{
         const req = mockRequest(user)
         await createUser(req, res)
         expect(res.status).toHaveBeenCalledWith(400)
-        expect(res.send).toBeCalledWith(`MissingParamError: ${field}`)
+        expect(res.json).toBeCalledWith(`MissingParamError: ${field}`)
       })
     }
     test('POST: Should return 200 if user has been created', async () =>{
@@ -94,7 +93,7 @@ describe('USER CONTROLLER: tests', () =>{
       const req = mockRequest(user)
       await createUser(req,res)
       expect(res.status).toHaveBeenCalledWith(200)
-      expect(res.json).toHaveBeenCalledWith({user:expect.objectContaining(getUserModelExpected())})
+      expect(res.json).toHaveBeenCalledWith(expect.objectContaining(getUserModelExpected()))
     })
   })
   

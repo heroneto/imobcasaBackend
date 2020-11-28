@@ -6,7 +6,7 @@
   "scripts": {
     "start": "set NODE_ENV=production && node dist/app.js",
     "test": "jest --watch --runInBand --detectOpenHandles --forceExit",
-    "dev": "nodemon ./src/app.ts",
+    "dev": "set NODE_ENV=development && nodemon ./src/app.ts",
     "build": "tsc"
   },
   "keywords": [],

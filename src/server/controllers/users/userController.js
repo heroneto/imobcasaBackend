@@ -2,27 +2,20 @@ const {forbiden, invalidRequest, unauthorized, internalError, noContent} = requi
 const {invalidParamError, missingParamError, serverError, noResultsError} = require('../config').errors
 const User = require('../../models').users
 const { Op } = require("sequelize");
-
+const UserService = require('../../services/UserService')
 
 
 module.exports = {
   createUser: async (req,res)=>{
     try{
-      const requiredFields = ['fullName', 'username', 'email', 'password', 'admin']
-      for(const field of requiredFields){
-        if(!req.body[`${field}`]){
-          const {error} = missingParamError(field)
-          const {statusCode, body} = invalidRequest(error)
-          return res.status(statusCode).send(body)
-        }
-      }
-      const user = await User.create(req.body)
-      return res.status(200).json({user})
+      const userService = new UserService()
+      const user = await userService.createUser(req.body)
+      delete user.password
+      return res.status(200).json(user)
     }catch(err){
-      console.log(err)
-      const {error} = serverError()
-      const {statusCode, body} = internalError(error)
-      return res.status(statusCode).send(body)
+      console.error(err)
+      const {statusCode, body} = JSON.parse(err.message)
+      return res.status(statusCode).json(body)
     }
   },
   getAllUsers: async (req,res)=>{
