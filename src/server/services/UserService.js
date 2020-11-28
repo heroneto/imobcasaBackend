@@ -6,6 +6,7 @@ const { Op } = require("sequelize");
 class UserService {
   _requiredFields = ['fullName', 'username', 'email', 'password', 'admin']
   _updateRequiredFields = ['id']
+  _deleteUserRequiredFields = ['id']
 
   _checkRequiredFields(fieldsToCheck){
     for(const field of fieldsToCheck){
@@ -55,6 +56,27 @@ class UserService {
     user.admin = this.body.admin
     await user.save()
     return user
+  }
+
+  async deleteUser(body){
+    this.body = body
+    await this._checkRequiredFields(this._deleteUserRequiredFields)   
+    const user = await User.findOne({where:
+      {
+        id: this.body.id
+      }
+    })
+    if(!user){
+      const {error} = invalidParamError('id or username')
+      const {statusCode, body} = invalidRequest(error)
+      throw new Error(JSON.stringify({statusCode, body}))
+    }
+    const result = await User.destroy({where:
+      {
+        id: this.body.id
+      }
+    })
+    return result
   }
 
 

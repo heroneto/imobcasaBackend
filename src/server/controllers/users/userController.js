@@ -44,33 +44,13 @@ module.exports = {
   },
   deleteUser: async (req,res)=>{
     try{
-      const {id} = req.body
-      if(!id){
-        const {error} = missingParamError('id')
-        const {statusCode, body} = invalidRequest(error)
-        return res.status(statusCode).send(body)
-      }
-      const user = await User.findOne({where:
-        {
-          id: id
-        }
-      })
-      if(!user){
-        const {error} = invalidParamError('id or username')
-        const {statusCode, body} = invalidRequest(error)
-        return res.status(statusCode).send(body)
-      }
-      await User.destroy({where:
-        {
-          id: id
-        }
-      })
-      res.status(200).send({user})
+      const userService = new UserService()
+      const result = await userService.deleteUser(req.body)
+      res.status(200).json(result)
     }catch(err){
-      console.log(err)
-      const {error} = serverError()
-      const {statusCode, body} = internalError(error)
-      return res.status(statusCode).send(body)
+      console.error(err)
+      const {statusCode, body} = JSON.parse(err.message)
+      return res.status(statusCode).json(body)
     }  
   },
   getUser: async (req, res) => {
