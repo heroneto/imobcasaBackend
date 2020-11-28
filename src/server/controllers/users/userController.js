@@ -20,8 +20,9 @@ module.exports = {
   },
   getAllUsers: async (req,res)=>{
     try{
-      const users = await User.findAll()
-      return res.status(200).send({users: users})
+      const userService = new UserService()
+      const users = await userService.findAll()
+      return res.status(200).json(users)
     }catch(err){
       console.log(err)
       const {error} = serverError()
@@ -31,34 +32,14 @@ module.exports = {
   },
   updateUser: async (req,res)=>{
     try{
-      const {id, fullName, username, email, admin} = req.body
-      if(!id && !username){
-        const {error} = missingParamError('id and username')
-        const {statusCode, body} = invalidRequest(error)
-        return res.status(statusCode).send(body)
-      }
-      const user = await User.findOne({where:{
-        [Op.or]:[
-          {id: id},
-          {username: username}
-        ]}
-      })
-      if(!user){
-        const {error} = invalidParamError('id or username')
-        const {statusCode, body} = invalidRequest(error)
-        return res.status(statusCode).send(body)
-      }      
-      user.fullName = fullName
-      user.username = username
-      user.email = email
-      user.admin = admin
-      await user.save()
-      return res.status(200).send(user)
+      const userService = new UserService()
+      const user = await userService.updateUser(req.body)
+     
+      return res.status(200).json(user)
     }catch(err){
-      console.log(err)
-      const {error} = serverError()
-      const {statusCode, body} = internalError(error)
-      return res.status(statusCode).send(body)
+      console.error(err)
+      const {statusCode, body} = JSON.parse(err.message)
+      return res.status(statusCode).json(body)
     }
   },
   deleteUser: async (req,res)=>{

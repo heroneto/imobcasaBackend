@@ -103,21 +103,21 @@ describe('USER CONTROLLER: tests', () =>{
       const req = mockRequest()
       await getAllUsers(req,res)
       expect(res.status).toHaveBeenCalledWith(200)
-      expect(res.send).toHaveBeenCalledWith(expect.objectContaining({users: expect.any(Array)}))
+      expect(res.json).toHaveBeenCalledWith(expect.arrayContaining([expect.objectContaining(getUserModelExpected())]))
     })
   })
 
   describe('PUT User tests', () => {
-    test('PUT: Should return 400 if no id and username has beem send', async()=>{
+    test('PUT: Should return 400 if no id has beem send', async()=>{
       const user = mockFakeUser()
       delete user.username
       const res = mockResponse()
       const req = mockRequest(user)
       await updateUser(req, res)
       expect(res.status).toHaveBeenCalledWith(400)
-      expect(res.send).toBeCalledWith('MissingParamError: id and username')
+      expect(res.json).toBeCalledWith('MissingParamError: id')
     })
-    test('PUT: Should return 400 if invalid id and username has beem send', async()=>{
+    test('PUT: Should return 400 if invalid id has beem send', async()=>{
       const user = mockFakeUser()
       user.id = 'invalidId'
       user.username = 'invalidUsername'
@@ -125,7 +125,7 @@ describe('USER CONTROLLER: tests', () =>{
       const req = mockRequest(user)
       await updateUser(req, res)
       expect(res.status).toHaveBeenCalledWith(400)
-      expect(res.send).toBeCalledWith('InvalidParamError: id or username')
+      expect(res.json).toBeCalledWith('InvalidParamError: id')
     })
     test('PUT: Should return 200 username has beem updated', async()=>{
       const user = mockFakeUser()
@@ -134,7 +134,7 @@ describe('USER CONTROLLER: tests', () =>{
       const req = mockRequest(user)
       await updateUser(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
-      expect(res.send).toHaveBeenCalledWith(expect.objectContaining(getUserModelExpected()))
+      expect(res.json).toHaveBeenCalledWith(expect.objectContaining(getUserModelExpected()))
     })
   })
 
