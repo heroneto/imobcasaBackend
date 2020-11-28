@@ -194,7 +194,7 @@ describe('USER CONTROLLER: tests', () =>{
       await getUser(req, res)
       expect(res.status).toHaveBeenCalledWith(400)
       const { error } = missingParamError('id')
-      expect(res.send).toHaveBeenCalledWith(error)
+      expect(res.json).toHaveBeenCalledWith(error)
     })
     test("Should return 204 if id has been send but no user has been found", async () => {
       const req = mockRequest({}, {id: userId+5})
@@ -202,14 +202,14 @@ describe('USER CONTROLLER: tests', () =>{
       await getUser(req, res)
       expect(res.status).toHaveBeenCalledWith(204)
       const {error} = noResultsError('user')
-      expect(res.send).toHaveBeenCalledWith(error)
+      expect(res.json).toHaveBeenCalledWith(error)
     })
     test('Should return 200 if user has been found', async () => {
       const req = mockRequest({}, {id: userId})
       const res = mockResponse()
       await getUser(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
-      expect(res.send).toHaveBeenCalledWith(expect.objectContaining(getUserModelExpected()))
+      expect(res.json).toHaveBeenCalledWith(expect.objectContaining(getUserModelExpected()))
     })
   })
 

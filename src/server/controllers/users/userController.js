@@ -55,24 +55,13 @@ module.exports = {
   },
   getUser: async (req, res) => {
     try{
-      const {id} = req.query
-      if(!id){
-        const {error} = missingParamError('id')
-        const {statusCode, body} = invalidRequest(error)
-        return res.status(statusCode).send(body)
-      }
-      const user = await User.findOne({where: {id: id}})
-      if(!user){
-        const {error} = noResultsError('user')
-        const {statusCode, body} = noContent(error)
-        return res.status(statusCode).send(body)
-      }
-      return res.status(200).send(user)
+      const userService = new UserService()
+      const user = await userService.getUser(req.query)      
+      return res.status(200).json(user)
     }catch(err){
-      console.log(err)
-      const {error} = serverError()
-      const {statusCode, body} = internalError(error)
-      return res.status(statusCode).send(body)
+      console.error(err)
+      const {statusCode, body} = JSON.parse(err.message)
+      return res.status(statusCode).json(body)
     }
   }
 }
