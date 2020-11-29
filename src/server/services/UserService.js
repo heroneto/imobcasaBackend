@@ -23,12 +23,7 @@ class UserService extends Service {
   }
 
   async findAll() {
-    const users = await User.findAll({
-      attributes: {
-        exclude: ['password']
-      }
-    })
-    return users
+    return await this._userRepository.findAll()
   }
 
   async updateUser(fields) {
