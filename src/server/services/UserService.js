@@ -45,11 +45,7 @@ class UserService extends Service {
   async getUser(fields) {
     this.fields = fields
     await this._checkRequiredFields(this._getUserRequiredFields)
-    const user = await User.findOne({
-      where: {
-        id: this.fields.id
-      }
-    })
+    const user = await this._userRepository.getOne(this.fields)
     await this._checkEntityExsits(user)
     return user
   }
