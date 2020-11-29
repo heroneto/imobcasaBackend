@@ -37,21 +37,9 @@ class UserService extends Service {
   async deleteUser(fields) {
     this.fields = fields
     await this._checkRequiredFields(this._deleteUserRequiredFields)
-    const user = await User.findOne({
-      where:
-      {
-        id:this.fields.id
-      }
-    })
+    const user = await this._userRepository.getOne(this.fields)
     await this._checkEntityExsits(user)
-
-    const result = await User.destroy({
-      where:
-      {
-        id:this.fields.id
-      }
-    })
-    return result
+    return await this._userRepository.delete(this.fields)
   }
 
   async getUser(fields) {

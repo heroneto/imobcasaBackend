@@ -23,9 +23,17 @@ class UserRepository {
     return user
   }
 
-  async delete(){
-    
+  async delete(fields){
+    const result = await User.destroy({
+      where:
+      {
+        id:fields.id
+      }
+    })
+    return result
   }
+
+
   async getOne(fields){
     const user = await User.findOne({
       where: {
