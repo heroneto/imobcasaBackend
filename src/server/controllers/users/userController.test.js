@@ -1,6 +1,6 @@
 const { getAllUsers, createUser, updateUser, deleteUser, getUser } = require('./userController')
 const databaseSetup = require('../../../database')
-const { missingParamError, noResultsError } = require('../config/Errors')
+const { missingParamError, invalidParamError } = require('../config/Errors')
 const User = require('../../models').users
 
 const mockFakeUser = () => {
@@ -157,7 +157,7 @@ describe('USER CONTROLLER: tests', () =>{
       const req = mockRequest(user)
       await deleteUser(req, res)
       expect(res.status).toHaveBeenCalledWith(400)
-      expect(res.json).toBeCalledWith('InvalidParamError: id or username')
+      expect(res.json).toBeCalledWith('InvalidParamError: id')
     })
     test('DELETE: Should return 200 username has beem deleted by id', async() =>{
       const res = mockResponse()
@@ -188,7 +188,7 @@ describe('USER CONTROLLER: tests', () =>{
       }
     })
 
-    test("Should return 400 if no user id has been send", async () => {
+    test("Should return 400 if no id has been send", async () => {
       const req = mockRequest({}, {})
       const res = mockResponse()
       await getUser(req, res)
@@ -196,12 +196,12 @@ describe('USER CONTROLLER: tests', () =>{
       const { error } = missingParamError('id')
       expect(res.json).toHaveBeenCalledWith(error)
     })
-    test("Should return 204 if id has been send but no user has been found", async () => {
+    test("Should return 400 if invalid id has been send", async () => {
       const req = mockRequest({}, {id: userId+5})
       const res = mockResponse()
       await getUser(req, res)
-      expect(res.status).toHaveBeenCalledWith(204)
-      const {error} = noResultsError('user')
+      expect(res.status).toHaveBeenCalledWith(400)
+      const {error} = invalidParamError('id')
       expect(res.json).toHaveBeenCalledWith(error)
     })
     test('Should return 200 if user has been found', async () => {

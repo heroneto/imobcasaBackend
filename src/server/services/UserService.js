@@ -16,7 +16,7 @@ class UserService extends Service {
 
   async _checkUserExsists(user){
     if (!user) {
-      const { error } = invalidParamError('id or username')
+      const { error } = invalidParamError('id')
       const { statusCode, body } = invalidRequest(error)
       this._throwException(body,statusCode)
     }
@@ -47,11 +47,7 @@ class UserService extends Service {
         id: this.fields.id
       }
     })
-    if (!user) {
-      const { error } = invalidParamError('id')
-      const { statusCode, body } = invalidRequest(error)
-      this._throwException(body,statusCode)
-    }
+    await this._checkUserExsists(user)
     user.fullName = this.fields.fullName
     user.username = this.fields.username
     user.email = this.fields.email
@@ -88,11 +84,7 @@ class UserService extends Service {
         id: this.fields.id
       }
     })
-    if (!user) {
-      const { error } = noResultsError('user')
-      const { statusCode, body } = noContent(error)
-      this._throwException(body,statusCode)
-    }
+    await this._checkUserExsists(user)
     return user
   }
 
