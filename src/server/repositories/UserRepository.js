@@ -14,16 +14,26 @@ class UserRepository {
     })
     return users
   }
-  async update(){
-    
+  async update(user, fields){   
+    user.fullName = fields.fullName
+    user.username = fields.username
+    user.email = fields.email
+    user.admin = fields.admin
+    await user.save()
+    return user
   }
+
   async delete(){
     
   }
-  async getOne(){
-    
+  async getOne(fields){
+    const user = await User.findOne({
+      where: {
+        id: fields.id
+      }
+    })
+    return user
   }
-
 }
 
 module.exports = UserRepository

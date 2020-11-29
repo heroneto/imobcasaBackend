@@ -29,19 +29,9 @@ class UserService extends Service {
   async updateUser(fields) {
     this.fields = fields
     await this._checkRequiredFields(this._updateRequiredFields)
-
-    const user = await User.findOne({
-      where: {
-        id: this.fields.id
-      }
-    })
-    await this._checkEntityExsits(user)
-    user.fullName = this.fields.fullName
-    user.username = this.fields.username
-    user.email = this.fields.email
-    user.admin = this.fields.admin
-    await user.save()
-    return user
+    const user = await this._userRepository.getOne(this.fields)
+    await this._checkEntityExsits(user)    
+    return await this._userRepository.update(user, this.fields)
   }
 
   async deleteUser(fields) {
