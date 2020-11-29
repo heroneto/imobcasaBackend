@@ -15,7 +15,7 @@ class UserService {
 
   _checkRequiredFields(fieldsToCheck) {
     for (const field of fieldsToCheck) {
-      if (!this.body[`${field}`]) {
+      if (!this.fields[`${field}`]) {
         const { error } = missingParamError(field)
         const { statusCode, body } = invalidRequest(error)
         this._throwException(body, statusCode)
@@ -29,10 +29,10 @@ class UserService {
 
 
 
-  async createUser(body) {
-    this.body = body
+  async createUser(fields) {
+    this.fields = fields
     await this._checkRequiredFields(this._requiredFields)
-    const user = await User.create(this.body)
+    const user = await User.create(this.fields)
     return user
   }
 
@@ -45,13 +45,13 @@ class UserService {
     return users
   }
 
-  async updateUser(body) {
-    this.body = body
+  async updateUser(fields) {
+    this.fields = fields
     await this._checkRequiredFields(this._updateRequiredFields)
 
     const user = await User.findOne({
       where: {
-        id: this.body.id
+        id: this.fields.id
       }
     })
     if (!user) {
@@ -59,21 +59,21 @@ class UserService {
       const { statusCode, body } = invalidRequest(error)
       this._throwException(body,statusCode)
     }
-    user.fullName = this.body.fullName
-    user.username = this.body.username
-    user.email = this.body.email
-    user.admin = this.body.admin
+    user.fullName = this.fields.fullName
+    user.username = this.fields.username
+    user.email = this.fields.email
+    user.admin = this.fields.admin
     await user.save()
     return user
   }
 
-  async deleteUser(body) {
-    this.body = body
+  async deleteUser(fields) {
+    this.fields = fields
     await this._checkRequiredFields(this._deleteUserRequiredFields)
     const user = await User.findOne({
       where:
       {
-        id: this.body.id
+        id:this.fields.id
       }
     })
     if (!user) {
@@ -84,18 +84,18 @@ class UserService {
     const result = await User.destroy({
       where:
       {
-        id: this.body.id
+        id:this.fields.id
       }
     })
     return result
   }
 
-  async getUser(query) {
-    this.body = query
+  async getUser(fields) {
+    this.fields = fields
     await this._checkRequiredFields(this._getUserRequiredFields)
     const user = await User.findOne({
       where: {
-        id: this.body.id
+        id: this.fields.id
       }
     })
     if (!user) {
