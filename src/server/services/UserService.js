@@ -14,6 +14,14 @@ class UserService extends Service {
     super()
   }
 
+  async _checkUserExsists(user){
+    if (!user) {
+      const { error } = invalidParamError('id or username')
+      const { statusCode, body } = invalidRequest(error)
+      this._throwException(body,statusCode)
+    }
+  }
+
   async createUser(fields) {
     this.fields = fields
     await this._checkRequiredFields(this._requiredFields)
@@ -61,11 +69,8 @@ class UserService extends Service {
         id:this.fields.id
       }
     })
-    if (!user) {
-      const { error } = invalidParamError('id or username')
-      const { statusCode, body } = invalidRequest(error)
-      this._throwException(body,statusCode)
-    }
+    await this._checkUserExsists(user)
+
     const result = await User.destroy({
       where:
       {
