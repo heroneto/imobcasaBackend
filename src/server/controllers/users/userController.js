@@ -47,7 +47,6 @@ module.exports = {
      
       return res.status(200).json(user)
     }catch(err){
-      console.log(err)
       if(err instanceof ServiceException){
         const {statusCode, message} = err
         return res.status(statusCode).json(message)

@@ -9,20 +9,33 @@ class Service{
     throw new ServiceException(body, statusCode)
   }
 
+  _throwMissingParamError(param){
+    const { error } = missingParamError(param)
+    const { statusCode, body } = invalidRequest(error)
+    this._throwException(body, statusCode)
+  }
+
+  _throwInvalidParamError(param){
+    const { error } = invalidParamError('id')
+    const { statusCode, body } = invalidRequest(error)
+    this._throwException(body, statusCode)
+  }
+
+
   _checkRequiredFields(fieldsToCheck) {
     for (const field of fieldsToCheck) {
       if (!this.fields[`${field}`]) {
-        const { statusCode, body } = this._getMissingParamError(field)
-        this._throwException(body, statusCode)
+        this._throwMissingParamError(field)
       }
+    }
+  }  
+
+  _checkEntityExsits(entity){
+    if (!entity) {
+      this._throwInvalidParamError('id')      
     }
   }
 
-  _getMissingParamError(param){
-    const { error } = missingParamError(param)
-    const { statusCode, body } = invalidRequest(error)
-    return { statusCode, body }
-  }
 }
 
 module.exports = Service

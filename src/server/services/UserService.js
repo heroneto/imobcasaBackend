@@ -1,6 +1,4 @@
 const User = require('../models').users
-const { forbiden, invalidRequest, unauthorized, internalError, noContent } = require('../helpers').protocols
-const { invalidParamError, missingParamError, serverError, noResultsError } = require('../helpers').errors
 const Service = require('./Service')
 
 class UserService extends Service {
@@ -14,13 +12,7 @@ class UserService extends Service {
     super()
   }
 
-  async _checkUserExsists(user){
-    if (!user) {
-      const { error } = invalidParamError('id')
-      const { statusCode, body } = invalidRequest(error)
-      this._throwException(body,statusCode)
-    }
-  }
+  
 
   async createUser(fields) {
     this.fields = fields
@@ -47,7 +39,7 @@ class UserService extends Service {
         id: this.fields.id
       }
     })
-    await this._checkUserExsists(user)
+    await this._checkEntityExsits(user)
     user.fullName = this.fields.fullName
     user.username = this.fields.username
     user.email = this.fields.email
@@ -65,7 +57,7 @@ class UserService extends Service {
         id:this.fields.id
       }
     })
-    await this._checkUserExsists(user)
+    await this._checkEntityExsits(user)
 
     const result = await User.destroy({
       where:
@@ -84,7 +76,7 @@ class UserService extends Service {
         id: this.fields.id
       }
     })
-    await this._checkUserExsists(user)
+    await this._checkEntityExsits(user)
     return user
   }
 
