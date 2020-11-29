@@ -2,6 +2,8 @@ const User = require('../models').users
 const { forbiden, invalidRequest, unauthorized, internalError, noContent } = require('../helpers').protocols
 const { invalidParamError, missingParamError, serverError, noResultsError } = require('../helpers').errors
 const { Op } = require("sequelize");
+const ServiceException = require('../helpers/Exceptions/ServiceException')
+
 
 class UserService {
   _requiredFields = ['fullName', 'username', 'email', 'password', 'admin']
@@ -9,19 +11,23 @@ class UserService {
   _deleteUserRequiredFields = ['id']
   _getUserRequiredFields = ['id']
 
+
+
   _checkRequiredFields(fieldsToCheck) {
     for (const field of fieldsToCheck) {
       if (!this.body[`${field}`]) {
         const { error } = missingParamError(field)
         const { statusCode, body } = invalidRequest(error)
-        throw new Error(JSON.stringify({ statusCode, body }))
+        this._throwException(body, statusCode)
       }
     }
   }
 
-  checkUpdateRequiredFields(fieldsToCheck) {
-
+  _throwException(body,statusCode){
+    throw new ServiceException(body, statusCode)
   }
+
+
 
   async createUser(body) {
     this.body = body
@@ -51,7 +57,7 @@ class UserService {
     if (!user) {
       const { error } = invalidParamError('id')
       const { statusCode, body } = invalidRequest(error)
-      throw new Error(JSON.stringify({ statusCode, body }))
+      this._throwException(body,statusCode)
     }
     user.fullName = this.body.fullName
     user.username = this.body.username
@@ -73,7 +79,7 @@ class UserService {
     if (!user) {
       const { error } = invalidParamError('id or username')
       const { statusCode, body } = invalidRequest(error)
-      throw new Error(JSON.stringify({ statusCode, body }))
+      this._throwException(body,statusCode)
     }
     const result = await User.destroy({
       where:
@@ -95,7 +101,7 @@ class UserService {
     if (!user) {
       const { error } = noResultsError('user')
       const { statusCode, body } = noContent(error)
-      throw new Error(JSON.stringify({ statusCode, body }))
+      this._throwException(body,statusCode)
     }
     return user
   }
