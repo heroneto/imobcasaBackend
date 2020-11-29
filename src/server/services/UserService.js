@@ -1,5 +1,6 @@
 const User = require('../models').users
 const Service = require('./Service')
+const UserRepository = require('../repositories/UserRepository')
 
 class UserService extends Service {
   _requiredFields = ['fullName', 'username', 'email', 'password', 'admin']
@@ -10,6 +11,7 @@ class UserService extends Service {
 
   constructor(){
     super()
+    this._userRepository = new UserRepository()
   }
 
   
@@ -17,8 +19,7 @@ class UserService extends Service {
   async createUser(fields) {
     this.fields = fields
     await this._checkRequiredFields(this._requiredFields)
-    const user = await User.create(this.fields)
-    return user
+    return await this._userRepository.create(this.fields)
   }
 
   async findAll() {
