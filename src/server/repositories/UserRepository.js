@@ -6,6 +6,7 @@ class UserRepository {
     const user = await User.create(fields)
     return user
   }
+  
   async findAll(){
     const users = await User.findAll({
       attributes: {
@@ -14,6 +15,7 @@ class UserRepository {
     })
     return users
   }
+
   async update(user, fields){   
     user.fullName = fields.fullName
     user.username = fields.username
@@ -32,7 +34,6 @@ class UserRepository {
     })
     return result
   }
-
 
   async getOne(fields){
     const user = await User.findOne({

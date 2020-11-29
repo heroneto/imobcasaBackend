@@ -22,9 +22,9 @@ class Service{
   }
 
 
-  _checkRequiredFields(fieldsToCheck) {
-    for (const field of fieldsToCheck) {
-      if (!this.fields[`${field}`]) {
+  _checkRequiredFields(requiredFields, fieldsToCheck) {
+    for (const field of requiredFields) {
+      if (!fieldsToCheck[`${field}`]) {
         this._throwMissingParamError(field)
       }
     }

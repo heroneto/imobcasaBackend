@@ -1,4 +1,3 @@
-const User = require('../models').users
 const Service = require('./Service')
 const UserRepository = require('../repositories/UserRepository')
 
@@ -17,9 +16,8 @@ class UserService extends Service {
   
 
   async createUser(fields) {
-    this.fields = fields
-    await this._checkRequiredFields(this._requiredFields)
-    return await this._userRepository.create(this.fields)
+    await this._checkRequiredFields(this._requiredFields, fields)
+    return await this._userRepository.create(fields)
   }
 
   async findAll() {
@@ -27,25 +25,22 @@ class UserService extends Service {
   }
 
   async updateUser(fields) {
-    this.fields = fields
-    await this._checkRequiredFields(this._updateRequiredFields)
-    const user = await this._userRepository.getOne(this.fields)
+    await this._checkRequiredFields(this._updateRequiredFields, fields)
+    const user = await this._userRepository.getOne(fields)
     await this._checkEntityExsits(user)    
-    return await this._userRepository.update(user, this.fields)
+    return await this._userRepository.update(user, fields)
   }
 
   async deleteUser(fields) {
-    this.fields = fields
-    await this._checkRequiredFields(this._deleteUserRequiredFields)
-    const user = await this._userRepository.getOne(this.fields)
+    await this._checkRequiredFields(this._deleteUserRequiredFields, fields)
+    const user = await this._userRepository.getOne(fields)
     await this._checkEntityExsits(user)
-    return await this._userRepository.delete(this.fields)
+    return await this._userRepository.delete(fields)
   }
 
   async getUser(fields) {
-    this.fields = fields
-    await this._checkRequiredFields(this._getUserRequiredFields)
-    const user = await this._userRepository.getOne(this.fields)
+    await this._checkRequiredFields(this._getUserRequiredFields, fields)
+    const user = await this._userRepository.getOne(fields)
     await this._checkEntityExsits(user)
     return user
   }
