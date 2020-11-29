@@ -1,33 +1,18 @@
 const User = require('../models').users
 const { forbiden, invalidRequest, unauthorized, internalError, noContent } = require('../helpers').protocols
 const { invalidParamError, missingParamError, serverError, noResultsError } = require('../helpers').errors
-const { Op } = require("sequelize");
-const ServiceException = require('../helpers/Exceptions/ServiceException')
+const Service = require('./Service')
 
-
-class UserService {
+class UserService extends Service {
   _requiredFields = ['fullName', 'username', 'email', 'password', 'admin']
   _updateRequiredFields = ['id']
   _deleteUserRequiredFields = ['id']
   _getUserRequiredFields = ['id']
 
 
-
-  _checkRequiredFields(fieldsToCheck) {
-    for (const field of fieldsToCheck) {
-      if (!this.fields[`${field}`]) {
-        const { error } = missingParamError(field)
-        const { statusCode, body } = invalidRequest(error)
-        this._throwException(body, statusCode)
-      }
-    }
+  constructor(){
+    super()
   }
-
-  _throwException(body,statusCode){
-    throw new ServiceException(body, statusCode)
-  }
-
-
 
   async createUser(fields) {
     this.fields = fields
