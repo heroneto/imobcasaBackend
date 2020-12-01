@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
     fbAdAccountId: DataTypes.STRING
   }, {
     hooks: {
-      beforeCreate: (user) => {
+      beforeCreate: (Campaign) => {
         Campaign.id = uuidV4()
       }
     }

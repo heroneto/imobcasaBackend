@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     negociationCompletedAt: DataTypes.DATE
   }, {
     hooks: {
-      beforeCreate: (user) => {
+      beforeCreate: (lead) => {
         lead.id = uuidV4()
       }
     }

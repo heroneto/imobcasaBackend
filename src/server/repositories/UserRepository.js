@@ -4,6 +4,7 @@ class UserRepository {
 
   async create(fields){
     const user = await User.create(fields)
+    delete user.password
     return user
   }
   

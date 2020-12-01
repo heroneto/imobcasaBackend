@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
     description: DataTypes.STRING
   }, {
     hooks: {
-      beforeCreate: (user) => {
+      beforeCreate: (leadstatus) => {
         leadstatus.id = uuidV4()
       }
     }

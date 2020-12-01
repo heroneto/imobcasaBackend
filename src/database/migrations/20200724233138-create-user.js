@@ -22,9 +22,6 @@ module.exports = {
       admin: {
         type: Sequelize.BOOLEAN
       },
-      lastLeadReceivedTime: {
-        type: Sequelize.STRING
-      },
       active: {
         type: Sequelize.BOOLEAN
       },

@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
     active: DataTypes.BOOLEAN
   }, {
     hooks: {
-      beforeCreate: (user) => {
+      beforeCreate: (leadSource) => {
         leadSource.id = uuidV4()
       }
     }

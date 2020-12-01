@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     active: DataTypes.BOOLEAN,
   }, {
     hooks: {
-      beforeCreate: (user) => {
+      beforeCreate: (task) => {
         task.id = uuidV4()
       }
     }

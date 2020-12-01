@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
     active: DataTypes.BOOLEAN
   }, {
     hooks: {
-      beforeCreate: (user) => {
+      beforeCreate: (tasktype) => {
         tasktype.id = uuidV4()
       }
     }

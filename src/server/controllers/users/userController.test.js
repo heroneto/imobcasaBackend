@@ -2,6 +2,7 @@ const { getAllUsers, createUser, updateUser, deleteUser, getUser } = require('./
 const databaseSetup = require('../../../database')
 const { missingParamError, invalidParamError } = require('../config/Errors')
 const User = require('../../models').users
+const { v4:uuidV4 } = require('uuid')
 
 const mockFakeUser = () => {
   const fakeUser = {
@@ -12,7 +13,6 @@ const mockFakeUser = () => {
     passwordConfirmation: "validPassword",
     admin: true,
     active: true,
-    lastLeadReceivedTime: "123456"
   }
   return fakeUser
 }
@@ -38,11 +38,10 @@ const getUserModelExpected = () => {
     createdAt: expect.any(Date),
     email: expect.any(String),
     fullName: expect.any(String),
-    id: expect.any(Number),
+    id: expect.any(String),
     admin: expect.any(Boolean),
     updatedAt: expect.any(Date),
     username: expect.any(String),
-    lastLeadReceivedTime: expect.any(String)
   }
 }
 
@@ -138,7 +137,7 @@ describe('USER CONTROLLER: tests', () =>{
     })
   })
 
-  describe('Delete user tests', () => {
+  describe('DELETE User tests', () => {
     test('DELETE: Should return 400 if no id has beem send', async()=>{
       const user = mockFakeUser()
       delete user.id
@@ -168,7 +167,7 @@ describe('USER CONTROLLER: tests', () =>{
     })
   })
 
-  describe('Get user by ID', () => {
+  describe('GET USER BY ID', () => {
     let userId = ""
     beforeAll(async () => {
       try{

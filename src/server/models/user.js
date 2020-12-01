@@ -12,7 +12,6 @@ module.exports = (sequelize, DataTypes) => {
     email: DataTypes.STRING,
     password: DataTypes.STRING,
     admin: DataTypes.BOOLEAN,
-    lastLeadReceivedTime: DataTypes.STRING,
     active: DataTypes.BOOLEAN
   }, {
     freezeTableName: true,
