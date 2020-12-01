@@ -1,10 +1,12 @@
 'use strict';
 const bcrypt = require('bcrypt')
 const salt = bcrypt.genSaltSync()
+const { v4:uuidV4 } = require('uuid')
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
    return queryInterface.bulkInsert('users', [{
+    id: uuidV4(),
     username: 'admin',
     fullName: 'Admin',
     admin: true,

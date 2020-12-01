@@ -4,9 +4,8 @@ module.exports = {
     return queryInterface.createTable('leads', {
       id: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.UUID,
       },
       name: {
         type: Sequelize.STRING,
@@ -17,7 +16,7 @@ module.exports = {
         unique: true
       },
       sourceid: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.UUID,
         allowNull: false,
         references: {
           model: "leadSources",
@@ -25,14 +24,14 @@ module.exports = {
         }
       },
       campaignid: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.UUID,
         references: {
           model: "Campaigns",
           key: "id"
         }
       },
       userid: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.UUID,
         references: {
           model: 'users',
           key: 'id'
@@ -43,7 +42,7 @@ module.exports = {
         allowNull: false
       },
       statusid: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.UUID,
         allowNull: false,
         references: {
           model: 'leadstatuses',

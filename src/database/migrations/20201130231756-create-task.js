@@ -4,9 +4,8 @@ module.exports = {
     return queryInterface.createTable('tasks', {
       id: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.UUID,
       },
       title: {
         type: Sequelize.STRING
@@ -15,14 +14,14 @@ module.exports = {
         type: Sequelize.STRING
       },
       userid: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.UUID,
         references: {
           model: 'users',
           key: 'id'
         },
       },
       leadid: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.UUID,
         references: {
           model: 'leads',
           key: 'id'

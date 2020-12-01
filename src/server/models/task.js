@@ -1,4 +1,5 @@
 'use strict';
+const { v4: uuidV4 } = require('uuid')
 module.exports = (sequelize, DataTypes) => {
   const task = sequelize.define('task', {
     title: DataTypes.STRING,
@@ -10,7 +11,13 @@ module.exports = (sequelize, DataTypes) => {
     resolutiondate: DataTypes.DATE,
     tasktypeid: DataTypes.INTEGER,
     active: DataTypes.BOOLEAN,
-  }, {});
+  }, {
+    hooks: {
+      beforeCreate: (user) => {
+        task.id = uuidV4()
+      }
+    }
+  });
   task.associate = function(models) {
     // associations can be defined here
   };
