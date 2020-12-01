@@ -8,7 +8,8 @@ module.exports = (sequelize, DataTypes) => {
     statusid: DataTypes.INTEGER,
     startdate: DataTypes.DATE,
     resolutiondate: DataTypes.DATE,
-    tasktypeid: DataTypes.INTEGER
+    tasktypeid: DataTypes.INTEGER,
+    active: DataTypes.BOOLEAN,
   }, {});
   task.associate = function(models) {
     // associations can be defined here

@@ -28,12 +28,9 @@ module.exports = {
           key: 'id'
         },
       },
-      statusid: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'taskstatuses',
-          key: 'id'
-        },
+      active: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false 
       },
       startdate: {
         type: Sequelize.DATE

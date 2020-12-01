@@ -4,12 +4,16 @@ module.exports = {
   up: (queryInterface, Sequelize) => {
    return queryInterface.bulkInsert('leads', [{
     name: "Demo Lead",
-    phone: "112222233333",
-    source: "Facebook",
-    userId: 1,
+    phone: "11123456789",
+    sourceid: 1,
+    campaignid: 1,
+    userid: 1,
     createdAt: new Date(),
     updatedAt: new Date,
-    statusId: 1
+    statusid: 2,
+    active: true,
+    negociationStartedAt: new Date(),
+    negociationCompletedAt: null
   }], {});
   },
 
