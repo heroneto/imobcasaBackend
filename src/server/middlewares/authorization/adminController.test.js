@@ -60,13 +60,13 @@ describe("AdminController tests", () => {
   })
 
   describe("CheckPrivileges tests", () => {
-    test("Should return 403 if no jwt token was provided", async () => {
+    test("Should return 400 if no jwt token was provided", async () => {
       const req =  mockRequest({}, {}, {})
       const res = mockResponse()
       await checkAdminPrivileges(req, res)
-      expect(res.status).toHaveBeenCalledWith(403)
+      expect(res.status).toHaveBeenCalledWith(400)
       const {error} = missingParamError('jwt')
-      expect(res.send).toHaveBeenCalledWith(error)
+      expect(res.json).toHaveBeenCalledWith(error)
     })
     test('Should return 403 if user has no privileges', async () => {
       const token = {
@@ -77,7 +77,7 @@ describe("AdminController tests", () => {
       await checkAdminPrivileges(req, res)
       expect(res.status).toHaveBeenCalledWith(403)
       const {error} = invalidParamError('jwt')
-      expect(res.send).toHaveBeenCalledWith(error)
+      expect(res.json).toHaveBeenCalledWith(error)
     })
     test('Should call next function if user has admin privileges', async () => {
       const token = {

@@ -11,35 +11,21 @@ class AuthService extends Service {
   }
 
 
-  async _checkToken(token) {
-    try {
-      const jwtDecoded = await jwt.verify(token, process.env.JWT_SECRET)
-      const actualTime = new Date().getTime() / 1000
-      if (actualTime > jwtDecoded.exp) {
-        this._thorwUnalthorizedError("token")
-      }
-      return jwtDecoded
-    } catch (err) {
-      this._thorwUnalthorizedError("token")
-    }
-  }
-
-
   async _checkEntityExsits(entity) {
     if (!entity) {
-      this._thorwUnalthorizedError("Username or Password")
+      this._throwUnalthorizedError("Username or Password")
     }
   }
 
   async _checkPassword(user, password) {
     if (!await user.validPassword(password)) {
-      this._thorwUnalthorizedError("Username or Password")
+      this._throwUnalthorizedError("Username or Password")
     }
   }
 
   async _checkActiveUser(user) {
     if (!user.admin) {
-      this._thorwUnalthorizedError("User is Not Active")
+      this._throwUnalthorizedError("User is Not Active")
     }
   }
 
