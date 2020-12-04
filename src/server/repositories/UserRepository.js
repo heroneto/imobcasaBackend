@@ -44,6 +44,8 @@ class UserRepository {
     })
     return user
   }
+
+  
 }
 
 module.exports = UserRepository

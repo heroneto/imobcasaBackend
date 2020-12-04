@@ -1,69 +1,33 @@
-const {forbiden, invalidRequest, unauthorized, internalError} = require('../../controllers/config').protocols
-const {invalidParamError, missingParamError, serverError} = require('../../controllers/config').errors
-const User = require('../../models').users
+const { internalError } = require('../../controllers/config').protocols
+const { serverError } = require('../../controllers/config').errors
+
 const path = require('path')
 require('dotenv').config({path: path.resolve(process.cwd(), '.env')})
-const jwt = require('jsonwebtoken')
-
-async function checkToken(token){
-  try{
-    const jwtDecoded = await jwt.verify(token, process.env.JWT_SECRET)
-    const actualTime = new Date().getTime() / 1000
-    if(actualTime > jwtDecoded.exp){
-      console.log("Token expirado")
-      return {...jwtDecoded,valid:false}
-    }    
-    return {...jwtDecoded,valid:true}
-  }catch(err){
-    return {valid:false,err}
-  }
-}
+const AuthService = require('../../services/AuthService')
+const ServiceException = require('../../helpers/Exceptions/ServiceException')
 
 module.exports = {
   checkAuthentication: async (req,res,next)=>{
-    try{    
-      const {jwt} = req.signedCookies
-      if(!jwt){
-        const {error} = missingParamError('token')
-        const {statusCode, body} = unauthorized(error)
-        return res.status(statusCode).send(body)
-      }
-      const isAuthenticated = await checkToken(jwt)
-      if(isAuthenticated.valid === false){
-        const {error} = invalidParamError('token')
-        const {statusCode, body} = unauthorized(error)
-        return res.status(statusCode).send(body)
-      }
+    try{         
+      const authService = new AuthService()
+      const tokenDecoded = await authService.checkAuthentication(req.signedCookies)
       next()
-    }catch(error){
-      const {error:serverErrorMsg} = serverError()
-      const {statusCode, body} = internalError(serverErrorMsg)
-      return res.status(statusCode).send(body)
+    }catch(err){
+      if(err instanceof ServiceException){
+        const {statusCode, message} = err
+        return res.status(statusCode).json(message)
+      }else {
+        console.error(err)
+        const {error} = serverError()
+        const {statusCode, body} = internalError(error)
+        return res.status(statusCode).send(body)
+      }     
     }
   },
   userAuthentication: async (req,res,next) => {
     try{
-      const {username, password} = req.body
-      const requiredFields = ['username', 'password']
-      for(const field of requiredFields){
-        if(!req.body[`${field}`]){
-          const {error} = missingParamError(field)
-          const {statusCode, body} = invalidRequest(error)
-          return res.status(statusCode).send(body)
-        }
-      }
-      const user = await User.findOne({where: {username: username}})
-      if(!user){
-        const {error} = invalidParamError('username')
-        const {statusCode, body} = unauthorized(error)
-        return res.status(statusCode).send(body)
-      }
-      if(!await user.validPassword(password)){
-        const {error} = invalidParamError('password')
-        const {statusCode, body} = unauthorized(error)
-        return res.status(statusCode).send(body)
-      }
-      const token = await user.generateToken(user.id, user.username)
+      const authService = new AuthService()
+      const token = await authService.authenticate(req.body)
       res.status(200)
       res.cookie('jwt', token, {
         expires: new Date(Date.now() + 8 * 3600000),
@@ -71,12 +35,17 @@ module.exports = {
         httpOnly: true,
         signed: true
       })
-      return res.send({token:token, admin: user.admin, active: user.active})
+      return res.json(token)
     }catch(err){
-      console.log(err)
-      const {error:serverErrorMsg} = serverError()
-      const {statusCode, body} = internalError(serverErrorMsg)
-      return res.status(statusCode).send(body)
+      if(err instanceof ServiceException){
+        const {statusCode, message} = err
+        return res.status(statusCode).json(message)
+      }else {
+        console.error(err)
+        const {error} = serverError()
+        const {statusCode, body} = internalError(error)
+        return res.status(statusCode).send(body)
+      }      
     }
   }
 }

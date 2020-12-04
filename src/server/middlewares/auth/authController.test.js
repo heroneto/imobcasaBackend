@@ -83,7 +83,7 @@ describe('AUTH CONTROLLER: tests', () => {
         await userAuthentication(req, res)
         const { error } = missingParamError(field)
         expect(res.status).toHaveBeenCalledWith(400)
-        expect(res.send).toBeCalledWith(error)
+        expect(res.json).toBeCalledWith(error)
       })  
     }
     for(const field of requiredFields){
@@ -93,9 +93,9 @@ describe('AUTH CONTROLLER: tests', () => {
         const req = mockRequest(fakeUser)
         const res = mockResponse()
         await userAuthentication(req, res)
-        const { error } = invalidParamError(field)
+        const { error } = invalidParamError('Username or Password')
         expect(res.status).toHaveBeenCalledWith(401)
-        expect(res.send).toBeCalledWith(error)
+        expect(res.json).toBeCalledWith(error)
       })
     }
     it('Should return 200 if valid password and username has been send', async () => {
@@ -104,31 +104,27 @@ describe('AUTH CONTROLLER: tests', () => {
       const res = mockResponse()
       await userAuthentication(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
-      expect(res.send).toHaveBeenCalledWith({
-        token: expect.any(String), 
-        admin: expect.any(Boolean), 
-        active: expect.any(Boolean)
-      })
+      expect(res.json).toHaveBeenCalledWith(expect.any(String))
     }
     )
   }),
 
   describe('CHECKAUTHENTICATION', () => {
-    it('should return 401 if no jwt token was provided', async () => {
+    it('should return 400 if no jwt token was provided', async () => {
       const req = {signedCookies: ''}
       const res = mockResponse()
       await checkAuthentication(req, res)
-      const { error } = missingParamError('token')
-      expect(res.status).toHaveBeenCalledWith(401)
-      expect(res.send).toBeCalledWith(error)
+      const { error } = missingParamError('jwt')
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toBeCalledWith(error)
     });
     it('should return 401 if invalid jwt token was provided ', async () => {
-      const req = mockRequestJwtToken('invalidJWT')
+      const req = mockRequestJwtToken('InvalidJWT')
       const res = mockResponse()
       await checkAuthentication(req, res)
       const { error } = invalidParamError('token')
       expect(res.status).toHaveBeenCalledWith(401)
-      expect(res.send).toBeCalledWith(error)      
+      expect(res.json).toBeCalledWith(error)      
     });
     it('should call next if valid jwt token was provided', async () => {
       const fakeUser = mockFakeUser()

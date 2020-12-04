@@ -16,11 +16,16 @@ class Service{
   }
 
   _throwInvalidParamError(param){
-    const { error } = invalidParamError('id')
+    const { error } = invalidParamError(param)
     const { statusCode, body } = invalidRequest(error)
     this._throwException(body, statusCode)
   }
 
+  _thorwUnalthorizedError(param){
+    const {error} = invalidParamError(param)
+    const {statusCode, body} = unauthorized(error)
+    this._throwException(body, statusCode)
+  }
 
   _checkRequiredFields(requiredFields, fieldsToCheck) {
     for (const field of requiredFields) {
