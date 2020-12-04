@@ -1,6 +1,5 @@
-const {forbiden, invalidRequest, unauthorized, internalError, noContent} = require('../config').protocols
-const {invalidParamError, missingParamError, serverError, noResultsError} = require('../config').errors
-const { Op } = require("sequelize");
+const {internalError} = require('../config').protocols
+const {serverError} = require('../config').errors
 const UserService = require('../../services/UserService')
 const ServiceException = require('../../helpers/Exceptions/ServiceException')
 

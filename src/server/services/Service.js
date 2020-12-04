@@ -52,11 +52,11 @@ class Service{
       const jwtDecoded = await jwt.verify(token, process.env.JWT_SECRET)
       const actualTime = new Date().getTime() / 1000
       if (actualTime > jwtDecoded.exp) {
-        this._thorwUnalthorizedError("token")
+        this._throwUnalthorizedError("token")
       }
       return jwtDecoded
     } catch (err) {
-      this._thorwUnalthorizedError("token")
+      this._throwUnalthorizedError("token")
     }
   }
 

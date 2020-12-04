@@ -2,18 +2,12 @@ const express = require('express')
 const cors = require('cors')
 const path = require('path')
 require('dotenv').config({path: path.resolve(__dirname, '../.env')})
-// const routes = require('./routes').routes
 const { authRoutes, leadRoutes, taskRoutes, userRoutes, tasktypeRoutes } = require('./routes')
 const cookieParser = require('cookie-parser')
-const csrf = require('csurf')
-const auth = require('./middlewares/auth')
 
 const app = express()
 const port = process.env.PORT || 8000
 const secret = process.env.JWT_SECRET
-const csrfProtection = csrf({
-  cookie: true
-})
 const token = "teste"
 
 async function server(){
@@ -33,7 +27,6 @@ async function server(){
     console.log(req.body)
   })
   app.use(cookieParser(secret))
-  app.use(csrfProtection)
   app.use(leadRoutes)
   app.use(userRoutes)
   app.use(taskRoutes)
