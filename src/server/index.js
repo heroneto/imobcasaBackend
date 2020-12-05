@@ -45,7 +45,7 @@
 
 
 const Server = require('./Server')
-const CampaignController = require('./controllers/campaign/campaignController')
+const CampaignController = require('./controllers/campaign/CampaignController')
 const UserController = require('./controllers/user/UserController')
 const AuthenticationController = require('./controllers/authentication/AuthenticationController')
 
