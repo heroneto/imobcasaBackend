@@ -1,6 +1,6 @@
 const ServiceException = require('../helpers/Exceptions/ServiceException')
 const { forbiden, invalidRequest, unauthorized, internalError, noContent } = require('../helpers').protocols
-const { invalidParamError, missingParamError, serverError, noResultsError } = require('../helpers').errors
+const { invalidParamError, missingParamError, serverError, noResultsError, forbidenError } = require('../helpers').errors
 const jwt = require('jsonwebtoken')
 
 class Service{
@@ -28,14 +28,15 @@ class Service{
   }
 
   _throwForbidenError(param){
-    const { error } = invalidParamError(param)
+    const { error } = forbidenError(param)
     const { statusCode, body } = forbiden(error)
     this._throwException(body, statusCode)
   }
 
   _checkRequiredFields(requiredFields, fieldsToCheck) {
+    const fieldsKeysToCheck = Object.keys(fieldsToCheck)
     for (const field of requiredFields) {
-      if (!fieldsToCheck[`${field}`]) {
+      if (!fieldsKeysToCheck.includes(field)) {
         this._throwMissingParamError(field)
       }
     }
@@ -59,8 +60,6 @@ class Service{
       this._throwUnalthorizedError("token")
     }
   }
-
-
 }
 
 module.exports = Service
