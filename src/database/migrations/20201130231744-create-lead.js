@@ -50,7 +50,7 @@ module.exports = {
         }
       },
       negociationStartedAt: {
-        allowNull: true,
+        allowNull: false,
         type: Sequelize.DATE
       },
       negociationCompletedAt: {
