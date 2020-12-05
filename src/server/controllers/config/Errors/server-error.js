@@ -1,6 +1,7 @@
 const serverError = () => {
   return {
-    error: `InternalServerError`
+    error: `InternalServerError`,
+    msg: `InternalServerError`,
   }
 }
 
