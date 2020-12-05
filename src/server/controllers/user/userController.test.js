@@ -26,10 +26,11 @@ const mockResponse = () => {
   return res;
 };
 
-const mockRequest = (body, query) => {
+const mockRequest = (body, query, params) => {
   const request = {}
   request.body = body
   request.query = query
+  request.params = params
   return request
 }
 
@@ -189,7 +190,7 @@ describe('USER CONTROLLER: tests', () =>{
     })
 
     test("Should return 400 if no id has been send", async () => {
-      const req = mockRequest({}, {})
+      const req = mockRequest({}, {}, {})
       const res = mockResponse()
       await userController._getOne(req, res)
       expect(res.status).toHaveBeenCalledWith(400)
@@ -197,7 +198,7 @@ describe('USER CONTROLLER: tests', () =>{
       expect(res.json).toHaveBeenCalledWith(error)
     })
     test("Should return 400 if invalid id has been send", async () => {
-      const req = mockRequest({}, {id: userId+5})
+      const req = mockRequest({}, {},  {id: userId+5})
       const res = mockResponse()
       await userController._getOne(req, res)
       expect(res.status).toHaveBeenCalledWith(400)
@@ -205,12 +206,11 @@ describe('USER CONTROLLER: tests', () =>{
       expect(res.json).toHaveBeenCalledWith(error)
     })
     test('Should return 200 if user has been found', async () => {
-      const req = mockRequest({}, {id: userId})
+      const req = mockRequest({},{}, {id: userId})
       const res = mockResponse()
       await userController._getOne(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
       expect(res.json).toHaveBeenCalledWith(expect.objectContaining(getUserModelExpected()))
     })
   })
-
 })

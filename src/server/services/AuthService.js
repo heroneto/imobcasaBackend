@@ -24,7 +24,7 @@ class AuthService extends Service {
   }
 
   async _checkActiveUser(user) {
-    if (!user.admin) {
+    if (!user.active) {
       this._throwUnalthorizedError("User is Not Active")
     }
   }

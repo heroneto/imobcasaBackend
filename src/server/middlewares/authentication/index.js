@@ -1,1 +1,1 @@
-module.exports = require('./authController')
+module.exports = require('./AuthenticationMiddleware')

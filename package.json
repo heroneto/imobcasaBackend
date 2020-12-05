@@ -7,6 +7,7 @@
     "start": "set NODE_ENV=production && node dist/app.js",
     "test": "jest --watch --runInBand --detectOpenHandles --forceExit",
     "dev": "set NODE_ENV=development && nodemon ./src/app.ts",
+    "teste": "nodemon ./src/server/index2.js",
     "build": "tsc"
   },
   "keywords": [],

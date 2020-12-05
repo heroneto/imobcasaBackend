@@ -3,5 +3,6 @@ module.exports = {
   invalidParamError: require('./invalid-param-errors'),
   serverError: require('./server-error'),
   noResultsError: require('./no-result-errors'),
-  missingBodyContent: require('./missing-body-errors')
+  missingBodyContent: require('./missing-body-errors'),
+  forbidenError: require('./forbiden-error')
 }

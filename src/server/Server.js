@@ -2,12 +2,11 @@ const express = require('express')
 const cors = require('cors')
 const cookieParser = require('cookie-parser')
 const path = require('path')
-require('dotenv').config({path: path.resolve(__dirname, '../.env')})
-
+require('dotenv').config({path: path.resolve(__dirname, '..', '..', '.env')})
 
 class Server {
   port = process.env.POST || 8000
-  secret = process.env.JTW_SECRET
+  secret = process.env.JWT_SECRET
   token = 'teste'
   controllers
 
@@ -27,6 +26,7 @@ class Server {
     }))
     this.app.use(express.json())
     this.app.use(express.urlencoded({extended: true}))
+    this.app.use(cookieParser(this.secret))
   }
   
   _loadRoutes(){

@@ -1,6 +1,8 @@
 const { Router } = require('express')
 const UserService = require('../../services/UserService')
 const ServiceException = require('../../helpers/Exceptions/ServiceException')
+const AuthenticationMiddleware = require('../../middlewares/authentication')
+const AuthorizationMiddleware = require('../../middlewares/authorization')
 const { internalError } = require('../config').protocols
 const { serverError } = require('../config').errors
 
@@ -12,23 +14,37 @@ class UserController {
   searchPath = `${this.basePath}/search`
 
   constructor() {
+    this.authenticationMid = new AuthenticationMiddleware()
+    this.authorizationMid = new AuthorizationMiddleware()
     this._load()
   }
 
 
   async _load() {
-    this.routes.get(this.basePath, this._list)
-    this.routes.post(this.basePath, this._create)
-    this.routes.put(this.basePath, this._update)
-    this.routes.delete(this.basePath, this._delete)
-    this.routes.get(this.getOnePath, this._getOne)
-    this.routes.get(this.searchPath, this._search)
+    this.routes.route(this.basePath)
+      .all(this.authenticationMid.checkAuthentication)
+      .all(this.authorizationMid.checkAdminPrivileges)
+      .get(this._list)
+      .post(this._create)
+      .put(this._update)
+      .delete(this._delete)
+
+    this.routes.route(this.getOnePath)
+      .all(this.authenticationMid.checkAuthentication)
+      .all(this.authorizationMid.checkAdminPrivileges)     
+      .get(this._getOne)
+
+    this.routes.route(this.searchPath)
+      .all(this.authenticationMid.checkAuthentication)
+      .all(this.authorizationMid.checkAdminPrivileges)
+      .get(this._search)
+
   }
 
   async _getOne(req, res) {
     try {
       const userService = new UserService()
-      const user = await userService.getUser(req.query)
+      const user = await userService.getUser(req.params)
       return res.status(200).json(user)
     } catch (err) {
       if (err instanceof ServiceException) {

@@ -1,1 +1,1 @@
-module.exports = require('./adminController')
+module.exports = require('./AuthorizationMiddleware')

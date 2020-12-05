@@ -1,5 +1,6 @@
-const { invalidParamError, missingParamError } = require('../../controllers/config').errors
-const { checkAdminPrivileges } = require('./adminController')
+const { invalidParamError, missingParamError, forbidenError } = require('../../helpers/Errors')
+const AuthorizationMiddleware = require('./AuthorizationMiddleware')
+const authorizationMiddleware = new AuthorizationMiddleware()
 const User = require('../../models').users
 
 
@@ -63,7 +64,7 @@ describe("AdminController tests", () => {
     test("Should return 400 if no jwt token was provided", async () => {
       const req =  mockRequest({}, {}, {})
       const res = mockResponse()
-      await checkAdminPrivileges(req, res)
+      await authorizationMiddleware.checkAdminPrivileges(req, res)
       expect(res.status).toHaveBeenCalledWith(400)
       const {error} = missingParamError('jwt')
       expect(res.json).toHaveBeenCalledWith(error)
@@ -74,9 +75,9 @@ describe("AdminController tests", () => {
       }
       const req = mockRequest({}, {}, token)
       const res = mockResponse()
-      await checkAdminPrivileges(req, res)
+      await authorizationMiddleware.checkAdminPrivileges(req, res)
       expect(res.status).toHaveBeenCalledWith(403)
-      const {error} = invalidParamError('jwt')
+      const {error} = forbidenError()
       expect(res.json).toHaveBeenCalledWith(error)
     })
     test('Should call next function if user has admin privileges', async () => {
@@ -86,7 +87,7 @@ describe("AdminController tests", () => {
       const req = mockRequest({}, {}, token)
       const res = mockResponse()
       const next = mockNext()
-      await checkAdminPrivileges(req, res, next)
+      await authorizationMiddleware.checkAdminPrivileges(req, res, next)
       expect(res.status).not.toHaveBeenCalledWith(403)
       expect(next).toHaveBeenCalled()
     })
