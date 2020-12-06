@@ -4,15 +4,16 @@ const Campaign = require('../models').Campaign
 export class CampaignRepository {
 
   async create (fields) {
-    const campaign = await Campaign.create(fields)
-    return campaign
+    return await Campaign.create(fields)
   }
   getOne = () => {
 
   }
-  list = () => {
 
+  async list(){
+    return await Campaign.findAll()
   }
+
   inactivate = () => {
 
   }

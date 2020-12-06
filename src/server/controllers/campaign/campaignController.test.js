@@ -2,6 +2,7 @@ const CampaignController = require('./CampaignController')
 const campaignController = new CampaignController()
 const CampaignModel = require('../../models').Campaign
 const databaseSetup = require('../../../database')
+const { missingParamError } = require("../../helpers/Errors")
 
 
 const mockFakeCampaign = () => {
@@ -35,11 +36,11 @@ const mockRequest = (body = {}, query = {}, params = {}) => {
 
 const getCampaignModelExpected = () => {
   return {
-    id: expect.any(Boolean),
+    id: expect.any(String),
     name: expect.any(String),
     active: expect.any(Boolean),
     fbCreatedDate: expect.any(Date),
-    fbCampaignId: expect.any(Date),
+    fbCampaignId: expect.any(String),
     fbAdAccountId: expect.any(String),
     createdAt: expect.any(Date),
     updatedAt:expect.any(Date)
@@ -82,9 +83,19 @@ describe('CAMPAIGN CONTROLLER: tests', () => {
         const req = mockRequest(fakeCampaign, {}, {})
         const res = mockResponse()
         await campaignController.createCampaign(req, res)
+        const { error } = missingParamError(field)
         expect(res.status).toHaveBeenCalledWith(400)
+        expect(res.json).toHaveBeenCalledWith(error)
       })      
     }
+    test('Should return 201 if campaign was created', async () => {
+      const fakeCampaign = mockFakeCampaign()
+      const req = mockRequest(fakeCampaign, {}, {})
+      const res = mockResponse()
+      await campaignController.createCampaign(req, res)
+      expect(res.status).toHaveBeenCalledWith(201)
+      expect(res.json).toHaveBeenCalledWith(expect.objectContaining(getCampaignModelExpected()))
+    })
 
   })
 })

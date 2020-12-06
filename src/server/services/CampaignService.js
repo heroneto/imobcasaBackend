@@ -11,7 +11,7 @@ class CampaignService extends Service{
 
   async create(fields){
     await this._checkRequiredFields(this._createRequiredFields, fields)
-    return true
+    return await this._campaignRepository.create(fields)
   }
 
 

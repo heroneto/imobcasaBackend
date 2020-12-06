@@ -24,8 +24,8 @@ class CampaignController {
   async createCampaign(req, res){
     try{
       const campaignService = new CampaignService()
-      await campaignService.create(req.body)
-      return res.status(201).json("Hello World")
+      const campaign = await campaignService.create(req.body)
+      return res.status(201).json(campaign)
     }catch(err){
       if (err instanceof ServiceException) {
         const { statusCode, message } = err
