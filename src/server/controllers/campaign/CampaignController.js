@@ -15,6 +15,44 @@ class CampaignController {
     this.routes.get(this.path, this.getCampaigns)
     this.routes.get(`${this.path}/:id`, this.getOne)
     this.routes.post(this.path, this.createCampaign)
+    this.routes.put(`${this.path}/:id/inactivate`, this.inactivate)
+    this.routes.put(`${this.path}/:id/activate`, this.activate)
+  }
+
+  async activate(request, response) {
+    try {
+      const campaignService = new CampaignService()
+      const result = await campaignService.activate(request.params)
+      return response.status(200).json(result)
+    } catch (err) {
+      if (err instanceof ServiceException) {
+        const { statusCode, message } = err
+        return response.status(statusCode).json(message)
+      } else {
+        console.error(err)
+        const { error } = serverError()
+        const { statusCode, body } = internalError(error)
+        return response.status(statusCode).send(body)
+      }
+    }
+  }
+
+  async inactivate(request, response) {
+    try {
+      const campaignService = new CampaignService()
+      const result = await campaignService.inactivate(request.params)
+      return response.status(200).json(result)
+    } catch (err) {
+      if (err instanceof ServiceException) {
+        const { statusCode, message } = err
+        return response.status(statusCode).json(message)
+      } else {
+        console.error(err)
+        const { error } = serverError()
+        const { statusCode, body } = internalError(error)
+        return response.status(statusCode).send(body)
+      }
+    }
   }
 
   async getOne(request, response) {

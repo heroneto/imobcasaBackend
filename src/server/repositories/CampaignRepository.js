@@ -18,11 +18,23 @@ class CampaignRepository {
     return await Campaign.findAll()
   }
 
-  inactivate = () => {
-
+  async inactivate(fields){
+    return await Campaign.update({
+      active: false
+    }, {
+      where: {
+        id: fields.id
+      }
+    })    
   }
-  activate = () => {
-
+  async activate(fields){
+    return await Campaign.update({
+      active: true
+    }, {
+      where: {
+        id: fields.id
+      }
+    })    
   }
   addUser = () => {
 

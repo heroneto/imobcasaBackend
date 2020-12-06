@@ -123,5 +123,53 @@ describe('CAMPAIGN CONTROLLER: tests', () => {
       expect(res.status).toHaveBeenCalledWith(200)
       expect(res.json).toHaveBeenCalledWith(expect.objectContaining(getCampaignModelExpected()))
     })
-  })  
+  })
+  describe("ACTIVATE Campaign Tests", ()=> {
+    test("Should return 0 on result array if invalid id has been send", async ()=> {
+      const req = mockRequest({}, {}, {id: "invalid id"})
+      const res = mockResponse()
+      await campaignController.activate(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.json).toHaveBeenCalledWith(expect.arrayContaining([0]))
+    })
+    test("Should return 404 if no id has been send", async ()=> {
+      const req = mockRequest({}, {}, {})
+      const res = mockResponse()
+      await campaignController.activate(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      const { error } = missingParamError("id")
+      expect(res.json).toHaveBeenCalledWith(error)
+    }),
+    test("Should return 200 if valid id has been send", async ()=> {
+      const req = mockRequest({}, {}, {id: campaignId})
+      const res = mockResponse()
+      await campaignController.activate(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.json).toHaveBeenCalledWith(expect.arrayContaining([1]))
+    })
+  })
+  describe("INACTIVATE Campaign Tests", ()=> {
+    test("Should return 0 on result array if invalid id has been send", async ()=> {
+      const req = mockRequest({}, {}, {id: "invalid id"})
+      const res = mockResponse()
+      await campaignController.inactivate(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.json).toHaveBeenCalledWith(expect.arrayContaining([0]))
+    })
+    test("Should return 404 if no id has been send", async ()=> {
+      const req = mockRequest({}, {}, {})
+      const res = mockResponse()
+      await campaignController.inactivate(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      const { error } = missingParamError("id")
+      expect(res.json).toHaveBeenCalledWith(error)
+    }),
+    test("Should return 200 if valid id has been send", async ()=> {
+      const req = mockRequest({}, {}, {id: campaignId})
+      const res = mockResponse()
+      await campaignController.inactivate(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.json).toHaveBeenCalledWith(expect.arrayContaining([1]))
+    })
+  })
 })

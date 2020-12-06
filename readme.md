@@ -24,13 +24,13 @@ A autorização servirá para validar se o usuário possui acesso à telas espec
 
 ## Campanhas
 A campanha representa um produto anunciado/conjunto de anuncios no facebook. É possível atrelar vários usuários na campanha para que recebam os Leads referentes àquela campanha.
-**[ ]Feat [ ]Test** Cadastro de campanha
-**[ ]Feat [ ]Test** Leitura de campanha
-**[ ]Feat [ ]Test** Listar campanhas
+**[x]Feat [x]Test** Cadastro de campanha
+**[x]Feat [x]Test** Leitura de campanha
+**[x]Feat [x]Test** Listar campanhas
 **[ ]Feat [ ]Test** Adição de usuários da campanha
 **[ ]Feat [ ]Test** Remoção de usuários da campanha
-**[ ]Feat [ ]Test** Inativação de campanha
-**[ ]Feat [ ]Test** ativação de campanha
+**[x]Feat [x]Test** Inativação de campanha
+**[x]Feat [x]Test** ativação de campanha
 
 
 ## Lead
