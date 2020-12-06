@@ -2,7 +2,7 @@ const CampaignController = require('./CampaignController')
 const campaignController = new CampaignController()
 const CampaignModel = require('../../models').Campaign
 const databaseSetup = require('../../../database')
-const { missingParamError } = require("../../helpers/Errors")
+const { missingParamError, invalidParamError } = require("../../helpers/Errors")
 
 
 const mockFakeCampaign = () => {
@@ -61,6 +61,7 @@ describe('CAMPAIGN CONTROLLER: tests', () => {
     try{
       const fakeCampaign = mockFakeCampaign()
       const campaign = await CampaignModel.create(fakeCampaign)
+      campaignId = campaign.id
     }catch(err){
       console.log(err)
     }
@@ -96,6 +97,31 @@ describe('CAMPAIGN CONTROLLER: tests', () => {
       expect(res.status).toHaveBeenCalledWith(201)
       expect(res.json).toHaveBeenCalledWith(expect.objectContaining(getCampaignModelExpected()))
     })
-
   })
+  describe("GET LIST Campaings tests", () => {
+    test("Should return 200", async () => {
+      const req = mockRequest({}, {}, {})
+      const res = mockResponse()
+      await campaignController.getCampaigns(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.json).toHaveBeenCalledWith(expect.arrayContaining([expect.objectContaining(getCampaignModelExpected())]))
+    })
+  })
+  describe("GET ONE Campaign tests", () => {
+    test("Should return 400 if invalid id has been send", async () => {
+      const req = mockRequest({}, {}, {id: "invalid id"})
+      const res = mockResponse()
+      await campaignController.getOne(req, res)
+      const { error } = invalidParamError("id")
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toHaveBeenCalledWith(error)
+    }),
+    test("Should return 200 if valid id has been send", async () => {
+      const req = mockRequest({}, {}, {id: campaignId})
+      const res = mockResponse()
+      await campaignController.getOne(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.json).toHaveBeenCalledWith(expect.objectContaining(getCampaignModelExpected()))
+    })
+  })  
 })

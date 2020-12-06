@@ -1,13 +1,17 @@
 const Campaign = require('../models').Campaign
 
 
-export class CampaignRepository {
+class CampaignRepository {
 
   async create (fields) {
     return await Campaign.create(fields)
   }
-  getOne = () => {
-
+  async getOne(fields){
+    return await Campaign.findOne({
+      where: {
+        id: fields.id
+      }
+    })
   }
 
   async list(){
@@ -29,4 +33,4 @@ export class CampaignRepository {
 
 }
 
-// module.exports = {CampaignRepository}
+module.exports = CampaignRepository
