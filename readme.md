@@ -8,10 +8,10 @@ O Lead deve ser relacionado à um usuário(no caso um corretor), que receberá u
 Abaixo as Features do projeto e seu status de implemetação, tanto da Feature quanto do teste automatizado.
 
 ## Usuários
-**[x]Feat [x]Test** Cadastro de usuários
-**[x]Feat [x]Test** Leitura de usuários
-**[x]Feat [x]Test** Edição de usuários
-**[x]Feat [x]Test** Remoção de usuários
+**[x]Feat [ ]Test** Cadastro de usuários
+**[x]Feat [ ]Test** Leitura de usuários
+**[x]Feat [ ]Test** Edição de usuários
+**[x]Feat [ ]Test** Remoção de usuários
 
 ## Autenticação
 Autenticação no App para acessar.
