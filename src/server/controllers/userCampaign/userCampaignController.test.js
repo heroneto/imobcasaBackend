@@ -221,7 +221,7 @@ describe("USERCAMPAIGN tests", () => {
       expect(res.status).toHaveBeenCalledWith(200)
       expect(res.json).toHaveBeenCalledWith(0)
     })
-    test("Should return 200 if invalid campaign has been send", async () => {
+    test("Should return 200 with 0 in body if invalid campaign has been send", async () => {
       const parameters = {
         userid: userid,
         campaignid: 'invalidcampaignID'
@@ -233,5 +233,20 @@ describe("USERCAMPAIGN tests", () => {
       expect(res.status).toHaveBeenCalledWith(200)
       expect(res.json).toHaveBeenCalledWith(0)
     })
+
+    test("Should return 200 valid campaignid and userid has been provided", async () => {
+      const parameters = {
+        userid: userid,
+        campaignid: campaignid
+      }
+      const res = mockResponse()
+      const req = mockRequest({}, {}, parameters)
+      
+      await userCampaignController.remove(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.json).toHaveBeenCalledWith(1)
+    })
+
+
   })
 })
