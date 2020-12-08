@@ -8,18 +8,28 @@ module.exports = {
         type: Sequelize.UUID
       },
       campaignid: {
-        type: Sequelize.UUID
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: "Campaigns",
+          key: "id"
+        }
       },
       userid: {
-        type: Sequelize.UUID
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: "users",
+          key: "id"
+        }
       },
       lastLeadReceivedTime: {
         type: Sequelize.DATE,
-        allowNull: false
+        allowNull: true,
       },
       score: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        allowNull: true,
       },
       createdAt: {
         allowNull: false,
