@@ -166,5 +166,18 @@ describe("USERCAMPAIGN tests", () => {
     })
   })
 
-  
+  describe("LIST User Campaign tests", () => {
+    test("Should return 400 if no campaignid has been provided", async () => {
+      const parameters = {
+        campaignid: campaignid
+      }
+      delete parameters.campaignid
+      const res = mockResponse()
+      const req = mockRequest({}, {}, parameters)      
+      await userCampaignController.list(req, res)
+      const { error } = missingParamError('campaignid')
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toHaveBeenCalledWith(error)
+    })
+  })
 })
