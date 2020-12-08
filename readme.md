@@ -27,8 +27,9 @@ A campanha representa um produto anunciado/conjunto de anuncios no facebook. É 
 **[x]Feat [x]Test** Cadastro de campanha
 **[x]Feat [x]Test** Leitura de campanha
 **[x]Feat [x]Test** Listar campanhas
-**[ ]Feat [ ]Test** Adição de usuários da campanha
-**[ ]Feat [ ]Test** Remoção de usuários da campanha
+**[x]Feat [x]Test** Adição de usuários da campanha
+**[x]Feat [x]Test** Remoção de usuários da campanha
+**[x]Feat [x]Test** Listar usuários da campanha
 **[x]Feat [x]Test** Inativação de campanha
 **[x]Feat [x]Test** ativação de campanha
 

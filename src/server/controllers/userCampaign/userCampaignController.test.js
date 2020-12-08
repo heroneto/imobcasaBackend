@@ -47,8 +47,6 @@ const mockRequest = (body = {}, query = {}, params = {}) => {
   return request
 }
 
-
-
 const getModelExpected = () => {
   return {
     id: expect.any(String),
@@ -58,7 +56,6 @@ const getModelExpected = () => {
     updatedAt:expect.any(Date)
   }
 }
-
 
 
 beforeAll(async () => {
