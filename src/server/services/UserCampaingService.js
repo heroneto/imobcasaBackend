@@ -1,6 +1,7 @@
 const Service = require('./Service')
 const UserCampaignRespository = require('../repositories/UserCampaignRespository')
-
+const UserRepository = require('../repositories/UserRepository')
+const CampaignRespository = require('../repositories/CampaignRepository')
 
 class UserCampaingService extends Service{
   _requiredFields = ["userid", "campaignid"]  
@@ -9,6 +10,8 @@ class UserCampaingService extends Service{
   constructor(){
     super()
     this._userCampaignRespository = new UserCampaignRespository()
+    this._userRespository = new UserRepository()
+    this._campaignRespository = new CampaignRespository()
   }
 
   
@@ -20,8 +23,20 @@ class UserCampaingService extends Service{
 
   async add(fields){
     await this._checkRequiredFields(this._requiredFields, fields)
+
+    const user = await this._userRespository.getOne({
+      id: fields.userid
+    })
+    await this._checkEntityExsits(user, "userid")
+
+    const campaign = await this._campaignRespository.getOne({
+      id: fields.campaignid
+    })
+    await this._checkEntityExsits(campaign, "campaignid")
+
     const usercampaign = await this._userCampaignRespository.getOne(fields)
     await this._checkUserExistsInCampaign(usercampaign)
+    
     return await this._userCampaignRespository.add(fields)
   }
 

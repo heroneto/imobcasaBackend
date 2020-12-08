@@ -42,9 +42,9 @@ class Service{
     }
   }  
 
-  _checkEntityExsits(entity){
+  _checkEntityExsits(entity, param = "id"){
     if (!entity) {
-      this._throwInvalidParamError('id')      
+      this._throwInvalidParamError(param)
     }
   }
 

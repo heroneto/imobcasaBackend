@@ -102,7 +102,32 @@ describe("USERCAMPAIGN tests", () => {
         expect(res.json).toHaveBeenCalledWith(error)
       })
     }
-    
+    test("Should return 400 if invalid userid has been send", async () => {
+      const parameters = {
+        userid: "invaliduserid",
+        campaignid: campaignid
+      }
+      const res = mockResponse()
+      const req = mockRequest({}, {}, parameters)
+      
+      await userCampaignController.add(req, res)
+      const { error } = invalidParamError("userid")
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toHaveBeenCalledWith(error)
+    })
+    test("Should return 400 if invalid campaign has been send", async () => {
+      const parameters = {
+        userid: userid,
+        campaignid: 'invalidcampaignID'
+      }
+      const res = mockResponse()
+      const req = mockRequest({}, {}, parameters)
+      
+      await userCampaignController.add(req, res)
+      const { error } = invalidParamError("campaignid")
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toHaveBeenCalledWith(error)
+    })
   })
 
   
