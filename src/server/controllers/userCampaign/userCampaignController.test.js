@@ -179,5 +179,15 @@ describe("USERCAMPAIGN tests", () => {
       expect(res.status).toHaveBeenCalledWith(400)
       expect(res.json).toHaveBeenCalledWith(error)
     })
+    test("Should return 200 if no campaignid has been provided", async () => {
+      const parameters = {
+        campaignid: campaignid
+      }
+      const res = mockResponse()
+      const req = mockRequest({}, {}, parameters)      
+      await userCampaignController.list(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.json).toHaveBeenCalledWith(expect.arrayContaining([expect.objectContaining(getModelExpected())]))
+    })
   })
 })
