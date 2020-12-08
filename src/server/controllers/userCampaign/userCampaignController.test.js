@@ -190,4 +190,31 @@ describe("USERCAMPAIGN tests", () => {
       expect(res.json).toHaveBeenCalledWith(expect.arrayContaining([expect.objectContaining(getModelExpected())]))
     })
   })
+
+  describe("DELETE User Campaign tests", () => {
+    test("Should return 200 if invalid userid has been send", async () => {
+      const parameters = {
+        userid: "invaliduserid",
+        campaignid: campaignid
+      }
+      const res = mockResponse()
+      const req = mockRequest({}, {}, parameters)
+      
+      await userCampaignController.remove(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.json).toHaveBeenCalledWith(0)
+    })
+    test("Should return 200 if invalid campaign has been send", async () => {
+      const parameters = {
+        userid: userid,
+        campaignid: 'invalidcampaignID'
+      }
+      const res = mockResponse()
+      const req = mockRequest({}, {}, parameters)
+      
+      await userCampaignController.remove(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.json).toHaveBeenCalledWith(0)
+    })
+  })
 })
