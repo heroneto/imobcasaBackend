@@ -34,6 +34,7 @@ class UserCampaingService extends Service{
     })
     await this._checkEntityExsits(campaign, "campaignid")
 
+    
     const usercampaign = await this._userCampaignRespository.getOne(fields)
     await this._checkUserExistsInCampaign(usercampaign)
     

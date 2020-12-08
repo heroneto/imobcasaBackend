@@ -152,6 +152,18 @@ describe("USERCAMPAIGN tests", () => {
       expect(res.status).toHaveBeenCalledWith(200)
       expect(res.json).toHaveBeenCalledWith(expect.objectContaining(getModelExpected()))
     })
+
+    test("Should return 400 if user already exists in campaign", async () => {
+      const parameters = {
+        userid: userid,
+        campaignid: campaignid
+      }
+      const res = mockResponse()
+      const req = mockRequest({}, {}, parameters)     
+      await userCampaignController.add(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toHaveBeenCalledWith("User already exists in this campaign")
+    })
   })
 
   
