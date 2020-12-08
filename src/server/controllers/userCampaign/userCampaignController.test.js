@@ -17,7 +17,6 @@ const mockFakeCampaign = () => {
   return fakeCampaign
 }
 
-
 const mockFakeUser = () => {
   const fakeUser = {
     username: "validUser",
@@ -47,6 +46,19 @@ const mockRequest = (body = {}, query = {}, params = {}) => {
   }
   return request
 }
+
+
+
+const getModelExpected = () => {
+  return {
+    id: expect.any(String),
+    campaignid: expect.any(String),
+    userid: expect.any(String),
+    createdAt: expect.any(Date),
+    updatedAt:expect.any(Date)
+  }
+}
+
 
 
 beforeAll(async () => {
@@ -127,6 +139,18 @@ describe("USERCAMPAIGN tests", () => {
       const { error } = invalidParamError("campaignid")
       expect(res.status).toHaveBeenCalledWith(400)
       expect(res.json).toHaveBeenCalledWith(error)
+    })
+
+    test("Should return 200 if item was created", async () => {
+      const parameters = {
+        userid: userid,
+        campaignid: campaignid
+      }
+      const res = mockResponse()
+      const req = mockRequest({}, {}, parameters)     
+      await userCampaignController.add(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.json).toHaveBeenCalledWith(expect.objectContaining(getModelExpected()))
     })
   })
 
