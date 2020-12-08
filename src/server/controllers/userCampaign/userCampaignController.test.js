@@ -179,7 +179,7 @@ describe("USERCAMPAIGN tests", () => {
       expect(res.status).toHaveBeenCalledWith(400)
       expect(res.json).toHaveBeenCalledWith(error)
     })
-    test("Should return 200 if no campaignid has been provided", async () => {
+    test("Should return 200 if valid campaignid has been provided", async () => {
       const parameters = {
         campaignid: campaignid
       }
