@@ -192,6 +192,23 @@ describe("USERCAMPAIGN tests", () => {
   })
 
   describe("DELETE User Campaign tests", () => {
+    const requiredFields = ["userid", "campaignid"]  
+    for(const field of requiredFields){
+      test(`Should return 400 if no ${field} has been send`, async () => {
+        const parameters = {
+          userid: userid,
+          campaignid: campaignid
+        }
+        delete parameters[`${field}`]
+        const res = mockResponse()
+        const req = mockRequest({}, {}, parameters)
+        
+        await userCampaignController.remove(req, res)
+        const { error } = missingParamError(field)
+        expect(res.status).toHaveBeenCalledWith(400)
+        expect(res.json).toHaveBeenCalledWith(error)
+      })
+    }
     test("Should return 200 if invalid userid has been send", async () => {
       const parameters = {
         userid: "invaliduserid",
