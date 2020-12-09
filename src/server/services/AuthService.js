@@ -41,7 +41,7 @@ class AuthService extends Service {
     await this._checkActiveUser(user)
     await this._checkPassword(user, fields.password)
 
-    return await user.generateToken(user.id, user.username)
+    return await user.generateToken(user.id, user.admin)
   }
 
   async checkAuthentication(fields) {

@@ -14,7 +14,7 @@ class LeadRepository {
     })
   }
 
-  async list(fields) {
+  async list() {    
     return await Leads.findAll()
   }
 
@@ -37,7 +37,8 @@ class LeadRepository {
   async delete(fields) {
     return await Leads.destroy({
       where: {
-        id: fields.id
+        id: fields.id,
+        userid: fields.userid
       }
     })
   }

@@ -11,6 +11,10 @@ class AuthenticationMiddleware {
     try{         
       const authService = new AuthService()
       const tokenDecoded = await authService.checkAuthentication(req.signedCookies)
+      req.locals = {
+        reqUserId: tokenDecoded.id,
+        admin: tokenDecoded.admin
+      }
       next()
     }catch(err){
       if(err instanceof ServiceException){

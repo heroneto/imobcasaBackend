@@ -11,6 +11,7 @@ class LeadController {
   routes = Router()
   basePath = "/leads"
   getOnePath = `${this.basePath}/:id`
+  getMyLeads = `${this.basePath}/`
   searchPath = `${this.basePath}/search/:value`
 
   constructor() {
@@ -22,28 +23,29 @@ class LeadController {
   async _load() {
     this.routes.route(this.basePath)
       .all(this.authenticationMid.checkAuthentication)
-      .all(this.authorizationMid.checkAdminPrivileges)
       .get(this.list)
       .post(this.create)
       .put(this.update)
-      
+
 
     this.routes.route(this.getOnePath)
       .all(this.authenticationMid.checkAuthentication)
-      .all(this.authorizationMid.checkAdminPrivileges)
       .get(this.getOne)
       .delete(this.delete)
 
     this.routes.route(this.searchPath)
       .all(this.authenticationMid.checkAuthentication)
-      .all(this.authorizationMid.checkAdminPrivileges)
       .get(this.search)
+
   }
 
   async getOne(request, response) {
     try {
       const leadService = new LeadService()
-      const lead = await leadService.getOne(request.params)
+      const lead = await leadService.getOne({
+        ...request.params,
+        ...request.locals
+      })
       return response.status(200).json(lead)
     } catch (err) {
       if (err instanceof ServiceException) {
@@ -61,7 +63,7 @@ class LeadController {
   async list(request, response) {
     try {
       const leadService = new LeadService()
-      const lead = await leadService.list(request.params)
+      const lead = await leadService.list(request.locals)
       return response.status(200).json(lead)
     } catch (err) {
       if (err instanceof ServiceException) {
@@ -97,7 +99,10 @@ class LeadController {
   async update(request, response) {
     try {
       const leadService = new LeadService()
-      const lead = await leadService.update(request.body)
+      const lead = await leadService.update({
+        ...request.body,
+        ...request.locals
+      })
       return response.status(200).json(lead)
     } catch (err) {
       if (err instanceof ServiceException) {
@@ -115,7 +120,10 @@ class LeadController {
   async delete(request, response) {
     try {
       const leadService = new LeadService()
-      const lead = await leadService.delete(request.params)
+      const lead = await leadService.delete({
+        ...request.params,
+        ...request.locals
+      })
       return response.status(200).json(lead)
     } catch (err) {
       if (err instanceof ServiceException) {
@@ -133,7 +141,10 @@ class LeadController {
   async search(request, response) {
     try {
       const leadService = new LeadService()
-      const lead = await leadService.search(request.params)
+      const lead = await leadService.search({
+        ...request.params,
+        ...request.locals
+      })
       return response.status(200).json(lead)
     } catch (err) {
       if (err instanceof ServiceException) {

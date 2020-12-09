@@ -27,7 +27,7 @@ class Service{
     this._throwException(body, statusCode)
   }
 
-  _throwForbidenError(param){
+  _throwForbidenError(param = ""){
     const { error } = forbidenError(param)
     const { statusCode, body } = forbiden(error)
     this._throwException(body, statusCode)

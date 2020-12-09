@@ -26,8 +26,8 @@ module.exports = (sequelize, DataTypes) => {
   user.prototype.validPassword = async function (password) {
     return await bcrypt.compareSync(password, this.password)
   }
-  user.prototype.generateToken = async function (id, username) {
-    const token = jwt.sign({ id, username }, process.env.JWT_SECRET, {
+  user.prototype.generateToken = async function (id, admin) {
+    const token = jwt.sign({ id, admin }, process.env.JWT_SECRET, {
       expiresIn: process.env.NODE_ENV === 'production' ? '1d' : '1m',
     });
     return token
