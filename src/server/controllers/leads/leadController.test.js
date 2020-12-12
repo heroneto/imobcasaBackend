@@ -1,7 +1,5 @@
 const LeadController = require('./LeadController')
 const leadController = new LeadController()
-
-// const {getLead, createLead, updateLead, deleteLead, getAllLeads, searchLeads} = require('./leadController')
 const { invalidParamError, missingParamError, missingBodyContent, forbidenError  } = require('../../helpers').errors
 const User = require('../../models').users
 const Leads = require('../../models').lead
@@ -9,7 +7,6 @@ const LeadStatus = require('../../models').leadstatus
 const LeadSource = require('../../models').leadSource
 
 const databaseSetup = require('../../../database')
-
 const mockFakeLead = (userid, statusid, sourceId) => {
   const fakeLead = {
     name: "Fake Lead", 
@@ -86,7 +83,7 @@ const getLeadModelExpected = () => {
     name: expect.any(String),
     phone: expect.any(String),
     sourceid: expect.any(String),
-    campaignid: expect.any(String),
+    campaignid: null,
     userid: expect.any(String),
     active: expect.any(Boolean),
     statusid: expect.any(String),
@@ -157,17 +154,13 @@ describe('LEAD CONTROLLER: tests', () => {
       expect(res.status).toBeCalledWith(403)
       expect(res.json).toBeCalledWith(error)
     })
-    // it('GET: Should return 200 if lead has been found', async () => {
-    //   const res = mockResponse()
-    //   const req = mockRequest({}, {id:ids.leadid})
-    //   await getLead(req, res)
-    //   expect(res.status).toHaveBeenCalledWith(200)
-    //   expect(res.send).toBeCalledWith(expect.objectContaining({
-    //     name: expect.any(String),
-    //     phone: expect.any(String),
-    //     source: expect.any(String)
-    //   }))
-    // })
+    it('GET: Should return 200 if lead has been found', async () => {
+      const res = mockResponse()
+      const req = mockRequest({}, {}, {id: lead.id}, {reqUserId: adminUser.id, admin: adminUser.admin})
+      await leadController.getOne(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.json).toBeCalledWith(expect.objectContaining(getLeadModelExpected()))
+    })
   })
   // describe('POST Leads', () => {
   //   const requiredFields = ['name', 'phone', 'source']
