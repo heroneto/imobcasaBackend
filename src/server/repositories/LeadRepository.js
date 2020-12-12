@@ -38,7 +38,6 @@ class LeadRepository {
     return await Leads.destroy({
       where: {
         id: fields.id,
-        userid: fields.userid
       }
     })
   }

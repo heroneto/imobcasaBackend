@@ -383,6 +383,13 @@ describe('LEAD CONTROLLER: tests', () => {
       expect(res.status).toHaveBeenCalledWith(403)
       expect(res.json).toHaveBeenCalledWith(error)
     })
+    it('DELETE: Should return 200 if valid id has been provided', async () => {
+      const res = mockResponse()
+      const req = mockRequest(null, null, { id: lead.id }, { reqUserId: adminUser.id, admin: adminUser.admin })
+      await leadController.delete(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.json).toHaveBeenCalledWith(1)
+    })
     // it('Should return 400 if invalid ID has been send', async () => {
     //   const req = mockRequest('', {id: 9999})
     //   const res = mockResponse()
