@@ -3,7 +3,7 @@ const LeadRepository = require('../repositories/LeadRepository')
 
 class LeadService extends Service{
   _getOneRequiredFields = ["id", "reqUserId", "admin"]
-  _createRequiredFields =  ["name", "phone", "sourceid", "campaignid", "userid", "active", "statusid", "negociationStartedAt"]
+  _createRequiredFields =  ["name", "phone", "sourceid", "campaignid", "userid", "active", "statusid", "negociationStartedAt", "reqUserId", "admin"]
   _listRequiredFields = ["reqUserId", "admin"]
   _updateRequiredFields = ["id", "name", "phone", "sourceid", "campaignid", "userid", "active", "statusid", "admin", "reqUserId"]
   _deleteRequiredFields = ["id"]
@@ -49,7 +49,7 @@ class LeadService extends Service{
     if(!fields.admin && fields.userid !== fields.reqUserId){
       await this._throwForbidenError()
     }
-    if(await this._leadRepository.search({value: fields.phone})){
+    if(await this._leadRepository.findByPhone(fields.phone)){
       await this._throwConflictError("phone")
     }
     return await this._leadRepository.create(fields)

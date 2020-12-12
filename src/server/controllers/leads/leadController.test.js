@@ -169,31 +169,50 @@ describe('LEAD CONTROLLER: tests', () => {
         const res = mockResponse()
         const fakeLead = mockFakeLead()
         delete fakeLead[`${field}`]
-        const req = mockRequest(fakeLead)
+        const req = mockRequest(fakeLead, {}, {id: lead.id}, {reqUserId: adminUser.id, admin: adminUser.admin})
         await leadController.create(req, res)
         expect(res.status).toHaveBeenCalledWith(400)
         const {error} = missingParamError(field)
         expect(res.json).toHaveBeenCalledWith(error)
       })
     }
+    it(`Should return 400 if no admin has been send`, async () => {
+      const res = mockResponse()
+      const fakeLead = mockFakeLead(adminUser.id, leadStatus.id, leadSource.id)
+      const req = mockRequest(fakeLead, {}, {id: lead.id}, {reqUserId: adminUser.id})
+      await leadController.create(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      const {error} = missingParamError('admin')
+      expect(res.json).toHaveBeenCalledWith(error)
+    })
+    it(`Should return 400 if no reqUserId has been send`, async () => {
+      const res = mockResponse()
+      const fakeLead = mockFakeLead(adminUser.id, leadStatus.id, leadSource.id)
+      const req = mockRequest(fakeLead, {}, {id: lead.id}, {admin: adminUser.admin})
+      await leadController.create(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      const {error} = missingParamError('reqUserId')
+      expect(res.json).toHaveBeenCalledWith(error)
+    })
     it('Should return 409 if existing lead already exists', async () => {
       const res = mockResponse()
-      const fakeLead = mockFakeLead()
-      const req = mockRequest(fakeLead)
+      const fakeLead = mockFakeLead(adminUser.id, leadStatus.id, leadSource.id)
+      const req = mockRequest(fakeLead, {}, {id: lead.id}, {reqUserId: adminUser.id, admin: adminUser.admin})
       await leadController.create(req, res)
       const { error } = conflictError('phone')
       expect(res.status).toHaveBeenCalledWith(409)
       expect(res.json).toHaveBeenCalledWith(error)
     })
-    // it('Should return 200 if lead was created', async() => {
-    //   const res = mockResponse()
-    //   const fakeLead = mockFakeLead(ids.userid, ids.leadstausid)
-    //   fakeLead.phone = "9999999999"
-    //   const req = mockRequest(fakeLead)
-    //   await createLead(req, res)
-    //   expect(res.status).toHaveBeenCalledWith(200)
-    //   expect(res.send).toBeCalledWith(expect.objectContaining(getLeadModelExpected()))
-    // })
+    it('Should return 200 if lead has been created', async () => {
+      const res = mockResponse()
+      const fakeLead = mockFakeLead(adminUser.id, leadStatus.id, leadSource.id)
+      fakeLead.name = "newName"
+      fakeLead.phone = "newPhoneNumber"
+      const req = mockRequest(fakeLead, {}, {id: lead.id}, {reqUserId: adminUser.id, admin: adminUser.admin})
+      await leadController.create(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.json).toHaveBeenCalledWith(expect.objectContaining(getLeadModelExpected()))
+    })
   })
   // describe('PUT Leads', () => {
   //   it('PUT: Should return 400 if no body has been send', async () => {

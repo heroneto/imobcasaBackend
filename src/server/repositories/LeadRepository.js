@@ -44,7 +44,7 @@ class LeadRepository {
   }
 
   async search(fields) {
-    return Leads.findAll({
+    return await Leads.findAll({
       where: {
         [Op.or]: [
           {
@@ -58,6 +58,14 @@ class LeadRepository {
             }
           }
         ]
+      }
+    })
+  }
+
+  async findByPhone(phone){
+    return await Leads.findOne({
+      where: {
+        phone: phone
       }
     })
   }
