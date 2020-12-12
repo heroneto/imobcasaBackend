@@ -253,11 +253,21 @@ describe('LEAD CONTROLLER: tests', () => {
       const res = mockResponse()
       const fakeLead  = mockFakeLead()
       fakeLead.id = 'FakeId'
-      const req = mockRequest(fakeLead, {}, {id: lead.id}, {reqUserId: adminUser.id, admin: adminUser.admin})
+      const req = mockRequest(fakeLead, {}, null, {reqUserId: adminUser.id, admin: adminUser.admin})
       await leadController.update(req, res)
       expect(res.status).toHaveBeenCalledWith(400)
       const { error } = invalidParamError('id')
       expect(res.json).toBeCalledWith(error)
+    })
+    it('PUT: Should return 409 if phone already used in another lead', async () => {
+      const res = mockResponse()
+      const fakeLead = mockFakeLead(adminUser.id, leadStatus.id, leadSource.id)
+      fakeLead.id = lead.id
+      const req = mockRequest(fakeLead, null, null, {reqUserId: adminUser.id, admin: adminUser.admin})
+      await leadController.update(req, res)
+      const { error } = conflictError('phone')
+      expect(res.status).toHaveBeenCalledWith(409)
+      expect(res.json).toHaveBeenCalledWith(error)
     })
     // it('PUT: Should return 200 updated', async () => {
     //   const res = mockResponse()
