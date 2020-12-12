@@ -36,17 +36,17 @@ A campanha representa um produto anunciado/conjunto de anuncios no facebook. É 
 
 ## Lead
 O Lead representa um cliente em potencial, O Lead deve ser atrelado sempre à um usuário e à uma campanha que ele entrou. O Lead pode ser cadastro manualmente ou ser recebido via API do Facebok quando ele se cadastra via um anúncio informando seus dados.
-- **[x]Feat [ ]Test** Cadastrar Lead para meu usuário
-- **[x]Feat [ ]Test** Cadastrar Lead para qualquer usuário se for admin
-- **[x]Feat [ ]Test** Listar de Todos Leads do usuário logado
-- **[x]Feat [ ]Test** Listar de Todos Leads se for um admin
+- **[x]Feat [x]Test** Cadastrar Lead para meu usuário
+- **[x]Feat [x]Test** Cadastrar Lead para qualquer usuário se for admin
+- **[x]Feat [x]Test** Listar de Todos Leads do usuário logado
+- **[x]Feat [x]Test** Listar de Todos Leads se for um admin
 - **[ ]Feat [ ]Test** Aplicar paginação no resultado dos Leads
 - **[ ]Feat [ ]Test** Lista Leads de um determinado Status [Analisando]
-- **[x]Feat [ ]Test** Busca de Leads com base em nome ou phone
-- **[x]Feat [ ]Test** Edição meu Lead
-- **[x]Feat [ ]Test** Edição qualquer Lead se for admin
-- **[x]Feat [ ]Test** Remoção do meu Lead
-- **[x]Feat [ ]Test** Remoção de qualquer Lead se for admin
+- **[x]Feat [x]Test** Busca de Leads com base em nome ou phone
+- **[x]Feat [x]Test** Edição meu Lead
+- **[x]Feat [x]Test** Edição qualquer Lead se for admin
+- **[x]Feat [x]Test** Remoção do meu Lead
+- **[x]Feat [x]Test** Remoção de qualquer Lead se for admin
 - **[ ]Feat [ ]Test** ~~ Inativação do meu Lead ~~
 - **[ ]Feat [ ]Test** ~~ Inativação de qualquer Lead se for admin ~~ 
 - **[ ]Feat [ ]Test** ~~Listar todos os Leads de um usuário~~

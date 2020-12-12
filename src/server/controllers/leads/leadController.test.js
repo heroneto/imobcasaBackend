@@ -389,21 +389,7 @@ describe('LEAD CONTROLLER: tests', () => {
       await leadController.delete(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
       expect(res.json).toHaveBeenCalledWith(1)
-    })
-    // it('Should return 400 if invalid ID has been send', async () => {
-    //   const req = mockRequest('', {id: 9999})
-    //   const res = mockResponse()
-    //   await deleteLead(req, res)
-    //   expect(res.status).toHaveBeenCalledWith(400)
-    //   const {error} = invalidParamError('id')
-    //   expect(res.send).toBeCalledWith(error)
-    // }),
-    // it('Should return 200', async () => {
-    //   const req = mockRequest('', {id: ids.leadid})
-    //   const res = mockResponse()
-    //   await deleteLead(req, res)
-    //   expect(res.status).toHaveBeenCalledWith(200)
-    // })
+    })    
   })
   
 })
