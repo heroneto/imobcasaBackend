@@ -343,14 +343,20 @@ describe('LEAD CONTROLLER: tests', () => {
       const { error } = missingParamError("admin")
       expect(res.json).toHaveBeenCalledWith(error)
     })
-    // test(`Should return 400 if no search paramters has been send`, async () => {
-    //   const req = mockRequest({}, {})
-    //   const res = mockResponse()
-    //   await searchLeads(req,res)
-    //   expect(res.status).toHaveBeenCalledWith(400)
-    //   const {error} = missingParamError('userid, phone and name')
-    //   expect(res.send).toHaveBeenCalledWith(error)
-    // })
+    it(`SEARCH: Should return 200 with leads finded by lead name`, async () => {
+      const res = mockResponse()
+      const req = mockRequest(null, null, {value: lead.name}, { reqUserId: adminUser.id,  admin: adminUser.admin })
+      await leadController.search(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.json).toHaveBeenCalledWith(expect.arrayContaining([expect.objectContaining(getLeadModelExpected())]))
+    })
+    it(`SEARCH: Should return 200 with leads finded by lead phone`, async () => {
+      const res = mockResponse()
+      const req = mockRequest(null, null, {value: lead.phone}, { reqUserId: adminUser.id,  admin: adminUser.admin })
+      await leadController.search(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.json).toHaveBeenCalledWith(expect.arrayContaining([expect.objectContaining(getLeadModelExpected())]))
+    })
     // test('Should return 200 with leads finded if userid has been send', async () => {
     //   const req = mockRequest({userid: ids.userid}, {})
     //   const res = mockResponse()
