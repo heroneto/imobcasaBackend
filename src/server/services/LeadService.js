@@ -48,7 +48,10 @@ class LeadService extends Service{
     await this._checkRequiredFields(this._createRequiredFields, fields)
     if(!fields.admin && fields.userid !== fields.reqUserId){
       await this._throwForbidenError()
-    }   
+    }
+    if(await this._leadRepository.search({value: fields.phone})){
+      await this._throwConflictError("phone")
+    }
     return await this._leadRepository.create(fields)
   }
 

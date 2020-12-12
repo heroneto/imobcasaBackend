@@ -81,7 +81,10 @@ class LeadController {
   async create(request, response) {
     try {
       const leadService = new LeadService()
-      const lead = await leadService.create(request.body)
+      const lead = await leadService.create({
+        ...request.body,
+        ...request.locals
+      })
       return response.status(200).json(lead)
     } catch (err) {
       if (err instanceof ServiceException) {

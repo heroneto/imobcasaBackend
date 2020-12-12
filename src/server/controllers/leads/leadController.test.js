@@ -1,6 +1,6 @@
 const LeadController = require('./LeadController')
 const leadController = new LeadController()
-const { invalidParamError, missingParamError, missingBodyContent, forbidenError  } = require('../../helpers').errors
+const { invalidParamError, missingParamError, missingBodyContent, forbidenError, conflictError  } = require('../../helpers').errors
 const User = require('../../models').users
 const Leads = require('../../models').lead
 const LeadStatus = require('../../models').leadstatus
@@ -176,16 +176,15 @@ describe('LEAD CONTROLLER: tests', () => {
         expect(res.json).toHaveBeenCalledWith(error)
       })
     }
-    // it('Should return 200 if existing lead already exists', async () => {
-    //   const res = mockResponse()
-    //   const fakeLead = mockFakeLead()
-    //   fakeLead.name = 'updateLeadName'
-    //   fakeLead.statusId = 3
-    //   const req = mockRequest(fakeLead)
-    //   await createLead(req, res)
-    //   expect(res.status).toHaveBeenCalledWith(200)
-    //   expect(res.send).toHaveBeenCalledWith(expect.objectContaining({created: false, lead: expect.any(Object)}))
-    // })
+    it('Should return 409 if existing lead already exists', async () => {
+      const res = mockResponse()
+      const fakeLead = mockFakeLead()
+      const req = mockRequest(fakeLead)
+      await leadController.create(req, res)
+      const { error } = conflictError('phone')
+      expect(res.status).toHaveBeenCalledWith(409)
+      expect(res.json).toHaveBeenCalledWith(error)
+    })
     // it('Should return 200 if lead was created', async() => {
     //   const res = mockResponse()
     //   const fakeLead = mockFakeLead(ids.userid, ids.leadstausid)

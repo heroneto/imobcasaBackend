@@ -4,5 +4,6 @@ module.exports = {
   serverError: require('./server-error'),
   noResultsError: require('./no-result-errors'),
   missingBodyContent: require('./missing-body-errors'),
-  forbidenError: require('./forbiden-error')
+  forbidenError: require('./forbiden-error'),
+  conflictError: require('./conflict-error')
 }

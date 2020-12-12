@@ -38,7 +38,13 @@ const noContent = (message) => {
     body: message
   }
 }
-//
+
+const conflict = (message) => {
+  return {
+    statusCode: 409,
+    body: message
+  }
+}
 
 module.exports = {
   forbiden, 
@@ -46,5 +52,6 @@ module.exports = {
   unauthorized, 
   internalError,
   successfulRequest, 
-  noContent
+  noContent,
+  conflict
 }

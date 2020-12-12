@@ -1,12 +1,18 @@
 const ServiceException = require('../helpers/Exceptions/ServiceException')
-const { forbiden, invalidRequest, unauthorized, internalError, noContent } = require('../helpers').protocols
-const { invalidParamError, missingParamError, serverError, noResultsError, forbidenError } = require('../helpers').errors
+const { forbiden, invalidRequest, unauthorized, internalError, noContent, conflict } = require('../helpers').protocols
+const { invalidParamError, missingParamError, serverError, noResultsError, forbidenError, conflictError } = require('../helpers').errors
 const jwt = require('jsonwebtoken')
 
 class Service{
 
   _throwException(body,statusCode){
     throw new ServiceException(body, statusCode)
+  }
+
+  _throwConflictError(param){
+    const { error } = conflictError(param)
+    const { statusCode, body } = conflict(error)
+    this._throwException(body, statusCode)
   }
 
   _throwMissingParamError(param){
