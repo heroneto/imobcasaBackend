@@ -297,7 +297,12 @@ describe('LEAD CONTROLLER: tests', () => {
       const req = mockRequest(fakeLead, null, null, {reqUserId: adminUser.id, admin: adminUser.admin})
       await leadController.update(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
-      expect(res.json).toHaveBeenCalledWith(expect.objectContaining(getLeadModelExpected()))
+      expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
+        ...getLeadModelExpected(),
+        name: fakeLead.name,
+        phone: fakeLead.phone,
+        id: fakeLead.id
+      }))
     })
     
   })
