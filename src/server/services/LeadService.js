@@ -27,10 +27,10 @@ class LeadService extends Service{
   async getOne(fields){
     await this._checkRequiredFields(this._getOneRequiredFields, fields)
     const lead = await this._leadRepository.getOne(fields)
+    await this._checkEntityExsits(lead)
     if(!fields.admin && lead.userid !== fields.reqUserId){
       await this._throwForbidenError()
-    }   
-    await this._checkEntityExsits(lead)
+    }    
     return lead
   }
 

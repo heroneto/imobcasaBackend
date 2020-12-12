@@ -2,33 +2,48 @@ const LeadController = require('./LeadController')
 const leadController = new LeadController()
 
 // const {getLead, createLead, updateLead, deleteLead, getAllLeads, searchLeads} = require('./leadController')
-const { invalidParamError, missingParamError, missingBodyContent } = require('../config/').errors
+const { invalidParamError, missingParamError, missingBodyContent, forbidenError  } = require('../../helpers').errors
 const User = require('../../models').users
 const Leads = require('../../models').lead
 const LeadStatus = require('../../models').leadstatus
+const LeadSource = require('../../models').leadSource
+
 const databaseSetup = require('../../../database')
 
-const mockFakeLead = (userid, statusid) => {
+const mockFakeLead = (userid, statusid, sourceId) => {
   const fakeLead = {
-    name: "validLead",
-    phone: "999123491234",
-    source: "validSource",
-    userid,
-    statusid
+    name: "Fake Lead", 
+    phone: "0000000000", 
+    sourceid: sourceId, 
+    campaignid: null,
+    userid: userid,
+    active: true,
+    statusid: statusid,
+    negociationStartedAt: new Date()
   }
   return fakeLead
 }
 
-const mockFakeUser = () => {
+const mockFakeAdminUser = () => {
   const fakeUser = {
-    username: "validUser",
-    fullName: "ValidFullName",
-    email: "valid@email.com",
-    password: "validPassword",
-    passwordConfirmation: "validPassword",
+    username: "admin",
     admin: true,
-    active: true,
-    lastLeadReceivedTime: "123456"
+    fullName: "limitedUser",
+    email: "no@mail.com.br",
+    password: "fakePass",
+    active: true
+  }
+  return fakeUser
+}
+
+const mockFakeLimitedUser = () => {
+  const fakeUser = {
+    username: "limitedUser2",
+    admin: false,
+    fullName: "limitedUser",
+    email: "no@mail.com.br",
+    password: "fakePass",
+    active: true
   }
   return fakeUser
 }
@@ -37,6 +52,13 @@ const mockLeadStatus = () => {
   return {
     name: 'To do',
     description: 'Represents an item that is in the queue for execution'
+  }
+}
+
+const mockLeadSource = () => {
+  return {
+    name: "Manual",
+    active: true,
   }
 }
 
@@ -60,31 +82,35 @@ const mockRequest = (body = {}, query = {}, params = {}, locals = {}) => {
 
 const getLeadModelExpected = () => {
   return {
+    id: expect.any(String),
     name: expect.any(String),
     phone: expect.any(String),
-    source: expect.any(String),
-    userid: expect.any(Number),
-    statusid: expect.any(Number),
-    id: expect.any(Number),
-    createdAt: expect.any(Date),
-    updatedAt: expect.any(Date)
+    sourceid: expect.any(String),
+    campaignid: expect.any(String),
+    userid: expect.any(String),
+    active: expect.any(Boolean),
+    statusid: expect.any(String),
+    negociationStartedAt: expect.any(Date),
+    updatedAt: expect.any(Date),
+    createdAt: expect.any(Date)
   }
 }
 
 describe('LEAD CONTROLLER: tests', () => {
-  const ids = {}
+  let limitedUser = {}
+  let adminUser = {}
+  let lead = {}
+  let leadStatus = {}
+  let leadSource = {}
+
   beforeAll(async ()=>{
     try{
       await databaseSetup()
-      const fakeUser = mockFakeUser()
-      const user = await User.create(fakeUser)
-      ids.userid = user.id
-      const fakeLeadStatus = mockLeadStatus()
-      const leadStatus = await LeadStatus.create(fakeLeadStatus)
-      ids.leadstausid = leadStatus.id
-      const fakeLead = mockFakeLead(user.id, leadStatus.id)
-      const Lead = await Leads.create(fakeLead)
-      ids.leadid = Lead.id
+      adminUser = await User.create(mockFakeAdminUser())
+      limitedUser = await User.create(mockFakeLimitedUser())
+      leadStatus = await LeadStatus.create(mockLeadStatus())
+      leadSource = await LeadSource.create(mockLeadSource())
+      lead = await Leads.create(mockFakeLead(adminUser.id, leadStatus.id, leadSource.id))
     }catch(err){
       console.log(err.toString())
     }
@@ -107,25 +133,41 @@ describe('LEAD CONTROLLER: tests', () => {
       const { error } = missingParamError("id")
       expect(res.json).toBeCalledWith(error)
     })
-    it('GET: Should return 400 is no reqUserId has been send', async () => {
+    it('GET: Should return 400 if no reqUserId has been send', async () => {
       const res = mockResponse()
-      const req = mockRequest({}, {}, {id: "InvalidId"}, {})
+      const req = mockRequest({}, {}, {id: lead.id}, {})
       await leadController.getOne(req, res)
       expect(res.status).toBeCalledWith(400)
       const { error } = missingParamError('reqUserId')
       expect(res.json).toBeCalledWith(error)
     })
-    it('GET: Should return 200 if lead has been found', async () => {
+    it('GET: Should return 400 if invalid id has been send', async () => {
       const res = mockResponse()
-      const req = mockRequest({}, {id:ids.leadid})
-      await getLead(req, res)
-      expect(res.status).toHaveBeenCalledWith(200)
-      expect(res.send).toBeCalledWith(expect.objectContaining({
-        name: expect.any(String),
-        phone: expect.any(String),
-        source: expect.any(String)
-      }))
+      const req = mockRequest({}, {}, {id: "InvalidId"}, {reqUserId: adminUser.id, admin: adminUser.admin})
+      await leadController.getOne(req, res)
+      expect(res.status).toBeCalledWith(400)
+      const { error } = invalidParamError('id')
+      expect(res.json).toBeCalledWith(error)
     })
+    it('GET: Should return 400 with forbiden message if reqUserId does not match with userid in lead properties', async () => {
+      const res = mockResponse()
+      const req = mockRequest({}, {}, {id: lead.id}, {reqUserId: limitedUser.id, admin: limitedUser.admin})
+      await leadController.getOne(req, res)
+      const { error } = forbidenError()
+      expect(res.status).toBeCalledWith(403)
+      expect(res.json).toBeCalledWith(error)
+    })
+    // it('GET: Should return 200 if lead has been found', async () => {
+    //   const res = mockResponse()
+    //   const req = mockRequest({}, {id:ids.leadid})
+    //   await getLead(req, res)
+    //   expect(res.status).toHaveBeenCalledWith(200)
+    //   expect(res.send).toBeCalledWith(expect.objectContaining({
+    //     name: expect.any(String),
+    //     phone: expect.any(String),
+    //     source: expect.any(String)
+    //   }))
+    // })
   })
   // describe('POST Leads', () => {
   //   const requiredFields = ['name', 'phone', 'source']
