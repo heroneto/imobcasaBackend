@@ -214,47 +214,81 @@ describe('LEAD CONTROLLER: tests', () => {
       expect(res.json).toHaveBeenCalledWith(expect.objectContaining(getLeadModelExpected()))
     })
   })
-  // describe('PUT Leads', () => {
-  //   it('PUT: Should return 400 if no body has been send', async () => {
-  //     const res = mockResponse()
-  //     const req = mockRequest()
-  //     await updateLead(req, res)
-  //     expect(res.status).toHaveBeenCalledWith(400)
-  //     const { error } = missingBodyContent()
-  //     expect(res.send).toBeCalledWith(error)
-  //   })
-  //   it('PUT: Should return 400 if no id has been send', async () => {
-  //     const res = mockResponse()
-  //     const fakeLead  = mockFakeLead()
-  //     const req = mockRequest(fakeLead, '')
-  //     await updateLead(req, res)
-  //     expect(res.status).toHaveBeenCalledWith(400)
-  //     const { error } = missingParamError('id')
-  //     expect(res.send).toBeCalledWith(error)
-  //   }),
-  //   it('PUT: Should return 400 if invalid id has been send', async () => {
-  //     const res = mockResponse()
-  //     const fakeLead  = mockFakeLead()
-  //     fakeLead.id = 'FakeId'
-  //     const req = mockRequest(fakeLead, '')
-  //     await updateLead(req, res)
-  //     expect(res.status).toHaveBeenCalledWith(400)
-  //     const { error } = invalidParamError('id')
-  //     expect(res.send).toBeCalledWith(error)
-  //   })
-  //   it('PUT: Should return 200 updated', async () => {
-  //     const res = mockResponse()
-  //     const fakeLead  = mockFakeLead()
-  //     fakeLead.id = ids.leadid
-  //     fakeLead.name = 'updatedName'
-  //     fakeLead.phone = 'updatedPhone'
-  //     fakeLead.source = 'updatedSource'
-  //     const req = mockRequest(fakeLead, '')
-  //     await updateLead(req, res)
-  //     expect(res.status).toHaveBeenCalledWith(200)
-  //     expect(res.send).toBeCalledWith(expect.objectContaining(getLeadModelExpected()))
-  //   })
-  // })
+  describe('PUT Leads', () => {
+    const requiredFields = ["id", "name", "phone", "sourceid", "campaignid", "userid", "active", "statusid", "negociationStartedAt"]
+    for(const field of requiredFields){
+      it(`Should return 400 if no ${field} has been send`, async () => {
+        const res = mockResponse()
+        const fakeLead = mockFakeLead()
+        fakeLead.id = lead.id
+        delete fakeLead[`${field}`]
+        const req = mockRequest(fakeLead, null, null, {reqUserId: adminUser.id, admin: adminUser.admin})
+        await leadController.update(req, res)
+        expect(res.status).toHaveBeenCalledWith(400)
+        const {error} = missingParamError(field)
+        expect(res.json).toHaveBeenCalledWith(error)
+      })
+    }
+    it(`Should return 400 if no admin has been send`, async () => {
+      const res = mockResponse()
+      const fakeLead = mockFakeLead(adminUser.id, leadStatus.id, leadSource.id)
+      fakeLead.id = lead.id
+      const req = mockRequest(fakeLead, {}, {id: lead.id}, {reqUserId: adminUser.id})
+      await leadController.update(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      const {error} = missingParamError('admin')
+      expect(res.json).toHaveBeenCalledWith(error)
+    })
+    it(`Should return 400 if no reqUserId has been send`, async () => {
+      const res = mockResponse()
+      const fakeLead = mockFakeLead(adminUser.id, leadStatus.id, leadSource.id)
+      fakeLead.id = lead.id
+      const req = mockRequest(fakeLead, {}, {id: lead.id}, {admin: adminUser.admin})
+      await leadController.update(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      const {error} = missingParamError('reqUserId')
+      expect(res.json).toHaveBeenCalledWith(error)
+    })
+    // it('PUT: Should return 400 if no body has been send', async () => {
+    //   const res = mockResponse()
+    //   const req = mockRequest()
+    //   await updateLead(req, res)
+    //   expect(res.status).toHaveBeenCalledWith(400)
+    //   const { error } = missingBodyContent()
+    //   expect(res.send).toBeCalledWith(error)
+    // })
+    // it('PUT: Should return 400 if no id has been send', async () => {
+    //   const res = mockResponse()
+    //   const fakeLead  = mockFakeLead()
+    //   const req = mockRequest(fakeLead, '')
+    //   await updateLead(req, res)
+    //   expect(res.status).toHaveBeenCalledWith(400)
+    //   const { error } = missingParamError('id')
+    //   expect(res.send).toBeCalledWith(error)
+    // }),
+    // it('PUT: Should return 400 if invalid id has been send', async () => {
+    //   const res = mockResponse()
+    //   const fakeLead  = mockFakeLead()
+    //   fakeLead.id = 'FakeId'
+    //   const req = mockRequest(fakeLead, '')
+    //   await updateLead(req, res)
+    //   expect(res.status).toHaveBeenCalledWith(400)
+    //   const { error } = invalidParamError('id')
+    //   expect(res.send).toBeCalledWith(error)
+    // })
+    // it('PUT: Should return 200 updated', async () => {
+    //   const res = mockResponse()
+    //   const fakeLead  = mockFakeLead()
+    //   fakeLead.id = ids.leadid
+    //   fakeLead.name = 'updatedName'
+    //   fakeLead.phone = 'updatedPhone'
+    //   fakeLead.source = 'updatedSource'
+    //   const req = mockRequest(fakeLead, '')
+    //   await updateLead(req, res)
+    //   expect(res.status).toHaveBeenCalledWith(200)
+    //   expect(res.send).toBeCalledWith(expect.objectContaining(getLeadModelExpected()))
+    // })
+  })
   // describe('DELETE Leads', () => {
   //   it('Should return 400 if no ID has been send', async () => {
   //     const req = mockRequest('', '')
