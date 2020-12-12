@@ -71,9 +71,11 @@ class LeadService extends Service{
 
   async delete(fields){
     await this._checkRequiredFields(this._deleteRequiredFields, fields)
-    if(!fields.admin && fields.userid !== fields.reqUserId){
+    const lead = await this._leadRepository.getOne(fields)
+    await this._checkEntityExsits(lead)
+    if(!fields.admin && lead.userid !== fields.reqUserId){
       await this._throwForbidenError()
-    }   
+    }    
     return await this._leadRepository.delete(fields)
   }
 

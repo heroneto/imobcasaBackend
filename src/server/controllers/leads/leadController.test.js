@@ -359,12 +359,28 @@ describe('LEAD CONTROLLER: tests', () => {
     })
   })
   describe('DELETE Leads', () => {
-    it('Should return 400 if no ID has been send', async () => {
+    it('DELETE: Should return 400 if no ID has been send', async () => {
       const res = mockResponse()
       const req = mockRequest(null, null, null, { reqUserId: adminUser.id, admin: adminUser.admin })
       await leadController.delete(req, res)
       expect(res.status).toHaveBeenCalledWith(400)
       const { error } = missingParamError("id")
+      expect(res.json).toHaveBeenCalledWith(error)
+    })
+    it('DELETE: Should return 400 if invalid ID has been send', async () => {
+      const res = mockResponse()
+      const req = mockRequest(null, null, { id: "invalidId" }, { reqUserId: adminUser.id, admin: adminUser.admin })
+      await leadController.delete(req, res)
+      const { error } = invalidParamError("id")
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toHaveBeenCalledWith(error)
+    })
+    it('DELETE: Should return 403 if userid does not match with id provided', async () => {
+      const res = mockResponse()
+      const req = mockRequest(null, null, { id: lead.id }, { reqUserId: limitedUser.id, admin: limitedUser.admin })
+      await leadController.delete(req, res)
+      const { error } = forbidenError()
+      expect(res.status).toHaveBeenCalledWith(403)
       expect(res.json).toHaveBeenCalledWith(error)
     })
     // it('Should return 400 if invalid ID has been send', async () => {
