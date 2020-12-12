@@ -357,51 +357,30 @@ describe('LEAD CONTROLLER: tests', () => {
       expect(res.status).toHaveBeenCalledWith(200)
       expect(res.json).toHaveBeenCalledWith(expect.arrayContaining([expect.objectContaining(getLeadModelExpected())]))
     })
-    // test('Should return 200 with leads finded if userid has been send', async () => {
-    //   const req = mockRequest({userid: ids.userid}, {})
+  })
+  describe('DELETE Leads', () => {
+    it('Should return 400 if no ID has been send', async () => {
+      const res = mockResponse()
+      const req = mockRequest(null, null, null, { reqUserId: adminUser.id, admin: adminUser.admin })
+      await leadController.delete(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      const { error } = missingParamError("id")
+      expect(res.json).toHaveBeenCalledWith(error)
+    })
+    // it('Should return 400 if invalid ID has been send', async () => {
+    //   const req = mockRequest('', {id: 9999})
     //   const res = mockResponse()
-    //   await searchLeads(req,res)
-    //   expect(res.status).toHaveBeenCalledWith(200)
-    //   expect(res.send).toHaveBeenCalledWith([expect.any(Object)])
-    // })
-    // test('Should return 200 with leads finded if phone lead has been send', async () => {
-    //   const req = mockRequest({phone: lead.phone}, {})
+    //   await deleteLead(req, res)
+    //   expect(res.status).toHaveBeenCalledWith(400)
+    //   const {error} = invalidParamError('id')
+    //   expect(res.send).toBeCalledWith(error)
+    // }),
+    // it('Should return 200', async () => {
+    //   const req = mockRequest('', {id: ids.leadid})
     //   const res = mockResponse()
-    //   await searchLeads(req,res)
+    //   await deleteLead(req, res)
     //   expect(res.status).toHaveBeenCalledWith(200)
-    //   expect(res.send).toHaveBeenCalledWith([expect.any(Object)])
-    // })
-    // test('Should return 200 with leads finded if name lead has been send', async () => {
-    //   const req = mockRequest({name: lead.name}, {})
-    //   const res = mockResponse()
-    //   await searchLeads(req,res)
-    //   expect(res.status).toHaveBeenCalledWith(200)
-    //   expect(res.send).toHaveBeenCalledWith(expect.arrayContaining([expect.any(Object)]))
     // })
   })
-  // describe('DELETE Leads', () => {
-  //   it('Should return 400 if no ID has been send', async () => {
-  //     const req = mockRequest('', '')
-  //     const res = mockResponse()
-  //     await deleteLead(req, res)
-  //     expect(res.status).toHaveBeenCalledWith(400)
-  //     const {error} = missingParamError('id')
-  //     expect(res.send).toBeCalledWith(error)
-  //   }),
-  //   it('Should return 400 if invalid ID has been send', async () => {
-  //     const req = mockRequest('', {id: 9999})
-  //     const res = mockResponse()
-  //     await deleteLead(req, res)
-  //     expect(res.status).toHaveBeenCalledWith(400)
-  //     const {error} = invalidParamError('id')
-  //     expect(res.send).toBeCalledWith(error)
-  //   }),
-  //   it('Should return 200', async () => {
-  //     const req = mockRequest('', {id: ids.leadid})
-  //     const res = mockResponse()
-  //     await deleteLead(req, res)
-  //     expect(res.status).toHaveBeenCalledWith(200)
-  //   })
-  // })
   
 })
