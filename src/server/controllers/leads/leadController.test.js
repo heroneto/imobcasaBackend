@@ -215,12 +215,31 @@ describe('LEAD CONTROLLER: tests', () => {
     })
   })
   describe('PUT Leads', () => {
+    let leadToUpdate
+    beforeAll(async ()=>{
+      try{
+        const leadMock = mockFakeLead(adminUser.id, leadStatus.id, leadSource.id)
+        leadMock.phone = "11111111111"
+        leadToUpdate = await Leads.create(leadMock)
+      }catch(err){
+        console.log(err.toString())
+      }
+    }),
+    afterAll(async () => {
+      try{
+        await Leads.destroy({where: {
+          id: leadToUpdate.id
+        }})
+      }catch(err){
+        console.log(err)
+      }
+    })
     const requiredFields = ["id", "name", "phone", "sourceid", "campaignid", "userid", "active", "statusid", "negociationStartedAt"]
     for(const field of requiredFields){
       it(`PUT: Should return 400 if no ${field} has been send`, async () => {
         const res = mockResponse()
         const fakeLead = mockFakeLead()
-        fakeLead.id = lead.id
+        fakeLead.id = leadToUpdate.id
         delete fakeLead[`${field}`]
         const req = mockRequest(fakeLead, null, null, {reqUserId: adminUser.id, admin: adminUser.admin})
         await leadController.update(req, res)
@@ -232,7 +251,7 @@ describe('LEAD CONTROLLER: tests', () => {
     it(`PUT: Should return 400 if no admin has been send`, async () => {
       const res = mockResponse()
       const fakeLead = mockFakeLead(adminUser.id, leadStatus.id, leadSource.id)
-      fakeLead.id = lead.id
+      fakeLead.id = leadToUpdate.id
       const req = mockRequest(fakeLead, {}, {id: lead.id}, {reqUserId: adminUser.id})
       await leadController.update(req, res)
       expect(res.status).toHaveBeenCalledWith(400)
@@ -242,7 +261,7 @@ describe('LEAD CONTROLLER: tests', () => {
     it(`PUT: Should return 400 if no reqUserId has been send`, async () => {
       const res = mockResponse()
       const fakeLead = mockFakeLead(adminUser.id, leadStatus.id, leadSource.id)
-      fakeLead.id = lead.id
+      fakeLead.id = leadToUpdate.id
       const req = mockRequest(fakeLead, {}, {id: lead.id}, {admin: adminUser.admin})
       await leadController.update(req, res)
       expect(res.status).toHaveBeenCalledWith(400)
@@ -262,25 +281,25 @@ describe('LEAD CONTROLLER: tests', () => {
     it('PUT: Should return 409 if phone already used in another lead', async () => {
       const res = mockResponse()
       const fakeLead = mockFakeLead(adminUser.id, leadStatus.id, leadSource.id)
-      fakeLead.id = lead.id
+      fakeLead.id = leadToUpdate.id
       const req = mockRequest(fakeLead, null, null, {reqUserId: adminUser.id, admin: adminUser.admin})
       await leadController.update(req, res)
       const { error } = conflictError('phone')
       expect(res.status).toHaveBeenCalledWith(409)
       expect(res.json).toHaveBeenCalledWith(error)
     })
-    // it('PUT: Should return 200 updated', async () => {
-    //   const res = mockResponse()
-    //   const fakeLead  = mockFakeLead()
-    //   fakeLead.id = ids.leadid
-    //   fakeLead.name = 'updatedName'
-    //   fakeLead.phone = 'updatedPhone'
-    //   fakeLead.source = 'updatedSource'
-    //   const req = mockRequest(fakeLead, '')
-    //   await updateLead(req, res)
-    //   expect(res.status).toHaveBeenCalledWith(200)
-    //   expect(res.send).toBeCalledWith(expect.objectContaining(getLeadModelExpected()))
-    // })
+    it('PUT: Should return 200 updated', async () => {
+      const res = mockResponse()
+      const fakeLead = mockFakeLead(adminUser.id, leadStatus.id, leadSource.id)
+      fakeLead.id = leadToUpdate.id
+      fakeLead.phone = leadToUpdate.phone
+      fakeLead.name = "New Lead Name"
+      const req = mockRequest(fakeLead, null, null, {reqUserId: adminUser.id, admin: adminUser.admin})
+      await leadController.update(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.json).toHaveBeenCalledWith(expect.objectContaining(getLeadModelExpected()))
+    })
+    
   })
   // describe('DELETE Leads', () => {
   //   it('Should return 400 if no ID has been send', async () => {

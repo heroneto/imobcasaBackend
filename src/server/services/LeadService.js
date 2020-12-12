@@ -62,7 +62,8 @@ class LeadService extends Service{
     if(!fields.admin && lead.userid !== fields.reqUserId){
       await this._throwForbidenError()
     }
-    if(await this._leadRepository.findByPhone(fields.phone)){
+    const leadFinded = await this._leadRepository.findByPhone(fields.phone)
+    if(leadFinded.id !== fields.id){
       await this._throwConflictError("phone")
     }    
     return await this._leadRepository.update(lead, fields)
