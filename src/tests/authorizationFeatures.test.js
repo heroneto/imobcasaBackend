@@ -1,8 +1,11 @@
-const { invalidParamError, missingParamError, forbidenError } = require('../../helpers/Errors')
-const AuthorizationMiddleware = require('./AuthorizationMiddleware')
+const { invalidParamError, missingParamError, forbidenError } = require('../server/helpers/Errors')
+const AuthorizationMiddleware = require('../server/middlewares/authorization/AuthorizationMiddleware')
 const authorizationMiddleware = new AuthorizationMiddleware()
-const User = require('../../models').users
-
+const {User} = require('../server/models')
+const Mocks = require('./Mocks')
+const ModelsExpected = require('./ModelsExpected')
+const mocks = new Mocks()
+const modelsExpected = new ModelsExpected()
 
 
 const mockResponse = () => {
@@ -26,29 +29,15 @@ const mockNext = () => {
   return next
 }
 
-const mockFakeUser = (admin) => {
-  return {
-    username: "validUser",
-    fullName: "ValidFullName",
-    email: "valid@email.com",
-    password: "validPassword",
-    passwordConfirmation: "validPassword",
-    admin,
-    active: true,
-    lastLeadReceivedTime: "123456"
-  }
-}
 
 describe("AdminController tests", () => {
   const user = {}
   beforeAll(async () => {
-    const fakeUserAdmin = mockFakeUser(true)
-    const userAdminCreated = await User.create(fakeUserAdmin)
-    user.tokenAdmin = await userAdminCreated.generateToken(userAdminCreated.id, userAdminCreated.username)
+    const userAdminCreated = await User.create(mocks.mockUser(true))
+    user.tokenAdmin = await mocks.mockJwtToken(userAdminCreated.id)
     
-    const fakeUser = mockFakeUser(false)
-    const userCreated = await User.create(fakeUser)
-    user.token = await userCreated.generateToken(userCreated.id, userCreated.username)
+    const userCreated = await User.create(mocks.mockUser(false))
+    user.token = await mocks.mockJwtToken(userCreated.id)
 
     })
 
@@ -62,8 +51,8 @@ describe("AdminController tests", () => {
 
   describe("CheckPrivileges tests", () => {
     test("Should return 400 if no jwt token was provided", async () => {
-      const req =  mockRequest({}, {}, {})
-      const res = mockResponse()
+      const req =  mocks.mockReq({}, {}, {})
+      const res = mocks.mockRes()
       await authorizationMiddleware.checkAdminPrivileges(req, res)
       expect(res.status).toHaveBeenCalledWith(400)
       const {error} = missingParamError('jwt')
@@ -73,8 +62,8 @@ describe("AdminController tests", () => {
       const token = {
         jwt: user.token
       }
-      const req = mockRequest({}, {}, token)
-      const res = mockResponse()
+      const req = mocks.mockReq(null, null, null, null, token)
+      const res = mocks.mockRes()
       await authorizationMiddleware.checkAdminPrivileges(req, res)
       expect(res.status).toHaveBeenCalledWith(403)
       const {error} = forbidenError()
@@ -84,8 +73,8 @@ describe("AdminController tests", () => {
       const token = {
         jwt: user.tokenAdmin
       }
-      const req = mockRequest({}, {}, token)
-      const res = mockResponse()
+      const req = mocks.mockReq(null, null, null, null, token)
+      const res = mocks.mockRes()
       const next = mockNext()
       await authorizationMiddleware.checkAdminPrivileges(req, res, next)
       expect(res.status).not.toHaveBeenCalledWith(403)

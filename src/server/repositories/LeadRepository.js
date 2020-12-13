@@ -1,4 +1,4 @@
-const Leads = require('../models').lead
+const { Lead } = require('../models')
 const Sequelize = require('sequelize')
 const { Op } = Sequelize
 
@@ -7,7 +7,7 @@ class LeadRepository {
 
 
   async getOne(fields) {
-    return await Leads.findOne({
+    return await Lead.findOne({
       where: {
         id: fields.id
       }
@@ -15,11 +15,11 @@ class LeadRepository {
   }
 
   async list() {    
-    return await Leads.findAll()
+    return await Lead.findAll()
   }
 
   async create(fields) {
-    return await Leads.create(fields)
+    return await Lead.create(fields)
   }
 
   async update(lead, fields) {
@@ -35,7 +35,7 @@ class LeadRepository {
   }
 
   async delete(fields) {
-    return await Leads.destroy({
+    return await Lead.destroy({
       where: {
         id: fields.id,
       }
@@ -43,7 +43,7 @@ class LeadRepository {
   }
 
   async search(fields) {
-    return await Leads.findAll({
+    return await Lead.findAll({
       where: {
         [Op.or]: [
           {
@@ -62,7 +62,7 @@ class LeadRepository {
   }
 
   async findByPhone(phone){
-    return await Leads.findOne({
+    return await Lead.findOne({
       where: {
         phone: phone
       }

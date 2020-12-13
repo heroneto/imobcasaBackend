@@ -60,6 +60,10 @@ O Lead representa um cliente em potencial, O Lead deve ser atrelado sempre à um
 A tarefa é um item que fica associado ao Lead e ao usuário, representando um agendamento ou cobrança que será/deveria ser feita.
 O Lead pode ter, ao longo do histórico, várias tarefas, mas apenas uma deve estar ativa, a antiga deve ser inativada para criação de uma nova tarefa. Tarefas não podem ser removidas.
 - **[ ]Feat [ ]Test** Criação de nova tarefa
+- **[ ]Feat [ ]Test** Leitura de tarefa atual
+- **[ ]Feat [ ]Test** Listagem de tarefas de um Lead
+- **[ ]Feat [ ]Test** Edição de tarefa
+- **[ ]Feat [ ]Test** Remoção de tarefa
 - **[ ]Feat [ ]Test** Alteração de status de tarefa.
 
 

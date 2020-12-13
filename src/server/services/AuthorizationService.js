@@ -1,5 +1,5 @@
 const Service = require('./Service')
-const User = require('../models').users
+const {User} = require('../models/')
 const jwt = require('jsonwebtoken')
 
 class AuthorizationService extends Service {

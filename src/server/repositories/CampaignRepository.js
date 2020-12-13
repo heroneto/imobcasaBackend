@@ -1,4 +1,4 @@
-const Campaign = require('../models').Campaign
+const {Campaign} = require('../models')
 
 
 class CampaignRepository {

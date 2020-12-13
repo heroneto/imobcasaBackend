@@ -1,51 +1,12 @@
-const UserController = require('./UserController')
+const UserController = require('../server/controllers/user/UserController')
 const userController = new UserController()
-const databaseSetup = require('../../../database')
-const { missingParamError, invalidParamError } = require('../config/Errors')
-const User = require('../../models').users
-
-
-const mockFakeUser = () => {
-  const fakeUser = {
-    username: "validUser",
-    fullName: "ValidFullName",
-    email: "valid@email.com",
-    password: "validPassword",
-    passwordConfirmation: "validPassword",
-    admin: true,
-    active: true,
-  }
-  return fakeUser
-}
-
-const mockResponse = () => {
-  const res = {};
-  res.status = jest.fn().mockReturnValue(res);
-  res.json = jest.fn().mockReturnValue(res);
-  res.send = jest.fn().mockReturnValue(res);
-  return res;
-};
-
-const mockRequest = (body, query, params) => {
-  const request = {}
-  request.body = body
-  request.query = query
-  request.params = params
-  return request
-}
-
-const getUserModelExpected = () => {
-  return {
-    active: expect.any(Boolean),
-    createdAt: expect.any(Date),
-    email: expect.any(String),
-    fullName: expect.any(String),
-    id: expect.any(String),
-    admin: expect.any(Boolean),
-    updatedAt: expect.any(Date),
-    username: expect.any(String),
-  }
-}
+const databaseSetup = require('../database')
+const { missingParamError, invalidParamError } = require('../server/controllers/config/Errors')
+const { User } = require('../server/models')
+const Mocks = require('./Mocks')
+const ModelsExpected = require('./ModelsExpected')
+const mocks = new Mocks()
+const modelsExpected = new ModelsExpected()
 
 beforeAll(async () => {
   try{
@@ -59,8 +20,7 @@ describe('USER CONTROLLER: tests', () =>{
   let userId = ""
   beforeAll(async () => {
     try{
-      const fakeUser = mockFakeUser()
-      const user  = await User.create(fakeUser)
+      const user  = await User.create(mocks.mockUser())
       userId = user.id
     }catch(err){
       console.log(err)
@@ -79,90 +39,89 @@ describe('USER CONTROLLER: tests', () =>{
     const requiredFields = ['fullName', 'username', 'email', 'password', 'admin']
     for(const field of requiredFields){
       test(`POST: Should return 400 if no ${field} has beem send`, async() =>{
-        const user = mockFakeUser()
+        const user = mocks.mockUser()
         delete user[`${field}`]
-        const res = mockResponse()
-        const req = mockRequest(user)
+        const res = mocks.mockRes()
+        const req = mocks.mockReq(user)
         await userController._create(req, res)
         expect(res.status).toHaveBeenCalledWith(400)
         expect(res.json).toBeCalledWith(`MissingParamError: ${field}`)
       })
     }
     test('POST: Should return 200 if user has been created', async () =>{
-      const user = mockFakeUser()
-      const res = mockResponse()
-      const req = mockRequest(user)
+      const user = mocks.mockUser()
+      const res = mocks.mockRes()
+      const req = mocks.mockReq(user)
       await userController._create(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
-      expect(res.json).toHaveBeenCalledWith(expect.objectContaining(getUserModelExpected()))
+      expect(res.json).toHaveBeenCalledWith(expect.objectContaining(modelsExpected.userModel()))
     })
   })
   
   describe('GET User tests', () => {
     test('GET: Should return 200', async () =>{
-      const res = mockResponse()
-      const req = mockRequest()
+      const res = mocks.mockRes()
+      const req = mocks.mockReq()
       await userController._list(req,res)
       expect(res.status).toHaveBeenCalledWith(200)
-      expect(res.json).toHaveBeenCalledWith(expect.arrayContaining([expect.objectContaining(getUserModelExpected())]))
+      expect(res.json).toHaveBeenCalledWith(expect.arrayContaining([expect.objectContaining(modelsExpected.userModel())]))
     })
   })
 
   describe('PUT User tests', () => {
     test('PUT: Should return 400 if no id has beem send', async()=>{
-      const user = mockFakeUser()
+      const user = mocks.mockUser()
       delete user.username
-      const res = mockResponse()
-      const req = mockRequest(user)
+      const res = mocks.mockRes()
+      const req = mocks.mockReq(user)
       await userController._update(req, res)
       expect(res.status).toHaveBeenCalledWith(400)
       expect(res.json).toBeCalledWith('MissingParamError: id')
     })
     test('PUT: Should return 400 if invalid id has beem send', async()=>{
-      const user = mockFakeUser()
+      const user = mocks.mockUser()
       user.id = 'invalidId'
       user.username = 'invalidUsername'
-      const res = mockResponse()
-      const req = mockRequest(user)
+      const res = mocks.mockRes()
+      const req = mocks.mockReq(user)
       await userController._update(req, res)
       expect(res.status).toHaveBeenCalledWith(400)
       expect(res.json).toBeCalledWith('InvalidParamError: id')
     })
     test('PUT: Should return 200 username has beem updated', async()=>{
-      const user = mockFakeUser()
+      const user = mocks.mockUser()
       user.id = userId
-      const res = mockResponse()
-      const req = mockRequest(user)
+      const res = mocks.mockRes()
+      const req = mocks.mockReq(user)
       await userController._update(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
-      expect(res.json).toHaveBeenCalledWith(expect.objectContaining(getUserModelExpected()))
+      expect(res.json).toHaveBeenCalledWith(expect.objectContaining(modelsExpected.userModel()))
     })
   })
 
   describe('DELETE User tests', () => {
     test('DELETE: Should return 400 if no id has beem send', async()=>{
-      const user = mockFakeUser()
+      const user = mocks.mockUser()
       delete user.id
       delete user.username
-      const res = mockResponse()
-      const req = mockRequest(user)
+      const res = mocks.mockRes()
+      const req = mocks.mockReq(user)
       await userController._delete(req, res)
       expect(res.status).toHaveBeenCalledWith(400)
       expect(res.json).toBeCalledWith('MissingParamError: id')
     })
     test('DELETE: Should return 400 if invalid id has beem send', async()=>{
-      const user = mockFakeUser()
+      const user = mocks.mockUser()
       user.id = 'invalidId'
-      user.username = 'invalidUsername'
-      const res = mockResponse()
-      const req = mockRequest(user)
+      const res = mocks.mockRes()
+      const req = mocks.mockReq(null, null, {id: "invalid user id"}, null)
       await userController._delete(req, res)
       expect(res.status).toHaveBeenCalledWith(400)
       expect(res.json).toBeCalledWith('InvalidParamError: id')
     })
     test('DELETE: Should return 200 username has beem deleted by id', async() =>{
-      const res = mockResponse()
-      const req = mockRequest({id: userId}, {})
+      const res = mocks.mockRes()
+      const req = mocks.mockReq(null, null, {id: userId}, null)
       await userController._delete(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
       expect(res.json).toBeCalledWith(1)
@@ -173,8 +132,7 @@ describe('USER CONTROLLER: tests', () =>{
     let userId = ""
     beforeAll(async () => {
       try{
-        const fakeUser = mockFakeUser()
-        const user  = await User.create(fakeUser)
+        const user  = await User.create(mocks.mockUser())
         userId = user.id
       }catch(err){
         console.log(err)
@@ -190,27 +148,27 @@ describe('USER CONTROLLER: tests', () =>{
     })
 
     test("Should return 400 if no id has been send", async () => {
-      const req = mockRequest({}, {}, {})
-      const res = mockResponse()
+      const req = mocks.mockReq()
+      const res = mocks.mockRes()
       await userController._getOne(req, res)
       expect(res.status).toHaveBeenCalledWith(400)
       const { error } = missingParamError('id')
       expect(res.json).toHaveBeenCalledWith(error)
     })
     test("Should return 400 if invalid id has been send", async () => {
-      const req = mockRequest({}, {},  {id: userId+5})
-      const res = mockResponse()
+      const req = mocks.mockReq(null, null, {id: "invalid user id"}, null )
+      const res = mocks.mockRes()
       await userController._getOne(req, res)
       expect(res.status).toHaveBeenCalledWith(400)
       const {error} = invalidParamError('id')
       expect(res.json).toHaveBeenCalledWith(error)
     })
     test('Should return 200 if user has been found', async () => {
-      const req = mockRequest({},{}, {id: userId})
-      const res = mockResponse()
+      const req = mocks.mockReq(null, null, {id:userId}, null )
+      const res = mocks.mockRes()
       await userController._getOne(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
-      expect(res.json).toHaveBeenCalledWith(expect.objectContaining(getUserModelExpected()))
+      expect(res.json).toHaveBeenCalledWith(expect.objectContaining(modelsExpected.userModel()))
     })
   })
 })

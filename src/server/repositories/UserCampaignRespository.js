@@ -1,16 +1,15 @@
-
-const UsersCampaigns = require('../models').usersCampaigns
+const { Userscampaigns } = require('../models')
 
 
 class UserCampaignResposotory{
   
   
   async add(fields){
-    return await UsersCampaigns.create(fields) 
+    return await Userscampaigns.create(fields) 
   }
 
   async remove(fields){
-    return await UsersCampaigns.destroy({
+    return await Userscampaigns.destroy({
       where: {
         campaignid: fields.campaignid,
         userid: fields.userid,
@@ -19,7 +18,7 @@ class UserCampaignResposotory{
   }
 
   async getOne(fields){
-    return await UsersCampaigns.findOne({
+    return await Userscampaigns.findOne({
       where: {
         userid: fields.userid,
         campaignid: fields.campaignid
@@ -28,7 +27,7 @@ class UserCampaignResposotory{
   }
 
   async list(fields){
-    return await UsersCampaigns.findAll({
+    return await Userscampaigns.findAll({
       where: {
         campaignid: fields.campaignid
       }

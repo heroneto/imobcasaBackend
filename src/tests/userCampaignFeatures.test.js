@@ -1,62 +1,12 @@
-const UserCampaignController = require("./UserCampaignController")
+const UserCampaignController = require("../server/controllers/userCampaign/UserCampaignController")
 const userCampaignController = new UserCampaignController()
-const UserModel = require('../../models').users
-const CampaignModel = require('../../models').Campaign
-const UsersCampaignsModel = require('../../models').usersCampaigns
-const databaseSetup = require('../../../database')
-const { missingParamError, invalidParamError } = require("../../helpers/Errors")
-
-const mockFakeCampaign = () => {
-  const fakeCampaign = {
-    name: "fakeCampaignName",
-    active: true,
-    fbCreatedDate: new Date(),
-    fbCampaignId: "Fake FB Campaign ID",
-    fbAdAccountId: "Fake FB AD Account ID"
-  }
-  return fakeCampaign
-}
-
-const mockFakeUser = () => {
-  const fakeUser = {
-    username: "validUser",
-    fullName: "ValidFullName",
-    email: "valid@email.com",
-    password: "validPassword",
-    passwordConfirmation: "validPassword",
-    admin: true,
-    active: true,
-  }
-  return fakeUser
-}
-
-const mockResponse = () => {
-  const res = {}
-  res.status = jest.fn().mockReturnValue(res)
-  res.json = jest.fn().mockReturnValue(res)
-  res.send = jest.fn().mockReturnValue(res)
-  return res
-}
-
-const mockRequest = (body = {}, query = {}, params = {}) => {
-  const request = {
-    body,
-    query,
-    params
-  }
-  return request
-}
-
-const getModelExpected = () => {
-  return {
-    id: expect.any(String),
-    campaignid: expect.any(String),
-    userid: expect.any(String),
-    createdAt: expect.any(Date),
-    updatedAt:expect.any(Date)
-  }
-}
-
+const { User, Campaign } = require('../server/models')
+const databaseSetup = require('../database')
+const { missingParamError, invalidParamError } = require("../server/helpers/Errors")
+const ModelsExpected = require('./ModelsExpected')
+const Mocks = require('./Mocks')
+const modelsExpected = new ModelsExpected()
+const mocks = new Mocks()
 
 beforeAll(async () => {
   try{
@@ -71,12 +21,9 @@ describe("USERCAMPAIGN tests", () => {
   let campaignid = ""
   beforeAll(async () => {
     try{
-      const fakeUser = mockFakeUser()
-      const user = await UserModel.create(fakeUser)
+      const user = await User.create(mocks.mockUser())
       userid = user.id
-  
-      const fakeCampaign = mockFakeCampaign()
-      const campaign = await CampaignModel.create(fakeCampaign)
+      const campaign = await Campaign.create(mocks.mockCampaign())
       campaignid = campaign.id
     }catch(err){
       console.log(err)
@@ -85,9 +32,8 @@ describe("USERCAMPAIGN tests", () => {
 
   afterAll(async () => {
     try{
-      await UsersCampaignsModel.destroy({where: {}})
-      await CampaignModel.destroy({where: {}})
-      await UserModel.destroy({where: {}})
+      await User.destroy({where: {}})
+      await Campaign.destroy({where: {}})
     }catch(err){
       console.log(err)
     }
@@ -102,8 +48,8 @@ describe("USERCAMPAIGN tests", () => {
           campaignid: campaignid
         }
         delete parameters[`${field}`]
-        const res = mockResponse()
-        const req = mockRequest({}, {}, parameters)
+        const res = mocks.mockRes()
+        const req = mocks.mockReq(null, null, parameters)
         
         await userCampaignController.add(req, res)
         const { error } = missingParamError(field)
@@ -116,8 +62,8 @@ describe("USERCAMPAIGN tests", () => {
         userid: "invaliduserid",
         campaignid: campaignid
       }
-      const res = mockResponse()
-      const req = mockRequest({}, {}, parameters)
+      const res = mocks.mockRes()
+      const req = mocks.mockReq(null, null, parameters)
       
       await userCampaignController.add(req, res)
       const { error } = invalidParamError("userid")
@@ -129,8 +75,8 @@ describe("USERCAMPAIGN tests", () => {
         userid: userid,
         campaignid: 'invalidcampaignID'
       }
-      const res = mockResponse()
-      const req = mockRequest({}, {}, parameters)
+      const res = mocks.mockRes()
+      const req = mocks.mockReq(null, null, parameters)
       
       await userCampaignController.add(req, res)
       const { error } = invalidParamError("campaignid")
@@ -143,11 +89,11 @@ describe("USERCAMPAIGN tests", () => {
         userid: userid,
         campaignid: campaignid
       }
-      const res = mockResponse()
-      const req = mockRequest({}, {}, parameters)     
+      const res = mocks.mockRes()
+      const req = mocks.mockReq(null, null, parameters)     
       await userCampaignController.add(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
-      expect(res.json).toHaveBeenCalledWith(expect.objectContaining(getModelExpected()))
+      expect(res.json).toHaveBeenCalledWith(expect.objectContaining(modelsExpected.userCampaignModel()))
     })
 
     test("Should return 400 if user already exists in campaign", async () => {
@@ -155,8 +101,8 @@ describe("USERCAMPAIGN tests", () => {
         userid: userid,
         campaignid: campaignid
       }
-      const res = mockResponse()
-      const req = mockRequest({}, {}, parameters)     
+      const res = mocks.mockRes()
+      const req = mocks.mockReq(null, null, parameters)     
       await userCampaignController.add(req, res)
       expect(res.status).toHaveBeenCalledWith(400)
       expect(res.json).toHaveBeenCalledWith("User already exists in this campaign")
@@ -169,8 +115,8 @@ describe("USERCAMPAIGN tests", () => {
         campaignid: campaignid
       }
       delete parameters.campaignid
-      const res = mockResponse()
-      const req = mockRequest({}, {}, parameters)      
+      const res = mocks.mockRes()
+      const req = mocks.mockReq(null, null, parameters)      
       await userCampaignController.list(req, res)
       const { error } = missingParamError('campaignid')
       expect(res.status).toHaveBeenCalledWith(400)
@@ -180,11 +126,11 @@ describe("USERCAMPAIGN tests", () => {
       const parameters = {
         campaignid: campaignid
       }
-      const res = mockResponse()
-      const req = mockRequest({}, {}, parameters)      
+      const res = mocks.mockRes()
+      const req = mocks.mockReq(null, null, parameters)      
       await userCampaignController.list(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
-      expect(res.json).toHaveBeenCalledWith(expect.arrayContaining([expect.objectContaining(getModelExpected())]))
+      expect(res.json).toHaveBeenCalledWith(expect.arrayContaining([expect.objectContaining(modelsExpected.userCampaignModel())]))
     })
   })
 
@@ -197,8 +143,8 @@ describe("USERCAMPAIGN tests", () => {
           campaignid: campaignid
         }
         delete parameters[`${field}`]
-        const res = mockResponse()
-        const req = mockRequest({}, {}, parameters)
+        const res = mocks.mockRes()
+        const req = mocks.mockReq(null, null, parameters)
         
         await userCampaignController.remove(req, res)
         const { error } = missingParamError(field)
@@ -211,8 +157,8 @@ describe("USERCAMPAIGN tests", () => {
         userid: "invaliduserid",
         campaignid: campaignid
       }
-      const res = mockResponse()
-      const req = mockRequest({}, {}, parameters)
+      const res = mocks.mockRes()
+      const req = mocks.mockReq(null, null, parameters)
       
       await userCampaignController.remove(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
@@ -223,8 +169,8 @@ describe("USERCAMPAIGN tests", () => {
         userid: userid,
         campaignid: 'invalidcampaignID'
       }
-      const res = mockResponse()
-      const req = mockRequest({}, {}, parameters)
+      const res = mocks.mockRes()
+      const req = mocks.mockReq(null, null, parameters)
       
       await userCampaignController.remove(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
@@ -236,8 +182,8 @@ describe("USERCAMPAIGN tests", () => {
         userid: userid,
         campaignid: campaignid
       }
-      const res = mockResponse()
-      const req = mockRequest({}, {}, parameters)
+      const res = mocks.mockRes()
+      const req = mocks.mockReq(null, null, parameters)
       
       await userCampaignController.remove(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
