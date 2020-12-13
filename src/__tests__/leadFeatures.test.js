@@ -1,9 +1,9 @@
-const LeadController = require('../server/controllers/leads/LeadController')
+const LeadController = require('../controllers/leads/LeadController')
 const leadController = new LeadController()
-const { invalidParamError, missingParamError, forbidenError, conflictError } = require('../server/helpers').errors
-const {Lead, User, LeadSource, LeadStatus } = require('../server/models')
-const Mocks = require('./Mocks')
-const ModelsExpected = require('./ModelsExpected')
+const { invalidParamError, missingParamError, forbidenError, conflictError } = require('../helpers').errors
+const {Lead, User, LeadSource, LeadStatus } = require('../models')
+const Mocks = require('./helpers/Mocks')
+const ModelsExpected = require('./helpers/ModelsExpected')
 const mocks = new Mocks()
 const modelsExpected = new ModelsExpected()
 const databaseSetup = require('../database')

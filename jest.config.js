@@ -2,7 +2,10 @@ module.exports = {
   // preset: 'ts-jest',
   testEnvironment: 'node',
   verbose: true,
-  coveragePathIgnorePatterns: ["/node_modules"]
+  coveragePathIgnorePatterns: ["/node_modules"],
+  testPathIgnorePatterns : [
+    "./src/__tests__/helpers" 
+  ]
 };
 
 // "jest": {

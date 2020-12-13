@@ -1,4 +1,4 @@
-const { User } = require('../server/models')
+const { User } = require('../../models')
 
 class Mocks {
     

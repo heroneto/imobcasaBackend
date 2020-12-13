@@ -1,8 +1,8 @@
-const AuthenticationController = require('../server/controllers/authentication/AuthenticationController')
+const AuthenticationController = require('../controllers/authentication/AuthenticationController')
 const authenticationController = new AuthenticationController()
-const { invalidParamError, missingParamError } = require('../server/controllers/config').errors
-const {User} = require('../server/models')
-const Mocks = require('./Mocks')
+const { invalidParamError, missingParamError } = require('../controllers/config').errors
+const {User} = require('../models')
+const Mocks = require('./helpers/Mocks')
 const mocks = new Mocks()
 const databaseSetup = require('../database')
 
