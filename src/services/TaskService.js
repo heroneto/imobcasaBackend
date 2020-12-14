@@ -19,7 +19,7 @@ class TaskService extends Service {
     const lead = await this._leadRepository.getOne({id: fields.leadid})
     await this._checkEntityExsits(lead, "leadid")
     const user = await this._userRepository.getOne({id: fields.userid})
-    await this._checkEntityExsits(user)
+    await this._checkEntityExsits(user, "userid")
     if(!fields.admin && fields.reqUserId !== fields.userid){
       this._throwForbidenError()
     }
