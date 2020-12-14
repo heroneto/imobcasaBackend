@@ -4,6 +4,7 @@ const UserController = require('./controllers/user/UserController')
 const AuthenticationController = require('./controllers/authentication/AuthenticationController')
 const UserCampaignController = require('./controllers/userCampaign/UserCampaignController')
 const LeadController = require('./controllers/leads/LeadController')
+const TaskController = require('./controllers/tasks/TaskController')
 const database = require('./database')
 
 
@@ -15,7 +16,8 @@ async function app(){
       new UserController(),
       new AuthenticationController(),
       new UserCampaignController(),
-      new LeadController()
+      new LeadController(),
+      new TaskController()
     ])
   
     await server.listen()
