@@ -15,6 +15,15 @@ class TaskRepository {
     })
   }
 
+  async getOne(fields){
+    
+    return await Task.findOne({
+      where: {
+        id: fields.id
+      }
+    })
+  }
+
   async update(){
 
   }

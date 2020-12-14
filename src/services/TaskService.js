@@ -6,6 +6,7 @@ const UserRepository = require('../repositories/UserRepository')
 class TaskService extends Service {
   _createRequiredFields = ["title", "description", "userid", "leadid", "active", "startdate", "tasktypeid", "reqUserId", "admin"]  
   _listByLeadRequiredFields = ["leadid", "reqUserId", "admin"]
+  _getOneRequiredFields = ["id", "reqUserId", "admin"]
   constructor(){
     super()
     this._taskRepository = new TaskRespository()
@@ -40,8 +41,9 @@ class TaskService extends Service {
 
 
   async getOne(fields) {
-    
-    return "getOne"
+    this._checkEntityExsits(this._getOneRequiredFields, fields)
+
+    return fields    
   }
 
 
