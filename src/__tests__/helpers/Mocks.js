@@ -48,7 +48,7 @@ class Mocks {
   mockLead (userid, statusid, sourceId){
     const fakeLead = {
       name: "Fake Lead",
-      phone: "0000000000",
+      phone: Math.round(Math.random()*10000000000000, 1),
       sourceid: sourceId,
       campaignid: null,
       userid: userid,
@@ -82,6 +82,26 @@ class Mocks {
       fbAdAccountId: "Fake FB AD Account ID"
     }
     return fakeCampaign
+  }
+
+  mockTask(userid, leadid, tasktypeid){
+    return {
+      title: "Mocked Task Title", 
+      description: "Mocked Task Description", 
+      userid: userid, 
+      leadid: leadid, 
+      active: true, 
+      startdate: "14/12/2020 20:00:45",
+      tasktypeid: tasktypeid
+    }
+  }
+
+  mockTaskType(){
+    return {
+      name: 'Cobrar cliente',
+      description: 'Cobrar o cliente referente à uma atualização',
+      active: 1
+    }
   }
 }
 
