@@ -6,7 +6,6 @@ module.exports = (sequelize, DataTypes) => {
     description: DataTypes.STRING,
     userid: DataTypes.INTEGER,
     leadid: DataTypes.INTEGER,
-    statusid: DataTypes.INTEGER,
     startdate: DataTypes.DATE,
     resolutiondate: DataTypes.DATE,
     tasktypeid: DataTypes.INTEGER,
