@@ -95,5 +95,17 @@ describe("TASKS FEATURES Tests", () => {
       expect(res.status).toHaveBeenCalledWith(400)
       expect(res.json).toHaveBeenCalledWith(error)
     })
+    test("Should return 400 if invalid userid has been proveided", async () => {
+      const locals = {
+        reqUserId: adminUser.id,
+        admin: adminUser.admin
+      }
+      const body = mocks.mockTask("invalidUserId", lead.id, taskType.id)
+      const req = mocks.mockReq(body, null, null, locals)
+      await taskController._create(req, res)
+      const { error } = invalidParamError('userid')
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toHaveBeenCalledWith(error)
+    })
   })
 })
