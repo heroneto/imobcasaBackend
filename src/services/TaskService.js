@@ -17,7 +17,7 @@ class TaskService extends Service {
   async create(fields) {
     await this._checkRequiredFields(this._createRequiredFields, fields)
     const lead = await this._leadRepository.getOne({id: fields.leadid})
-    await this._checkEntityExsits(lead)
+    await this._checkEntityExsits(lead, "leadid")
     const user = await this._userRepository.getOne({id: fields.userid})
     await this._checkEntityExsits(user)
     if(!fields.admin && fields.reqUserId !== fields.userid){
@@ -42,6 +42,7 @@ class TaskService extends Service {
 
   async getOne(fields) {
     this._checkEntityExsits(this._getOneRequiredFields, fields)
+
 
     return fields    
   }
