@@ -2,6 +2,7 @@ const Service = require('./Service')
 const TaskRespository = require('../repositories/TaskRespository')
 const LeadRepository = require('../repositories/LeadRepository')
 const UserRepository = require('../repositories/UserRepository')
+const TaskTypeRepository = require('../repositories/TaskTypeRepository')
 
 class TaskService extends Service {
   _createRequiredFields = ["title", "description", "userid", "leadid", "active", "startdate", "tasktypeid", "reqUserId", "admin"]  
@@ -13,6 +14,7 @@ class TaskService extends Service {
   constructor(){
     super()
     this._taskRepository = new TaskRespository()
+    this._taskTypeRepository = new TaskTypeRepository()
     this._leadRepository = new LeadRepository()
     this._userRepository = new UserRepository()
   }
@@ -71,6 +73,8 @@ class TaskService extends Service {
     await this._checkEntityExsits(user, "userid")
     const lead = await this._leadRepository.getOne({id: fields.leadid})
     await this._checkEntityExsits(lead, "leadid")
+    const taskType = await this._taskTypeRepository.getOne(fields.tasktypeid)
+    await this._checkEntityExsits(taskType, "tasktypeid")
     return fields
   }
 
