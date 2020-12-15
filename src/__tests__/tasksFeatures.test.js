@@ -133,7 +133,7 @@ describe("TASKS FEATURES Tests", () => {
       }
       const params = {        
       }
-      const req = mocks.mockReq(null, params, null, locals)
+      const req = mocks.mockReq(null, null , params, locals)
       const res = mocks.mockRes()
       await taskController._listByLead(req, res)
       const { error } = missingParamError('leadid')
@@ -215,4 +215,20 @@ describe("TASKS FEATURES Tests", () => {
      
   })
 
+  describe("GET ONE Tests", () => {
+    test(`Should return 400 if no id has been provided`, async () => {
+      const locals = {
+        reqUserId: adminUser.id,
+        admin: adminUser.admin
+      }
+      const params = {
+      }
+      const req = mocks.mockReq(null, null, params, locals)
+      const res = mocks.mockRes()
+      await taskController._getOne(req, res)
+      const { error } = missingParamError('id')
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toHaveBeenCalledWith(error)
+    })
+  })
 })
