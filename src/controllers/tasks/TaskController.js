@@ -17,24 +17,6 @@ class TaskController {
 
 
   async _load() {
-    // this.routes.route(this.basePath)
-    //   .all(this.authenticationMid.checkAuthentication)
-    //   .all(this.authorizationMid.checkAdminPrivileges)
-    //   .get(this._list)
-    //   .post(this._create)
-    //   .put(this._update)
-    //   .delete(this._delete)
-
-    // this.routes.route(this.getOnePath)
-    //   .all(this.authenticationMid.checkAuthentication)
-    //   .all(this.authorizationMid.checkAdminPrivileges)     
-    //   .get(this._getOne)
-
-    // this.routes.route(this.searchPath)
-    //   .all(this.authenticationMid.checkAuthentication)
-    //   .all(this.authorizationMid.checkAdminPrivileges)
-    //   .get(this._search)
-
     this.routes.route(this.basePath)
       .all(this.authenticationMid.checkAuthentication)
       .post(this._create)

@@ -124,4 +124,21 @@ describe("TASKS FEATURES Tests", () => {
       expect(res.json).toHaveBeenCalledWith(expect.objectContaining(modelsExpected.taskModel()))
     })
   })
+
+  describe("LISTBYLEAD Tests", () => {
+    test(`Should return 400 if no leadid has been provided`, async () => {
+      const locals = {
+        reqUserId: adminUser.id,
+        admin: adminUser.admin
+      }
+      const params = {        
+      }
+      const req = mocks.mockReq(null, params, null, locals)
+      const res = mocks.mockRes()
+      await taskController._listByLead(req, res)
+      const { error } = missingParamError('leadid')
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toHaveBeenCalledWith(error)
+    })  
+  })
 })
