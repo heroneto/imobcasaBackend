@@ -69,7 +69,8 @@ class TaskService extends Service {
     await this._checkRequiredFields(this._updateRequiredFields, fields)
     const task = await this._taskRepository.getOne(fields)
     this._checkEntityExsits(task)
-    if(!fields.admin && fields.reqUserId !== task.userid){
+    const { reqUserId, admin, ...updateTaskFields } = fields
+    if(!admin && reqUserId !== task.userid){
       this._throwForbidenError()
     }
     const user = await this._userRepository.getOne({id: fields.userid})
@@ -78,8 +79,8 @@ class TaskService extends Service {
     await this._checkEntityExsits(lead, "leadid")
     const taskType = await this._taskTypeRepository.getOne(fields.tasktypeid)
     await this._checkEntityExsits(taskType, "tasktypeid")
-
-    return fields
+        
+    return this._taskRepository.update(task, updateTaskFields)
   }
 
 
