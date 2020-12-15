@@ -304,6 +304,56 @@ describe("TASKS FEATURES Tests", () => {
     })
   })
 
+  describe("UPDATE TASK Tests", () => {
+    const requiredFields = ["id", "title", "description", "userid", "leadid", "active", "startdate", "tasktypeid"]
+    for(const field of requiredFields){
+      test(`Should return 400 if no ${field} has been provided`, async () => {
+        const locals = {
+          reqUserId: adminUser.id,
+          admin: adminUser.admin
+        }
+        const body = mocks.mockTask(adminUser.id, lead.id, taskType.id)
+        body.id = task.id
+        body.resolutionDate = new Date().toISOString()
+        delete body[`${field}`]
+        const req = mocks.mockReq(body, null, null, locals)
+        const res = mocks.mockRes()
+        await taskController._update(req, res)
+        const { error } = missingParamError(field)
+        expect(res.status).toHaveBeenCalledWith(400)
+        expect(res.json).toHaveBeenCalledWith(error)
+      })    
+    }
+    test(`Should return 400 if no reqUserId has been provided`, async () => {
+      const locals = {
+        admin: adminUser.admin
+      }
+      const body = mocks.mockTask(adminUser.id, lead.id, taskType.id)
+      body.id = task.id
+      body.resolutionDate = new Date().toISOString()
+      const req = mocks.mockReq(body, null, null, locals)
+      const res = mocks.mockRes()
+      await taskController._update(req, res)
+      const { error } = missingParamError('reqUserId')
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toHaveBeenCalledWith(error)
+    })   
+    test(`Should return 400 if no admin has been provided`, async () => {
+      const locals = {
+        reqUserId: adminUser.id,
+      }
+      const body = mocks.mockTask(adminUser.id, lead.id, taskType.id)
+      body.id = task.id
+      body.resolutionDate = new Date().toISOString()
+      const req = mocks.mockReq(body, null, null, locals)
+      const res = mocks.mockRes()
+      await taskController._update(req, res)
+      const { error } = missingParamError('admin')
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toHaveBeenCalledWith(error)
+    })   
+  })
+
   describe("DELETE ONE Tests", () => {
     test(`Should return 400 if no id has been provided`, async () => {
       const locals = {
