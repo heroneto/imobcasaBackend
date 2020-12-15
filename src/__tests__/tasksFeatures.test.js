@@ -167,6 +167,21 @@ describe("TASKS FEATURES Tests", () => {
       const { error } = missingParamError('admin')
       expect(res.status).toHaveBeenCalledWith(400)
       expect(res.json).toHaveBeenCalledWith(error)
+    })
+    test(`Should return 400 if invalid leadid has been provided`, async () => {
+      const locals = {
+        reqUserId: adminUser.id,
+        admin: adminUser.admin
+      }
+      const params = {  
+        leadid: "invalid lead id"
+      }
+      const req = mocks.mockReq(null, null, params, locals)
+      const res = mocks.mockRes()
+      await taskController._listByLead(req, res)
+      const { error } = invalidParamError('leadid')
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toHaveBeenCalledWith(error)
     })  
      
   })
