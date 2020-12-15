@@ -2,7 +2,7 @@ const TaskController = require('../controllers/tasks/TaskController')
 const taskController = new TaskController()
 const { Task, User, Lead, LeadSource, LeadStatus, TaskType } = require('../models')
 const databaseSetup = require('../database')
-const { missingParamError, invalidParamError } = require("../helpers/Errors")
+const { missingParamError, invalidParamError, forbidenError } = require("../helpers/Errors")
 const ModelsExpected = require('./helpers/ModelsExpected')
 const Mocks = require('./helpers/Mocks')
 const modelsExpected = new ModelsExpected()
@@ -182,7 +182,22 @@ describe("TASKS FEATURES Tests", () => {
       const { error } = invalidParamError('leadid')
       expect(res.status).toHaveBeenCalledWith(400)
       expect(res.json).toHaveBeenCalledWith(error)
-    })  
+    })
+    test(`Should return 403 if userid does not exists in lead fields of leadid provided and user is admin is false`, async () => {
+      const locals = {
+        reqUserId: limitedUser.id,
+        admin: limitedUser.admin
+      }
+      const params = {  
+        leadid: lead.id
+      }
+      const req = mocks.mockReq(null, null, params, locals)
+      const res = mocks.mockRes()
+      await taskController._listByLead(req, res)
+      const { error } = forbidenError()
+      expect(res.status).toHaveBeenCalledWith(403)
+      expect(res.json).toHaveBeenCalledWith(error)
+    }) 
      
   })
 
