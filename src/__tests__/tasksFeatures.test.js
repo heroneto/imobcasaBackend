@@ -351,6 +351,21 @@ describe("TASKS FEATURES Tests", () => {
       const { error } = missingParamError('admin')
       expect(res.status).toHaveBeenCalledWith(400)
       expect(res.json).toHaveBeenCalledWith(error)
+    })
+    test(`Should return 400 if invalid id has been provided`, async () => {
+      const locals = {
+        reqUserId: adminUser.id,
+        admin: adminUser.admin
+      }
+      const body = mocks.mockTask(adminUser.id, lead.id, taskType.id)
+      body.id = "Invalid Task id"
+      body.resolutionDate = new Date().toISOString()
+      const req = mocks.mockReq(body, null, null, locals)
+      const res = mocks.mockRes()
+      await taskController._update(req, res)
+      const { error } = invalidParamError('id')
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toHaveBeenCalledWith(error)
     })   
   })
 
