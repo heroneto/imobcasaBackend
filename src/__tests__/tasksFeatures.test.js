@@ -303,4 +303,93 @@ describe("TASKS FEATURES Tests", () => {
       expect(res.json).toHaveBeenCalledWith(expect.objectContaining(modelsExpected.taskModel()))
     })
   })
+
+  describe("DELETE ONE Tests", () => {
+    test(`Should return 400 if no id has been provided`, async () => {
+      const locals = {
+        reqUserId: adminUser.id,
+        admin: adminUser.admin
+      }
+      const params = {
+      }
+      const req = mocks.mockReq(null, null, params, locals)
+      const res = mocks.mockRes()
+      await taskController._delete(req, res)
+      const { error } = missingParamError('id')
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toHaveBeenCalledWith(error)
+    })
+    test(`Should return 400 if no reqUserId has been provided`, async () => {
+      const locals = {
+        admin: adminUser.admin
+      }
+      const params = {  
+        id: task.id      
+      }
+      const req = mocks.mockReq(null, null, params, locals)
+      const res = mocks.mockRes()
+      await taskController._delete(req, res)
+      const { error } = missingParamError('reqUserId')
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toHaveBeenCalledWith(error)
+    })  
+    test(`Should return 400 if no admin has been provided`, async () => {
+      const locals = {
+        reqUserId: adminUser.id,
+      }
+      const params = {  
+        id: task.id      
+      }
+      const req = mocks.mockReq(null, null, params, locals)
+      const res = mocks.mockRes()
+      await taskController._delete(req, res)
+      const { error } = missingParamError('admin')
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toHaveBeenCalledWith(error)
+    })
+    test(`Should return 400 if invalid id has been provided`, async () => {
+      const locals = {
+        reqUserId: adminUser.id,
+        admin: adminUser.admin
+      }
+      const params = {  
+        id: "invalid task id"
+      }
+      const req = mocks.mockReq(null, null, params, locals)
+      const res = mocks.mockRes()
+      await taskController._delete(req, res)
+      const { error } = invalidParamError('id')
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toHaveBeenCalledWith(error)
+    })
+    test(`Should return 403 userid does not exists in task fields and admin is false`, async () => {
+      const locals = {
+        reqUserId: limitedUser.id,
+        admin: limitedUser.admin
+      }
+      const params = {  
+        id: task.id
+      }
+      const req = mocks.mockReq(null, null, params, locals)
+      const res = mocks.mockRes()
+      await taskController._delete(req, res)
+      const { error } = forbidenError()
+      expect(res.status).toHaveBeenCalledWith(403)
+      expect(res.json).toHaveBeenCalledWith(error)
+    })
+    test(`Should return 200 if correct fields has provided`, async () => {
+      const locals = {
+        reqUserId: adminUser.id,
+        admin: adminUser.admin
+      }
+      const params = {  
+        id: task.id
+      }
+      const req = mocks.mockReq(null, null, params, locals)
+      const res = mocks.mockRes()
+      await taskController._delete(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.json).toHaveBeenCalledWith(1)
+    })
+  })
 })
