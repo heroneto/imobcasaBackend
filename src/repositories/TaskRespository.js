@@ -23,8 +23,15 @@ class TaskRepository {
     })
   }
 
-  async update(){
-
+  async update(task, fields){
+    task.title = fields.title
+    task.description = fields.description
+    task.userid = fields.userid
+    task.leadid = fields.leadid
+    task.active = fields.active
+    task.startdate = fields.startdate
+    task.tasktypeid = fields.tasktypeid
+    return await task.save()
   }
 
   async delete(fields){

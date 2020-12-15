@@ -95,8 +95,6 @@ class TaskController {
     }
   }
 
-
-
   async _delete(req,res){
     try {
       const taskService = new TaskService()
@@ -122,7 +120,7 @@ class TaskController {
     try {
       const taskService = new TaskService()
       const task = await taskService.update({
-        ...req.params,
+        ...req.body,
         ...req.locals
       })
       return res.status(200).json(task)

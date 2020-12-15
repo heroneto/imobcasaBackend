@@ -8,6 +8,7 @@ class TaskService extends Service {
   _listByLeadRequiredFields = ["leadid", "reqUserId", "admin"]
   _getOneRequiredFields = ["id", "reqUserId", "admin"]
   _deleteRequiredFields = ["id", "reqUserId", "admin"]
+  _updateRequiredFields = ["id", "title", "description", "userid", "leadid", "active", "startdate", "resolutionDate", "tasktypeid", "reqUserId", "admin"]
 
   constructor(){
     super()
@@ -62,8 +63,11 @@ class TaskService extends Service {
     return await this._taskRepository.delete(fields)
   }
 
-  async update() {
+  async update(fields) {
+    await this._checkRequiredFields(this._updateRequiredFields, fields)
+  
 
+    return fields
   }
 
 
