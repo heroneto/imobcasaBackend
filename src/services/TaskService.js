@@ -42,7 +42,7 @@ class TaskService extends Service {
 
 
   async getOne(fields) {
-    this._checkEntityExsits(this._getOneRequiredFields, fields)
+    this._checkRequiredFields(this._getOneRequiredFields, fields)
 
 
     return fields    
