@@ -197,6 +197,20 @@ describe("TASKS FEATURES Tests", () => {
       const { error } = forbidenError()
       expect(res.status).toHaveBeenCalledWith(403)
       expect(res.json).toHaveBeenCalledWith(error)
+    })
+    test(`Should return 200 if correct fields has been provided`, async () => {
+      const locals = {
+        reqUserId: adminUser.id,
+        admin: adminUser.admin
+      }
+      const params = {  
+        leadid: lead.id
+      }
+      const req = mocks.mockReq(null, null, params, locals)
+      const res = mocks.mockRes()
+      await taskController._listByLead(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.json).toHaveBeenCalledWith(expect.arrayContaining([expect.objectContaining(modelsExpected.taskModel())]))
     }) 
      
   })
