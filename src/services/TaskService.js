@@ -45,7 +45,10 @@ class TaskService extends Service {
     this._checkRequiredFields(this._getOneRequiredFields, fields)
     const task = await this._taskRepository.getOne(fields)
     this._checkEntityExsits(task)
-    return fields    
+    if(!fields.admin && task.userid !== fields.reqUserId){
+      this._throwForbidenError()
+    }
+    return task
   }
 
 
