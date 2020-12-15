@@ -67,6 +67,8 @@ class TaskService extends Service {
     await this._checkRequiredFields(this._updateRequiredFields, fields)
     const task = await this._taskRepository.getOne(fields)
     this._checkEntityExsits(task)
+    const user = await this._userRepository.getOne({id: fields.userid})
+    await this._checkEntityExsits(user, "userid")
 
     return fields
   }
