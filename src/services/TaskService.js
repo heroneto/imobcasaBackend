@@ -43,8 +43,8 @@ class TaskService extends Service {
 
   async getOne(fields) {
     this._checkRequiredFields(this._getOneRequiredFields, fields)
-
-
+    const task = await this._taskRepository.getOne(fields)
+    this._checkEntityExsits(task)
     return fields    
   }
 
