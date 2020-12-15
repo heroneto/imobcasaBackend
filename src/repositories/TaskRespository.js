@@ -15,8 +15,7 @@ class TaskRepository {
     })
   }
 
-  async getOne(fields){
-    
+  async getOne(fields){    
     return await Task.findOne({
       where: {
         id: fields.id
@@ -28,8 +27,12 @@ class TaskRepository {
 
   }
 
-  async delete(){
-
+  async delete(fields){
+    return await Task.destroy({
+      where: {
+        id: fields.id
+      }
+    })
   }
 
   async changeState(){

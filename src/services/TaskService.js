@@ -7,6 +7,8 @@ class TaskService extends Service {
   _createRequiredFields = ["title", "description", "userid", "leadid", "active", "startdate", "tasktypeid", "reqUserId", "admin"]  
   _listByLeadRequiredFields = ["leadid", "reqUserId", "admin"]
   _getOneRequiredFields = ["id", "reqUserId", "admin"]
+  _deleteRequiredFields = ["id", "reqUserId", "admin"]
+
   constructor(){
     super()
     this._taskRepository = new TaskRespository()
@@ -40,7 +42,6 @@ class TaskService extends Service {
     return await this._taskRepository.listByLead(fields)
   }
 
-
   async getOne(fields) {
     this._checkRequiredFields(this._getOneRequiredFields, fields)
     const task = await this._taskRepository.getOne(fields)
@@ -51,9 +52,14 @@ class TaskService extends Service {
     return task
   }
 
-
-  async delete() {
-
+  async delete(fields) {
+    this._checkRequiredFields(this._getOneRequiredFields, fields)
+    const task = await this._taskRepository.getOne(fields)
+    this._checkEntityExsits(task)
+    if(!fields.admin && task.userid !== fields.reqUserId){
+      this._throwForbidenError()
+    }
+    return await this._taskRepository.delete(fields)
   }
 
   async update() {
