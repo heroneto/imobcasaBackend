@@ -427,6 +427,26 @@ describe("TASKS FEATURES Tests", () => {
       expect(res.status).toHaveBeenCalledWith(400)
       expect(res.json).toHaveBeenCalledWith(error)
     })
+    test(`Should return 200 if valid fields has been provided`, async () => {
+      const locals = {
+        reqUserId: adminUser.id,
+        admin: adminUser.admin
+      }
+      const body = mocks.mockTask(adminUser.id, lead.id, taskType.id)
+      body.id = task.id
+      body.resolutionDate = new Date().toISOString()
+      body.title = "Update Task Title"
+      body.description = "Update Task Description"
+      const req = mocks.mockReq(body, null, null, locals)
+      const res = mocks.mockRes()
+      await taskController._update(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
+        ...modelsExpected.taskModel(),
+        title: "Update Task Title",
+        description: "Update Task Description"
+      }))
+    })
 
   })
 
