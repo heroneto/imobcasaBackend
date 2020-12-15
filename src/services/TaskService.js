@@ -65,7 +65,8 @@ class TaskService extends Service {
 
   async update(fields) {
     await this._checkRequiredFields(this._updateRequiredFields, fields)
-  
+    const task = await this._taskRepository.getOne(fields)
+    this._checkEntityExsits(task)
 
     return fields
   }
