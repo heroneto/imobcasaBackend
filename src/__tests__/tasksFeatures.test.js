@@ -17,8 +17,7 @@ describe("TASKS FEATURES Tests", () => {
   let adminUser = null
   let limitedUser = null
   let taskType = null
-
-  const res = mocks.mockRes()
+ 
 
   beforeAll(async () => {
     try{
@@ -55,6 +54,7 @@ describe("TASKS FEATURES Tests", () => {
         const body = mocks.mockTask(adminUser.id, lead.id, taskType.id)
         delete body[`${field}`]
         const req = mocks.mockReq(body, null, null, locals)
+        const res = mocks.mockRes()
         await taskController._create(req, res)
         const { error } = missingParamError(field)
         expect(res.status).toHaveBeenCalledWith(400)
@@ -67,6 +67,7 @@ describe("TASKS FEATURES Tests", () => {
       }
       const body = mocks.mockTask(adminUser.id, lead.id, taskType.id)
       const req = mocks.mockReq(body, null, null, locals)
+      const res = mocks.mockRes()
       await taskController._create(req, res)
       const { error } = missingParamError('reqUserId')
       expect(res.status).toHaveBeenCalledWith(400)
@@ -78,6 +79,7 @@ describe("TASKS FEATURES Tests", () => {
       }
       const body = mocks.mockTask(adminUser.id, lead.id, taskType.id)
       const req = mocks.mockReq(body, null, null, locals)
+      const res = mocks.mockRes()
       await taskController._create(req, res)
       const { error } = missingParamError('admin')
       expect(res.status).toHaveBeenCalledWith(400)
@@ -90,6 +92,7 @@ describe("TASKS FEATURES Tests", () => {
       }
       const body = mocks.mockTask(adminUser.id, "InvalidLeadId", taskType.id)
       const req = mocks.mockReq(body, null, null, locals)
+      const res = mocks.mockRes()
       await taskController._create(req, res)
       const { error } = invalidParamError('leadid')
       expect(res.status).toHaveBeenCalledWith(400)
@@ -102,10 +105,23 @@ describe("TASKS FEATURES Tests", () => {
       }
       const body = mocks.mockTask("invalidUserId", lead.id, taskType.id)
       const req = mocks.mockReq(body, null, null, locals)
+      const res = mocks.mockRes()
       await taskController._create(req, res)
       const { error } = invalidParamError('userid')
       expect(res.status).toHaveBeenCalledWith(400)
       expect(res.json).toHaveBeenCalledWith(error)
+    })
+    test("Should return 200 if valid fields has been proveided", async () => {
+      const locals = {
+        reqUserId: adminUser.id,
+        admin: adminUser.admin
+      }
+      const body = mocks.mockTask(adminUser.id, lead.id, taskType.id)
+      const req = mocks.mockReq(body, null, null, locals)
+      const res = mocks.mockRes()
+      await taskController._create(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.json).toHaveBeenCalledWith(expect.objectContaining(modelsExpected.taskModel()))
     })
   })
 })

@@ -52,11 +52,11 @@ class TaskController {
   async _create(req,res){
     try {
       const taskService = new TaskService()
-      const user = await taskService.create({
+      const task = await taskService.create({
         ...req.body,
         ...req.locals
       })
-      return res.status(200).json(user)
+      return res.status(200).json(task)
     } catch (err) {
       if (err instanceof ServiceException) {
         const { statusCode, message } = err
@@ -73,11 +73,11 @@ class TaskController {
   async _listByLead(req,res){
     try {
       const taskService = new TaskService()
-      const user = await taskService.listByLead({
+      const tasks = await taskService.listByLead({
         ...req.params,
         ...req.locals
       })
-      return res.status(200).json(user)
+      return res.status(200).json(tasks)
     } catch (err) {
       if (err instanceof ServiceException) {
         const { statusCode, message } = err
@@ -95,11 +95,11 @@ class TaskController {
   async _getOne(req,res){
     try {
       const taskService = new TaskService()
-      const user = await taskService.getOne({
+      const task = await taskService.getOne({
         ...req.params,
         ...req.locals
       })
-      return res.status(200).json(user)
+      return res.status(200).json(task)
     } catch (err) {
       if (err instanceof ServiceException) {
         const { statusCode, message } = err
@@ -118,11 +118,11 @@ class TaskController {
   async _delete(req,res){
     try {
       const taskService = new TaskService()
-      const user = await taskService.delete({
+      const result = await taskService.delete({
         ...req.params,
         ...req.locals
       })
-      return res.status(200).json(user)
+      return res.status(200).json(result)
     } catch (err) {
       if (err instanceof ServiceException) {
         const { statusCode, message } = err
@@ -139,11 +139,11 @@ class TaskController {
   async _update(req,res){
     try {
       const taskService = new TaskService()
-      const user = await taskService.update({
+      const task = await taskService.update({
         ...req.params,
         ...req.locals
       })
-      return res.status(200).json(user)
+      return res.status(200).json(task)
     } catch (err) {
       if (err instanceof ServiceException) {
         const { statusCode, message } = err

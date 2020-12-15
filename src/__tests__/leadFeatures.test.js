@@ -112,6 +112,7 @@ describe('LEAD CONTROLLER: tests', () => {
     it('POST: Should return 409 if existing lead already exists', async () => {
       const res = mocks.mockRes()
       const fakeLead = mocks.mockLead(adminUser.id, leadStatus.id, leadSource.id)
+      fakeLead.phone = lead.phone
       const req = mocks.mockReq(fakeLead, {}, { id: lead.id }, { reqUserId: adminUser.id, admin: adminUser.admin })
       await leadController.create(req, res)
       const { error } = conflictError('phone')

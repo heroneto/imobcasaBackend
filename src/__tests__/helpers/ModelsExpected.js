@@ -54,6 +54,21 @@ class ModelsExpected {
     }
   }
 
+  taskModel(){
+    return {
+      id: expect.any(String),
+      title: expect.any(String),
+      description: expect.any(String),
+      userid: expect.any(String),
+      leadid: expect.any(String),
+      active: expect.any(Boolean),
+      startdate: expect.any(Date),
+      tasktypeid: expect.any(String),
+      updatedAt: expect.any(Date),
+      createdAt: expect.any(Date)
+    }
+  }
+
 }
 
 
