@@ -83,7 +83,6 @@ class TaskService extends Service {
     return this._taskRepository.update(task, updateTaskFields)
   }
 
-
 }
 
 module.exports = TaskService
