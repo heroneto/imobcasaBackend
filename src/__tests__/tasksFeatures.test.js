@@ -273,5 +273,20 @@ describe("TASKS FEATURES Tests", () => {
       expect(res.status).toHaveBeenCalledWith(400)
       expect(res.json).toHaveBeenCalledWith(error)
     })
+    test(`Should return 403 userid does not exists in task fields and admin is false`, async () => {
+      const locals = {
+        reqUserId: limitedUser.id,
+        admin: limitedUser.admin
+      }
+      const params = {  
+        id: task.id
+      }
+      const req = mocks.mockReq(null, null, params, locals)
+      const res = mocks.mockRes()
+      await taskController._getOne(req, res)
+      const { error } = forbidenError()
+      expect(res.status).toHaveBeenCalledWith(403)
+      expect(res.json).toHaveBeenCalledWith(error)
+    })
   })
 })
