@@ -1,7 +1,7 @@
 const LeadController = require('../controllers/leads/LeadController')
 const leadController = new LeadController()
 const { invalidParamError, missingParamError, forbidenError, conflictError } = require('../helpers').errors
-const {Lead, User, LeadSource, LeadStatus } = require('../models')
+const { Lead, User, LeadSource, LeadStatus } = require('../models')
 const Mocks = require('./helpers/Mocks')
 const ModelsExpected = require('./helpers/ModelsExpected')
 const mocks = new Mocks()
@@ -12,7 +12,10 @@ describe('LEAD CONTROLLER: tests', () => {
   let limitedUser = {}
   let adminUser = {}
   let lead = {}
-  let leadStatus = {}
+  let lead2 = {}
+  let lead3 = {}
+  let lead4 = {}
+  let leadStatus = new Array()
   let leadSource = {}
 
   beforeAll(async () => {
@@ -20,22 +23,29 @@ describe('LEAD CONTROLLER: tests', () => {
       await databaseSetup()
       adminUser = await User.create(mocks.mockUser(true))
       limitedUser = await User.create(mocks.mockUser(false))
-      leadStatus = await LeadStatus.create(mocks.mockLeadStatus())
       leadSource = await LeadSource.create(mocks.mockLeadSource())
-      lead = await Lead.create(mocks.mockLead(adminUser.id, leadStatus.id, leadSource.id))
+      const statusMocks = mocks.mockLeadStatus()
+      for (const mock of statusMocks) {
+        await leadStatus.push(await LeadStatus.create(mock))
+      }
+
+      lead = await Lead.create(mocks.mockLead(adminUser.id, leadStatus[0].id, leadSource.id))
+      lead2 = await Lead.create(mocks.mockLead(adminUser.id, leadStatus[1].id, leadSource.id))
+      lead3 = await Lead.create(mocks.mockLead(adminUser.id, leadStatus[2].id, leadSource.id))
+      lead4 = await Lead.create(mocks.mockLead(adminUser.id, leadStatus[3].id, leadSource.id))
     } catch (err) {
       console.log(err.toString())
     }
   }),
-    afterAll(async () => {
-      try {
-        await Lead.destroy({ where: {} })
-        await LeadStatus.destroy({ where: {} })
-        await User.destroy({ where: {} })
-      } catch (err) {
-        console.log(err)
-      }
-    })
+  afterAll(async () => {
+    try {
+      await Lead.destroy({ where: {} })
+      await LeadStatus.destroy({ where: {} })
+      await User.destroy({ where: {} })
+    } catch (err) {
+      console.log(err)
+    }
+  })
   describe('GET Leads', () => {
     it('GET: Should return 400 if no id has been send', async () => {
       const res = mocks.mockRes()
@@ -93,7 +103,7 @@ describe('LEAD CONTROLLER: tests', () => {
     }
     it(`POST: Should return 400 if no admin has been send`, async () => {
       const res = mocks.mockRes()
-      const fakeLead = mocks.mockLead(adminUser.id, leadStatus.id, leadSource.id)
+      const fakeLead = mocks.mockLead(adminUser.id, leadStatus[0].id, leadSource.id)
       const req = mocks.mockReq(fakeLead, {}, { id: lead.id }, { reqUserId: adminUser.id })
       await leadController.create(req, res)
       expect(res.status).toHaveBeenCalledWith(400)
@@ -102,7 +112,7 @@ describe('LEAD CONTROLLER: tests', () => {
     })
     it(`POST: Should return 400 if no reqUserId has been send`, async () => {
       const res = mocks.mockRes()
-      const fakeLead = mocks.mockLead(adminUser.id, leadStatus.id, leadSource.id)
+      const fakeLead = mocks.mockLead(adminUser.id, leadStatus[0].id, leadSource.id)
       const req = mocks.mockReq(fakeLead, {}, { id: lead.id }, { admin: adminUser.admin })
       await leadController.create(req, res)
       expect(res.status).toHaveBeenCalledWith(400)
@@ -111,7 +121,7 @@ describe('LEAD CONTROLLER: tests', () => {
     })
     it('POST: Should return 409 if existing lead already exists', async () => {
       const res = mocks.mockRes()
-      const fakeLead = mocks.mockLead(adminUser.id, leadStatus.id, leadSource.id, lead.phone)
+      const fakeLead = mocks.mockLead(adminUser.id, leadStatus[0].id, leadSource.id, lead.phone)
       const req = mocks.mockReq(fakeLead, {}, null, { reqUserId: adminUser.id, admin: adminUser.admin })
       await leadController.create(req, res)
       const { error } = conflictError('phone')
@@ -120,7 +130,7 @@ describe('LEAD CONTROLLER: tests', () => {
     })
     it('POST: Should return 200 if lead has been created', async () => {
       const res = mocks.mockRes()
-      const fakeLead = mocks.mockLead(adminUser.id, leadStatus.id, leadSource.id)
+      const fakeLead = mocks.mockLead(adminUser.id, leadStatus[0].id, leadSource.id)
       const req = mocks.mockReq(fakeLead, {}, { id: lead.id }, { reqUserId: adminUser.id, admin: adminUser.admin })
       await leadController.create(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
@@ -131,7 +141,7 @@ describe('LEAD CONTROLLER: tests', () => {
     let leadToUpdate
     beforeAll(async () => {
       try {
-        const leadMock = mocks.mockLead(adminUser.id, leadStatus.id, leadSource.id)
+        const leadMock = mocks.mockLead(adminUser.id, leadStatus[0].id, leadSource.id)
         leadToUpdate = await Lead.create(leadMock)
       } catch (err) {
         console.log(err.toString())
@@ -164,7 +174,7 @@ describe('LEAD CONTROLLER: tests', () => {
     }
     it(`PUT: Should return 400 if no admin has been send`, async () => {
       const res = mocks.mockRes()
-      const fakeLead = mocks.mockLead(adminUser.id, leadStatus.id, leadSource.id)
+      const fakeLead = mocks.mockLead(adminUser.id, leadStatus[0].id, leadSource.id)
       fakeLead.id = leadToUpdate.id
       const req = mocks.mockReq(fakeLead, {}, { id: lead.id }, { reqUserId: adminUser.id })
       await leadController.update(req, res)
@@ -174,7 +184,7 @@ describe('LEAD CONTROLLER: tests', () => {
     })
     it(`PUT: Should return 400 if no reqUserId has been send`, async () => {
       const res = mocks.mockRes()
-      const fakeLead = mocks.mockLead(adminUser.id, leadStatus.id, leadSource.id)
+      const fakeLead = mocks.mockLead(adminUser.id, leadStatus[0].id, leadSource.id)
       fakeLead.id = leadToUpdate.id
       const req = mocks.mockReq(fakeLead, {}, { id: lead.id }, { admin: adminUser.admin })
       await leadController.update(req, res)
@@ -194,7 +204,7 @@ describe('LEAD CONTROLLER: tests', () => {
     })
     it('PUT: Should return 409 if phone already used in another lead', async () => {
       const res = mocks.mockRes()
-      const fakeLead = mocks.mockLead(adminUser.id, leadStatus.id, leadSource.id, leadToUpdate.phone)
+      const fakeLead = mocks.mockLead(adminUser.id, leadStatus[0].id, leadSource.id, leadToUpdate.phone)
       fakeLead.id = lead.id
       const req = mocks.mockReq(fakeLead, null, null, { reqUserId: adminUser.id, admin: adminUser.admin })
       await leadController.update(req, res)
@@ -204,7 +214,7 @@ describe('LEAD CONTROLLER: tests', () => {
     })
     it('PUT: Should return 200 updated', async () => {
       const res = mocks.mockRes()
-      const fakeLead = mocks.mockLead(adminUser.id, leadStatus.id, leadSource.id, leadToUpdate.phone)
+      const fakeLead = mocks.mockLead(adminUser.id, leadStatus[0].id, leadSource.id, leadToUpdate.phone)
       fakeLead.id = leadToUpdate.id
       fakeLead.name = "New Lead Name"
       const req = mocks.mockReq(fakeLead, null, null, { reqUserId: adminUser.id, admin: adminUser.admin })
@@ -221,7 +231,7 @@ describe('LEAD CONTROLLER: tests', () => {
   })
   describe('LIST Leads', () => {
     test("LIST: should return 400 if no skip has been send", async () => {
-      const query = mocks.mockPaginationQuery()
+      const query = mocks.mockLeadPaginationQuery(null, null, leadStatus[0].id)
       delete query.skip
       const req = mocks.mockReq(null, query, null, { reqUserId: adminUser.id, admin: adminUser.admin })
       const res = mocks.mockRes()
@@ -231,7 +241,7 @@ describe('LEAD CONTROLLER: tests', () => {
       expect(res.json).toHaveBeenCalledWith(error)
     })
     test("LIST: should return 400 if no limit has been send", async () => {
-      const query = mocks.mockPaginationQuery()
+      const query = mocks.mockLeadPaginationQuery(null, null, leadStatus[0].id)
       delete query.limit
       const req = mocks.mockReq(null, query, null, { reqUserId: adminUser.id, admin: adminUser.admin })
       const res = mocks.mockRes()
@@ -240,17 +250,44 @@ describe('LEAD CONTROLLER: tests', () => {
       expect(res.status).toHaveBeenCalledWith(400)
       expect(res.json).toHaveBeenCalledWith(error)
     })
-    test('LIST: should return 200 with all leads', async () => {
-      const query = mocks.mockPaginationQuery()
+    test(`LIST: should return 200 with all leads with specific status id`, async () => {
+      const query = mocks.mockLeadPaginationQuery(null, null, leadStatus[0].id)
+
       const req = mocks.mockReq(null, query, null, { reqUserId: adminUser.id, admin: adminUser.admin })
       const res = mocks.mockRes()
       await leadController.list(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
-      expect(res.json).toHaveBeenCalledWith(expect.arrayContaining([expect.objectContaining(modelsExpected.leadModel())]))
+      expect(res.json).toHaveBeenCalledWith(expect.arrayContaining([expect.objectContaining({
+        ...modelsExpected.leadModel(),
+        statusid: leadStatus[0].id
+      })]))
+    })
+    test(`LIST: should return 200 with all leads with specific status id`, async () => {
+      const query = mocks.mockLeadPaginationQuery(null, null, leadStatus[1].id)
+
+      const req = mocks.mockReq(null, query, null, { reqUserId: adminUser.id, admin: adminUser.admin })
+      const res = mocks.mockRes()
+      await leadController.list(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.json).toHaveBeenCalledWith(expect.arrayContaining([expect.objectContaining({
+        ...modelsExpected.leadModel(),
+        statusid: leadStatus[1].id
+      })]))
+    })
+    test(`LIST: should return 200 with all leads with specific status id`, async () => {
+      const query = mocks.mockLeadPaginationQuery(null, null, leadStatus[2].id)
+
+      const req = mocks.mockReq(null, query, null, { reqUserId: adminUser.id, admin: adminUser.admin })
+      const res = mocks.mockRes()
+      await leadController.list(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.json).toHaveBeenCalledWith(expect.arrayContaining([expect.objectContaining({
+        ...modelsExpected.leadModel(),
+        statusid: leadStatus[2].id
+      })]))
     })
   })
   describe('SEARCH leads', () => {
-    const requiredFields = ["value", "reqUserId", "admin"]
     it(`SEARCH: Should return 400 if no search value has been send`, async () => {
       const res = mocks.mockRes()
       const req = mocks.mockReq(null, null, null, { reqUserId: adminUser.id, admin: adminUser.admin })
@@ -261,7 +298,7 @@ describe('LEAD CONTROLLER: tests', () => {
     })
     it(`SEARCH: Should return 400 if no reqUserId value has been send`, async () => {
       const res = mocks.mockRes()
-      const req = mocks.mockReq(null, null, {value: "searchValue"}, { admin: adminUser.admin })
+      const req = mocks.mockReq(null, null, { value: "searchValue" }, { admin: adminUser.admin })
       await leadController.search(req, res)
       expect(res.status).toHaveBeenCalledWith(400)
       const { error } = missingParamError("reqUserId")
@@ -269,7 +306,7 @@ describe('LEAD CONTROLLER: tests', () => {
     })
     it(`SEARCH: Should return 400 if no search value has been send`, async () => {
       const res = mocks.mockRes()
-      const req = mocks.mockReq(null, null, {value: "searchValue"}, { reqUserId: adminUser.id})
+      const req = mocks.mockReq(null, null, { value: "searchValue" }, { reqUserId: adminUser.id })
       await leadController.search(req, res)
       expect(res.status).toHaveBeenCalledWith(400)
       const { error } = missingParamError("admin")
@@ -277,14 +314,14 @@ describe('LEAD CONTROLLER: tests', () => {
     })
     it(`SEARCH: Should return 200 with leads finded by lead name`, async () => {
       const res = mocks.mockRes()
-      const req = mocks.mockReq(null, null, {value: lead.name}, { reqUserId: adminUser.id,  admin: adminUser.admin })
+      const req = mocks.mockReq(null, null, { value: lead.name }, { reqUserId: adminUser.id, admin: adminUser.admin })
       await leadController.search(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
       expect(res.json).toHaveBeenCalledWith(expect.arrayContaining([expect.objectContaining(modelsExpected.leadModel())]))
     })
     it(`SEARCH: Should return 200 with leads finded by lead phone`, async () => {
       const res = mocks.mockRes()
-      const req = mocks.mockReq(null, null, {value: lead.phone}, { reqUserId: adminUser.id,  admin: adminUser.admin })
+      const req = mocks.mockReq(null, null, { value: lead.phone }, { reqUserId: adminUser.id, admin: adminUser.admin })
       await leadController.search(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
       expect(res.json).toHaveBeenCalledWith(expect.arrayContaining([expect.objectContaining(modelsExpected.leadModel())]))
@@ -321,7 +358,7 @@ describe('LEAD CONTROLLER: tests', () => {
       await leadController.delete(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
       expect(res.json).toHaveBeenCalledWith(1)
-    })    
+    })
   })
-  
+
 })
