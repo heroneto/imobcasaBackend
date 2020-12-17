@@ -111,9 +111,8 @@ describe('LEAD CONTROLLER: tests', () => {
     })
     it('POST: Should return 409 if existing lead already exists', async () => {
       const res = mocks.mockRes()
-      const fakeLead = mocks.mockLead(adminUser.id, leadStatus.id, leadSource.id)
-      fakeLead.phone = lead.phone
-      const req = mocks.mockReq(fakeLead, {}, { id: lead.id }, { reqUserId: adminUser.id, admin: adminUser.admin })
+      const fakeLead = mocks.mockLead(adminUser.id, leadStatus.id, leadSource.id, lead.phone)
+      const req = mocks.mockReq(fakeLead, {}, null, { reqUserId: adminUser.id, admin: adminUser.admin })
       await leadController.create(req, res)
       const { error } = conflictError('phone')
       expect(res.status).toHaveBeenCalledWith(409)
@@ -122,8 +121,6 @@ describe('LEAD CONTROLLER: tests', () => {
     it('POST: Should return 200 if lead has been created', async () => {
       const res = mocks.mockRes()
       const fakeLead = mocks.mockLead(adminUser.id, leadStatus.id, leadSource.id)
-      fakeLead.name = "newName"
-      fakeLead.phone = "newPhoneNumber"
       const req = mocks.mockReq(fakeLead, {}, { id: lead.id }, { reqUserId: adminUser.id, admin: adminUser.admin })
       await leadController.create(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
@@ -135,7 +132,6 @@ describe('LEAD CONTROLLER: tests', () => {
     beforeAll(async () => {
       try {
         const leadMock = mocks.mockLead(adminUser.id, leadStatus.id, leadSource.id)
-        leadMock.phone = "11111111111"
         leadToUpdate = await Lead.create(leadMock)
       } catch (err) {
         console.log(err.toString())
@@ -198,8 +194,8 @@ describe('LEAD CONTROLLER: tests', () => {
     })
     it('PUT: Should return 409 if phone already used in another lead', async () => {
       const res = mocks.mockRes()
-      const fakeLead = mocks.mockLead(adminUser.id, leadStatus.id, leadSource.id)
-      fakeLead.id = leadToUpdate.id
+      const fakeLead = mocks.mockLead(adminUser.id, leadStatus.id, leadSource.id, leadToUpdate.phone)
+      fakeLead.id = lead.id
       const req = mocks.mockReq(fakeLead, null, null, { reqUserId: adminUser.id, admin: adminUser.admin })
       await leadController.update(req, res)
       const { error } = conflictError('phone')
@@ -208,9 +204,8 @@ describe('LEAD CONTROLLER: tests', () => {
     })
     it('PUT: Should return 200 updated', async () => {
       const res = mocks.mockRes()
-      const fakeLead = mocks.mockLead(adminUser.id, leadStatus.id, leadSource.id)
+      const fakeLead = mocks.mockLead(adminUser.id, leadStatus.id, leadSource.id, leadToUpdate.phone)
       fakeLead.id = leadToUpdate.id
-      fakeLead.phone = leadToUpdate.phone
       fakeLead.name = "New Lead Name"
       const req = mocks.mockReq(fakeLead, null, null, { reqUserId: adminUser.id, admin: adminUser.admin })
       await leadController.update(req, res)
@@ -226,7 +221,11 @@ describe('LEAD CONTROLLER: tests', () => {
   })
   describe('LIST Leads', () => {
     test('LIST: hould return 200 with all leads', async () => {
-      const req = mocks.mockReq(null, null, null, { reqUserId: adminUser.id, admin: adminUser.admin })
+      const query = {
+        skip: 0,
+        limit: 10,
+      }
+      const req = mocks.mockReq(null, query, null, { reqUserId: adminUser.id, admin: adminUser.admin })
       const res = mocks.mockRes()
       await leadController.list(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
