@@ -4,7 +4,7 @@ const LeadRepository = require('../repositories/LeadRepository')
 class LeadService extends Service{
   _getOneRequiredFields = ["id", "reqUserId", "admin"]
   _createRequiredFields =  ["name", "phone", "sourceid", "campaignid", "userid", "active", "statusid", "negociationStartedAt", "reqUserId", "admin"]
-  _listRequiredFields = ["reqUserId", "admin", "skip", "limit"]
+  _listRequiredFields = ["reqUserId", "admin", "skip", "limit", "statusId"]
   _updateRequiredFields = ["id", "name", "phone", "sourceid", "campaignid", "userid", "active", "statusid", "negociationStartedAt", "reqUserId", "admin"]
   _deleteRequiredFields = ["id"]
   _searchRequiredFields = ["value", "reqUserId", "admin"]
@@ -36,11 +36,12 @@ class LeadService extends Service{
 
   async list(fields){
     await this._checkRequiredFields(this._listRequiredFields, fields)
-    const { admin, skip, limit } = fields
+    const { admin, skip, limit, statusId } = fields
     const leads = await this._leadRepository.list({
       skip,
-      limit
-    })
+      limit,
+      statusId
+    })    
     if(!admin){
       return this._filterMyLeads(leads, fields)  
     }

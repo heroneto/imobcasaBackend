@@ -40,8 +40,8 @@ O Lead representa um cliente em potencial, O Lead deve ser atrelado sempre à um
 - **[x]Feat [x]Test** Cadastrar Lead para qualquer usuário se for admin
 - **[x]Feat [x]Test** Listar de Todos Leads do usuário logado
 - **[x]Feat [x]Test** Listar de Todos Leads se for um admin
-- **[ ]Feat [ ]Test** Aplicar paginação no resultado dos Leads
-- **[ ]Feat [ ]Test** Lista Leads de um determinado Status [Analisando]
+- **[x]Feat [x]Test** Aplicar paginação no resultado dos Leads
+- **[x]Feat [ ]Test** Lista Leads de um determinado Status
 - **[x]Feat [x]Test** Busca de Leads com base em nome ou phone
 - **[x]Feat [x]Test** Edição meu Lead
 - **[x]Feat [x]Test** Edição qualquer Lead se for admin
