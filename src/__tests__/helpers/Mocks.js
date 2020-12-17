@@ -45,10 +45,10 @@ class Mocks {
     return token
   }
 
-  mockLead (userid, statusid, sourceId){
+  mockLead (userid, statusid, sourceId, phone = (Math.round(Math.random()*100000000000).toString())){
     const fakeLead = {
       name: "Fake Lead",
-      phone: Math.round(Math.random()*10000000000000, 1),
+      phone,
       sourceid: sourceId,
       campaignid: null,
       userid: userid,
