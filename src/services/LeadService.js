@@ -4,7 +4,7 @@ const LeadRepository = require('../repositories/LeadRepository')
 class LeadService extends Service{
   _getOneRequiredFields = ["id", "reqUserId", "admin"]
   _createRequiredFields =  ["name", "phone", "sourceid", "campaignid", "userid", "active", "statusid", "negociationStartedAt", "reqUserId", "admin"]
-  _listRequiredFields = ["reqUserId", "admin"]
+  _listRequiredFields = ["reqUserId", "admin", "skip", "limit"]
   _updateRequiredFields = ["id", "name", "phone", "sourceid", "campaignid", "userid", "active", "statusid", "negociationStartedAt", "reqUserId", "admin"]
   _deleteRequiredFields = ["id"]
   _searchRequiredFields = ["value", "reqUserId", "admin"]
@@ -36,8 +36,12 @@ class LeadService extends Service{
 
   async list(fields){
     await this._checkRequiredFields(this._listRequiredFields, fields)
-    const leads = await this._leadRepository.list()
-    if(!fields.admin){
+    const { admin, skip, limit } = fields
+    const leads = await this._leadRepository.list({
+      skip,
+      limit
+    })
+    if(!admin){
       return this._filterMyLeads(leads, fields)  
     }
     return leads
@@ -49,7 +53,8 @@ class LeadService extends Service{
     if(!fields.admin && fields.userid !== fields.reqUserId){
       await this._throwForbidenError()
     }
-    if(await this._leadRepository.findByPhone(fields.phone)){
+    const leadFinded = await this._leadRepository.findByPhone(fields.phone)
+    if(leadFinded){
       await this._throwConflictError("phone")
     }
     return await this._leadRepository.create(fields)

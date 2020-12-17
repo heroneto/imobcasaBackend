@@ -63,7 +63,10 @@ class LeadController {
   async list(request, response) {
     try {
       const leadService = new LeadService()
-      const lead = await leadService.list(request.locals)
+      const lead = await leadService.list({
+        ...request.locals,
+        ...request.query
+      })
       return response.status(200).json(lead)
     } catch (err) {
       if (err instanceof ServiceException) {

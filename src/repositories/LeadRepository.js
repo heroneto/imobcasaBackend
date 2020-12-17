@@ -14,8 +14,11 @@ class LeadRepository {
     })
   }
 
-  async list() {    
-    return await Lead.findAll()
+  async list({skip, limit}) {    
+    return await Lead.findAll({
+      offset: skip,
+      limit: limit,
+    })
   }
 
   async create(fields) {
