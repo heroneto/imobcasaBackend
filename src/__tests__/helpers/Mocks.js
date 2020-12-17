@@ -3,6 +3,13 @@ const { User } = require('../../models')
 class Mocks {
     
 
+  mockPaginationQuery = (skip = 0, limit = 10) => {
+    return {
+      skip,
+      limit
+    }
+  }
+
   mockNext = () => {
     const next = jest.fn()
     return next

@@ -220,11 +220,28 @@ describe('LEAD CONTROLLER: tests', () => {
 
   })
   describe('LIST Leads', () => {
-    test('LIST: hould return 200 with all leads', async () => {
-      const query = {
-        skip: 0,
-        limit: 10,
-      }
+    test("LIST: should return 400 if no skip has been send", async () => {
+      const query = mocks.mockPaginationQuery()
+      delete query.skip
+      const req = mocks.mockReq(null, query, null, { reqUserId: adminUser.id, admin: adminUser.admin })
+      const res = mocks.mockRes()
+      await leadController.list(req, res)
+      const { error } = missingParamError("skip")
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toHaveBeenCalledWith(error)
+    })
+    test("LIST: should return 400 if no limit has been send", async () => {
+      const query = mocks.mockPaginationQuery()
+      delete query.limit
+      const req = mocks.mockReq(null, query, null, { reqUserId: adminUser.id, admin: adminUser.admin })
+      const res = mocks.mockRes()
+      await leadController.list(req, res)
+      const { error } = missingParamError("limit")
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toHaveBeenCalledWith(error)
+    })
+    test('LIST: should return 200 with all leads', async () => {
+      const query = mocks.mockPaginationQuery()
       const req = mocks.mockReq(null, query, null, { reqUserId: adminUser.id, admin: adminUser.admin })
       const res = mocks.mockRes()
       await leadController.list(req, res)
