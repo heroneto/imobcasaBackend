@@ -10,7 +10,7 @@ class AuthorizationMiddleware {
   async checkAdminPrivileges (req, res, next){
     try{
       const authorizationService = new AuthhorizationService()
-      const tokenDecoded = await authorizationService.checkUserAuthorization(req.signedCookies)      
+      await authorizationService.checkUserAuthorization(req.headers)      
       next()
     }catch(err){
       if(err instanceof ServiceException){
