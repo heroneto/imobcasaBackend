@@ -6,6 +6,8 @@ class AuthService extends Service {
 
   _authenticateRequiredFields = ["username", "password"]
   _checkAuthenticationRequiredFields = ["authorization"]
+  _refreshTokenRequiredFields = ["refreshToken"]
+
   constructor() {
     super()
   }
@@ -55,6 +57,11 @@ class AuthService extends Service {
     const jwt = fields.authorization.split(" ")[1]
     await this._checkEntityExsits(jwt, "token")
     return await this._checkToken(jwt)
+  }
+
+  async refreshToken(fields){
+    await this._checkRequiredFields(this._refreshTokenRequiredFields, fields)
+    return fields
   }
 }
 
