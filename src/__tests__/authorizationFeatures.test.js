@@ -7,23 +7,6 @@ const ModelsExpected = require('./helpers/ModelsExpected')
 const mocks = new Mocks()
 const modelsExpected = new ModelsExpected()
 
-
-const mockResponse = () => {
-  const res = {};
-  res.status = jest.fn().mockReturnValue(res);
-  res.json = jest.fn().mockReturnValue(res);
-  res.send = jest.fn().mockReturnValue(res);
-  return res;
-};
-
-const mockRequest = (body, query, signedCookies) => {
-  const request = {}
-  request.body = body
-  request.query = query
-  request.signedCookies = signedCookies
-  return request
-}
-
 const mockNext = () => {
   const next = jest.fn()
   return next
@@ -55,14 +38,14 @@ describe("AdminController tests", () => {
       const res = mocks.mockRes()
       await authorizationMiddleware.checkAdminPrivileges(req, res)
       expect(res.status).toHaveBeenCalledWith(400)
-      const {error} = missingParamError('jwt')
+      const {error} = missingParamError('authorization')
       expect(res.json).toHaveBeenCalledWith(error)
     })
     test('Should return 403 if user has no privileges', async () => {
-      const token = {
-        jwt: user.token
+      const req = mocks.mockReq()
+      req.headers = {
+        authorization: `Bearer ${user.token}`
       }
-      const req = mocks.mockReq(null, null, null, null, token)
       const res = mocks.mockRes()
       await authorizationMiddleware.checkAdminPrivileges(req, res)
       expect(res.status).toHaveBeenCalledWith(403)
@@ -70,10 +53,10 @@ describe("AdminController tests", () => {
       expect(res.json).toHaveBeenCalledWith(error)
     })
     test('Should call next function if user has admin privileges', async () => {
-      const token = {
-        jwt: user.tokenAdmin
+      const req = mocks.mockReq()
+      req.headers = {
+        authorization: `Bearer ${user.tokenAdmin}`
       }
-      const req = mocks.mockReq(null, null, null, null, token)
       const res = mocks.mockRes()
       const next = mockNext()
       await authorizationMiddleware.checkAdminPrivileges(req, res, next)
