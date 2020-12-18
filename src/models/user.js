@@ -27,11 +27,17 @@ module.exports = (sequelize, DataTypes) => {
     return await bcrypt.compareSync(password, this.password)
   }
   user.prototype.generateToken = async function (id, admin) {
-    const token = jwt.sign({ id, admin }, process.env.JWT_SECRET, {
+    return await jwt.sign({ id, admin }, process.env.JWT_SECRET, {
       expiresIn: process.env.NODE_ENV === 'production' ? '1d' : '1m',
     });
-    return token
   }
+
+  user.prototype.generateRefreshToken = async function(id){
+    return await jwt.sign({id}, process.env.JWT_SECRET, {
+      expiresIn: process.env.NODE_ENV === 'production' ? '30d' : '1d'
+    })
+  }
+
   user.associate = function (models) {
     // associations can be defined here
   };

@@ -41,7 +41,12 @@ class AuthService extends Service {
     await this._checkActiveUser(user)
     await this._checkPassword(user, fields.password)
 
-    return await user.generateToken(user.id, user.admin)
+    const accessToken =  await user.generateToken(user.id, user.admin)
+    const refreshToken =  await user.generateRefreshToken(user.id)
+    return {
+      accessToken, 
+      refreshToken
+    }
   }
 
   async checkAuthentication(fields) {
@@ -49,7 +54,6 @@ class AuthService extends Service {
     await this._checkRequiredFields(this._checkAuthenticationRequiredFields, fields)
     return await this._checkToken(jwt)
   }
-
 }
 
 module.exports = AuthService

@@ -9,8 +9,9 @@ class AuthenticationMiddleware {
 
   async checkAuthentication (req,res,next) {
     try{         
+      const jwt = req.headers.authorization.split(" ")[1]
       const authService = new AuthService()
-      const tokenDecoded = await authService.checkAuthentication(req.signedCookies)
+      const tokenDecoded = await authService.checkAuthentication({jwt})
       req.locals = {
         reqUserId: tokenDecoded.id,
         admin: tokenDecoded.admin

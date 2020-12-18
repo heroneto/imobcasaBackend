@@ -8,6 +8,7 @@ const ServiceException = require('../../helpers/Exceptions/ServiceException')
 class AuthenticationController {
   routes = Router()
   basePath = "/login"
+  refreshTokenPath = `${this.basePath}/refresh`
 
   constructor() {
     this._load()
@@ -15,7 +16,8 @@ class AuthenticationController {
 
 
   async _load() {
-    this.routes.post(this.basePath, this.authenticate)    
+    this.routes.post(this.basePath, this.authenticate)
+
   }
 
   async authenticate(req, res){
@@ -23,12 +25,12 @@ class AuthenticationController {
       const authService = new AuthService()
       const token = await authService.authenticate(req.body)
       res.status(200)
-      res.cookie('jwt', token, {
-        expires: new Date(Date.now() + 8 * 3600000),
-        secure: false,
-        httpOnly: true,
-        signed: true
-      })
+      // res.cookie('jwt', token, {
+      //   expires: new Date(Date.now() + 8 * 3600000),
+      //   secure: false,
+      //   httpOnly: true,
+      //   signed: true
+      // })
       return res.json(token)
     }catch(err){
       if(err instanceof ServiceException){
