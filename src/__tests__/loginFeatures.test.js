@@ -62,4 +62,15 @@ describe('AUTH CONTROLLER: tests', () => {
       expect(res.json).toHaveBeenCalledWith(expect.objectContaining(modelsExpected.loginExpected()))
     })
   })
+
+  describe("REFRESH TOKEN Tests", () => {
+    it("Should return 400 if no refreshToken has been provided", async () => {
+      const req = mocks.mockReq()
+      const res = mocks.mockRes()
+      await authenticationController.refreshToken(req, res)
+      const { error } = missingParamError("refreshToken")
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toHaveBeenCalledWith(error)
+    })
+  })
 })
