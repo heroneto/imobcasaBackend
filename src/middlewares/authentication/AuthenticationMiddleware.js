@@ -8,10 +8,9 @@ const ServiceException = require('../../helpers/Exceptions/ServiceException')
 class AuthenticationMiddleware {
 
   async checkAuthentication (req,res,next) {
-    try{         
-      const jwt = req.headers.authorization.split(" ")[1]
+    try{    
       const authService = new AuthService()
-      const tokenDecoded = await authService.checkAuthentication({jwt})
+      const tokenDecoded = await authService.checkAuthentication(req.headers)
       req.locals = {
         reqUserId: tokenDecoded.id,
         admin: tokenDecoded.admin

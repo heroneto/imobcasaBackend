@@ -5,17 +5,17 @@ const jwt = require('jsonwebtoken')
 class AuthService extends Service {
 
   _authenticateRequiredFields = ["username", "password"]
-  _checkAuthenticationRequiredFields = ["jwt"]
+  _checkAuthenticationRequiredFields = ["authorization"]
   constructor() {
     super()
   }
 
 
-  async _checkEntityExsits(entity) {
-    if (!entity) {
-      this._throwUnalthorizedError("Username or Password")
-    }
-  }
+  // async _checkEntityExsits(entity) {
+  //   if (!entity) {
+  //     this._throwUnalthorizedError("Username or Password")
+  //   }
+  // }
 
   async _checkPassword(user, password) {
     if (!await user.validPassword(password)) {
@@ -37,7 +37,7 @@ class AuthService extends Service {
       }
     })
 
-    await this._checkEntityExsits(user)
+    await this._checkEntityExsits(user, "Username or Password")
     await this._checkActiveUser(user)
     await this._checkPassword(user, fields.password)
 
@@ -50,8 +50,10 @@ class AuthService extends Service {
   }
 
   async checkAuthentication(fields) {
-    const { jwt } = fields
+    
     await this._checkRequiredFields(this._checkAuthenticationRequiredFields, fields)
+    const jwt = fields.authorization.split(" ")[1]
+    await this._checkEntityExsits(jwt, "token")
     return await this._checkToken(jwt)
   }
 }
