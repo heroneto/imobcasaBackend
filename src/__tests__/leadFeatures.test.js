@@ -276,7 +276,6 @@ describe('LEAD CONTROLLER: tests', () => {
     })
     test(`LIST: should return 200 with all leads with specific status id`, async () => {
       const query = mocks.mockLeadPaginationQuery(null, null, leadStatus[2].id)
-
       const req = mocks.mockReq(null, query, null, { reqUserId: adminUser.id, admin: adminUser.admin })
       const res = mocks.mockRes()
       await leadController.list(req, res)

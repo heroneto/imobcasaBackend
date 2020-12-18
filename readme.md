@@ -17,6 +17,8 @@ Abaixo as Features do projeto e seu status de implemetação, tanto da Feature q
 Autenticação no App para acessar.
 - **[x]Feat [x]Test** Autenticação JWT de usuários(usuário e senha)
 - **[x]Feat [x]Test** Validar token JWT de autenticação
+- **[ ]Feat [ ]Test** Envio de dois Tokens: Auth Token e RefreshToken
+- **[ ]Feat [ ]Test** Realizar envio de novo Token aceitando RefreshToken como autenticação.
 
 ## Autorização
 A autorização servirá para validar se o usuário possui acesso à telas especificas de configuração do App.
@@ -41,7 +43,7 @@ O Lead representa um cliente em potencial, O Lead deve ser atrelado sempre à um
 - **[x]Feat [x]Test** Listar de Todos Leads do usuário logado
 - **[x]Feat [x]Test** Listar de Todos Leads se for um admin
 - **[x]Feat [x]Test** Aplicar paginação no resultado dos Leads
-- **[x]Feat [ ]Test** Lista Leads de um determinado Status
+- **[x]Feat [x]Test** Lista Leads de um determinado Status
 - **[x]Feat [x]Test** Busca de Leads com base em nome ou phone
 - **[x]Feat [x]Test** Edição meu Lead
 - **[x]Feat [x]Test** Edição qualquer Lead se for admin
@@ -60,11 +62,11 @@ O Lead representa um cliente em potencial, O Lead deve ser atrelado sempre à um
 A tarefa é um item que fica associado ao Lead e ao usuário, representando um agendamento ou cobrança que será/deveria ser feita.
 O Lead pode ter, ao longo do histórico, várias tarefas, mas apenas uma deve estar ativa, a antiga deve ser inativada para criação de uma nova tarefa. Tarefas não podem ser removidas.
 - **[x]Feat [x]Test** Criação de nova tarefa
-- **[ ]Feat [ ]Test** Leitura de tarefa atual
+- **[ ]Feat [ ]Test** ~~ Leitura de tarefa atual ~~
 - **[x]Feat [x]Test** Listagem de tarefas de um Lead
 - **[x]Feat [x]Test** Edição de tarefa
 - **[x]Feat [x]Test** Remoção de tarefa
-- **[ ]Feat [ ]Test** Alteração de status de tarefa.
+- **[ ]Feat [ ]Test** ~~ Alteração de status de tarefa.~~
 
 
 ## UsersCampaigns
