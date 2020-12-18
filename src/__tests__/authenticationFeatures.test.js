@@ -30,16 +30,28 @@ describe('AUTH CONTROLLER: tests', () => {
   describe('CHECKAUTHENTICATION', () => {
     it('should return 400 if no jwt token was provided', async () => {
       const req = mocks.mockReq()
-      req.signedCookies = ""
       const res = mocks.mockRes()
       await authMiddleware.checkAuthentication(req, res)
-      const { error } = missingParamError('jwt')
+      const { error } = missingParamError('authorization')
       expect(res.status).toHaveBeenCalledWith(400)
       expect(res.json).toBeCalledWith(error)
     });
-    it('should return 401 if invalid jwt token was provided ', async () => {
+    it('should return 400 if malformated authorization Header has been provided ', async () => {
       const req =  mocks.mockReq()
-      req.signedCookies = {jwt: "Invalid JWT"}
+      req.headers = {
+        authorization: "InvalidJWT"
+      }
+      const res = mocks.mockRes()
+      await authMiddleware.checkAuthentication(req, res)
+      const { error } = invalidParamError('token')
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toBeCalledWith(error)      
+    });
+    it('should return 401 if invalid token has been provided ', async () => {
+      const req =  mocks.mockReq()
+      req.headers = {
+        authorization: "Bearer invalidJWT"
+      }
       const res = mocks.mockRes()
       await authMiddleware.checkAuthentication(req, res)
       const { error } = invalidParamError('token')
@@ -49,7 +61,9 @@ describe('AUTH CONTROLLER: tests', () => {
     it('should call next if valid jwt token was provided', async () => {
       const jwt = await mocks.mockJwtToken(user.id)
       const req =  mocks.mockReq()
-      req.signedCookies = {jwt: jwt}
+      req.headers = {
+        authorization: `Bearer ${jwt}`
+      }
       const res = mocks.mockRes()
       const next = mocks.mockNext()
       await authMiddleware.checkAuthentication(req, res, next)

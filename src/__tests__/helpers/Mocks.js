@@ -25,13 +25,13 @@ class Mocks {
     return res
   };
 
-  mockReq = (body = {}, query = {}, params = {}, locals = {}, signedCookies = {}) => {
+  mockReq = (body = {}, query = {}, params = {}, locals = {}, headers = {}) => {
     return {
       body: body,
       query: query,
       params: params,
       locals: locals,
-      signedCookies: signedCookies
+      headers: headers      
     }
   }
 
