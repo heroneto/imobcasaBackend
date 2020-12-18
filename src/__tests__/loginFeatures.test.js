@@ -3,7 +3,9 @@ const authenticationController = new AuthenticationController()
 const { invalidParamError, missingParamError } = require('../controllers/config').errors
 const {User} = require('../models')
 const Mocks = require('./helpers/Mocks')
+const ModelsExpected = require('./helpers/ModelsExpected')
 const mocks = new Mocks()
+const modelsExpected = new ModelsExpected
 const databaseSetup = require('../database')
 
 describe('AUTH CONTROLLER: tests', () => {
@@ -57,8 +59,7 @@ describe('AUTH CONTROLLER: tests', () => {
       const res = mocks.mockRes()
       await authenticationController.authenticate(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
-      expect(res.json).toHaveBeenCalledWith(expect.any(String))
-    }
-    )
+      expect(res.json).toHaveBeenCalledWith(expect.objectContaining(modelsExpected.loginExpected()))
+    })
   })
 })
