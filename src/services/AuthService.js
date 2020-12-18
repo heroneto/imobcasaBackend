@@ -11,11 +11,11 @@ class AuthService extends Service {
   }
 
 
-  // async _checkEntityExsits(entity) {
-  //   if (!entity) {
-  //     this._throwUnalthorizedError("Username or Password")
-  //   }
-  // }
+  async _checkUserEntityExsits(entity) {
+    if (!entity) {
+      this._throwUnalthorizedError("Username or Password")
+    }
+  }
 
   async _checkPassword(user, password) {
     if (!await user.validPassword(password)) {
@@ -37,7 +37,7 @@ class AuthService extends Service {
       }
     })
 
-    await this._checkEntityExsits(user, "Username or Password")
+    await this._checkUserEntityExsits(user, "Username or Password")
     await this._checkActiveUser(user)
     await this._checkPassword(user, fields.password)
 
