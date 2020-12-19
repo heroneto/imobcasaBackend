@@ -17,7 +17,7 @@ Abaixo as Features do projeto e seu status de implemetação, tanto da Feature q
 Autenticação no App para acessar.
 - **[x]Feat [x]Test** Retornar accessToken e refreshToken ao autenticar usuário
 - **[x]Feat [x]Test** Validar token JWT de autenticação 
-- **[ ]Feat [ ]Test** Retornar novo accessToken ao receber uma requisição de refreshToken válido. 
+- **[x]Feat [x]Test** Retornar novo accessToken ao receber uma requisição de refreshToken válido. 
 
 ## Autorização
 A autorização servirá para validar se o usuário possui acesso à telas especificas de configuração do App.

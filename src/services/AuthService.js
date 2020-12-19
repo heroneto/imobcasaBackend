@@ -1,5 +1,6 @@
 const Service = require('./Service')
 const {User} = require('../models')
+const UserRepository = require ('../repositories/UserRepository')
 const jwt = require('jsonwebtoken')
 
 class AuthService extends Service {
@@ -10,6 +11,7 @@ class AuthService extends Service {
 
   constructor() {
     super()
+    this._userRepository = new UserRepository()
   }
 
 
@@ -61,7 +63,10 @@ class AuthService extends Service {
 
   async refreshToken(fields){
     await this._checkRequiredFields(this._refreshTokenRequiredFields, fields)
-    return fields
+    const refreshTokenDecoded = await this._checkToken(fields.refreshToken)
+    const user = await this._userRepository.getOne({id: refreshTokenDecoded.id})
+
+    return user.generateToken(user.id, user.admin)
   }
 }
 

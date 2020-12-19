@@ -53,6 +53,12 @@ class Mocks {
     return token
   }
 
+  async mockRefreshToken(id) {
+    const user = await User.findOne({ where: { id: id } })
+    const token = await user.generateRefreshToken(user.id, user.admin)
+    return token
+  }
+
   mockLead(userid, statusid, sourceId, phone = (Math.round(Math.random() * 100000000000).toString())) {
     const fakeLead = {
       name: "Fake Lead",
