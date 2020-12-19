@@ -9,10 +9,11 @@ const modelsExpected = new ModelsExpected
 const databaseSetup = require('../database')
 
 describe('AUTH CONTROLLER: tests', () => {
+  let user
   beforeAll(async () => {
     try{
       databaseSetup()
-      await User.create(mocks.mockUser())
+      user = await User.create(mocks.mockUser())
     }catch(err){
       console.log(err.toString())
     }
@@ -71,6 +72,32 @@ describe('AUTH CONTROLLER: tests', () => {
       const { error } = missingParamError("refreshToken")
       expect(res.status).toHaveBeenCalledWith(400)
       expect(res.json).toHaveBeenCalledWith(error)
+    })
+    it("Should return 401 if invalid refreshToken has been provided", async () => {
+      const body = {
+        refreshToken: "InvalidRefreshToken"
+      }
+      const req = mocks.mockReq(body)
+      const res = mocks.mockRes()
+      await authenticationController.refreshToken(req, res)
+      const { error } = invalidParamError("token")
+      expect(res.status).toHaveBeenCalledWith(401)
+      expect(res.json).toHaveBeenCalledWith(error)
+    })
+    //Tests of invalid id token decoded
+    //Tests of inactivated user in token decoded
+
+    it("Should return 200 if valid refreshToken has been provided", async () => {
+      
+      const refreshToken = await mocks.mockRefreshToken(user.id)
+      const body = {
+        refreshToken
+      }
+      const req = mocks.mockReq(body)
+      const res = mocks.mockRes()
+      await authenticationController.refreshToken(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.json).toHaveBeenCalledWith(expect.any(String))
     })
   })
 })
