@@ -1,5 +1,6 @@
 const Service = require('./Service')
 const LeadRepository = require('../repositories/LeadRepository')
+const UserCampaignRespository = require('../repositories/UserCampaignRespository')
 
 class LeadService extends Service{
   _getOneRequiredFields = ["id", "reqUserId", "admin"]
@@ -12,6 +13,7 @@ class LeadService extends Service{
   constructor(){
     super()
     this._leadRepository = new LeadRepository()
+    this._userCampaignRespository = new UserCampaignRespository()
   }
 
 
@@ -30,7 +32,7 @@ class LeadService extends Service{
     await this._checkEntityExsits(lead)
     if(!fields.admin && lead.userid !== fields.reqUserId){
       await this._throwForbidenError()
-    }    
+    }
     return lead
   }
 
@@ -58,6 +60,12 @@ class LeadService extends Service{
     if(leadFinded){
       await this._throwConflictError("phone")
     }
+
+    
+
+    const usercampaign = await this._userCampaignRespository.getOne(fields)
+    await this._checkEntityExsits(usercampaign, "userid")
+
     return await this._leadRepository.create(fields)
   }
 
