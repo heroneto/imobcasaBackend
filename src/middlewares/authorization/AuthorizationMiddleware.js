@@ -1,5 +1,5 @@
-const { internalError } = require('../../controllers/config').protocols
-const { serverError } = require('../../controllers/config').errors
+const { internalError } = require('../../helpers/protocols')
+const { serverError } = require('../../helpers/errors')
 const path = require('path')
 require('dotenv').config({path: path.resolve(process.cwd(), '.env')})
 const AuthhorizationService = require('../../services/AuthorizationService')
