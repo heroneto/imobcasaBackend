@@ -73,6 +73,13 @@ class Mocks {
     return fakeLead
   }
 
+  mockUsersCampaings(userid, campaignid){
+    return {
+      userid,
+      campaignid
+    }
+  }
+
   mockLeadSource() {
     return {
       name: "Manual",
