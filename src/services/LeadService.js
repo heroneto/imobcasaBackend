@@ -3,6 +3,8 @@ const LeadRepository = require('../repositories/LeadRepository')
 const UserCampaignRespository = require('../repositories/UserCampaignRespository')
 const UserRepository = require('../repositories/UserRepository')
 const LeadStatusRepository = require('../repositories/LeadStatusRepository')
+const LeadSourceRepository = require('../repositories/LeadSourceRepository')
+const CampaignRepository = require('../repositories/CampaignRepository')
 
 class LeadService extends Service{
   _getOneRequiredFields = ["id", "reqUserId", "admin"]
@@ -18,6 +20,8 @@ class LeadService extends Service{
     this._userCampaignRespository = new UserCampaignRespository()
     this._userRepository = new UserRepository()
     this._leadStatusRepository = new LeadStatusRepository()
+    this._campaignRepository = new CampaignRepository()
+    this._leadSourceRepository = new LeadSourceRepository()
   }
 
 
@@ -63,11 +67,17 @@ class LeadService extends Service{
       await this._throwForbidenError()
     }
     
+    
     const user = await this._userRepository.getOne({id: userid})
     await this._checkEntityExsits(user, "userid")
 
     const leadStatus = await this._leadStatusRepository.getOne({id: statusid})
     await this._checkEntityExsits(leadStatus, "statusid")
+
+    const campaign = await this._campaignRepository.getOne({id: campaignid})
+    await this._checkEntityExsits(campaign, "campaignid")
+
+    
 
     const leadFinded = await this._leadRepository.findByPhone(phone)
     if(leadFinded){
@@ -84,7 +94,7 @@ class LeadService extends Service{
       statusid, 
       negociationStartedAt
     })
-    await this._checkEntityExsits(usercampaign, "userid")
+    await this._checkEntityExsits(usercampaign, "User does not exists in campaign")
 
     return await this._leadRepository.create(fields)
   }
