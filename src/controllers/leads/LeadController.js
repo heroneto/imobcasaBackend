@@ -3,8 +3,8 @@ const LeadService = require('../../services/LeadService')
 const ServiceException = require('../../helpers/Exceptions/ServiceException')
 const AuthenticationMiddleware = require('../../middlewares/authentication')
 const AuthorizationMiddleware = require('../../middlewares/authorization')
-const { internalError } = require('../config').protocols
-const { serverError } = require('../config').errors
+const { internalError } = require('../../helpers/Protocols')
+const { serverError } = require('../../helpers/Errors')
 
 
 class LeadController {

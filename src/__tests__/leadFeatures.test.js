@@ -1,7 +1,7 @@
 const LeadController = require('../controllers/leads/LeadController')
 const leadController = new LeadController()
 const { invalidParamError, missingParamError, forbidenError, conflictError } = require('../helpers').errors
-const { Lead, User, LeadSource, LeadStatus } = require('../models')
+const { Lead, User, LeadSource, LeadStatus, Userscampaigns, Campaign } = require('../models')
 const Mocks = require('./helpers/Mocks')
 const ModelsExpected = require('./helpers/ModelsExpected')
 const mocks = new Mocks()
@@ -17,6 +17,8 @@ describe('LEAD CONTROLLER: tests', () => {
   let lead4 = {}
   let leadStatus = new Array()
   let leadSource = {}
+  let campaign = {}
+  let userscampaings = {}
 
   beforeAll(async () => {
     try {
@@ -28,11 +30,12 @@ describe('LEAD CONTROLLER: tests', () => {
       for (const mock of statusMocks) {
         await leadStatus.push(await LeadStatus.create(mock))
       }
+      campaign = await Campaign.create(mocks.mockCampaign())
 
-      lead = await Lead.create(mocks.mockLead(adminUser.id, leadStatus[0].id, leadSource.id))
-      lead2 = await Lead.create(mocks.mockLead(adminUser.id, leadStatus[1].id, leadSource.id))
-      lead3 = await Lead.create(mocks.mockLead(adminUser.id, leadStatus[2].id, leadSource.id))
-      lead4 = await Lead.create(mocks.mockLead(adminUser.id, leadStatus[3].id, leadSource.id))
+      lead = await Lead.create(mocks.mockLead(adminUser.id, leadStatus[0].id, leadSource.id, campaign.id))
+      lead2 = await Lead.create(mocks.mockLead(adminUser.id, leadStatus[1].id, leadSource.id, campaign.id))
+      lead3 = await Lead.create(mocks.mockLead(adminUser.id, leadStatus[2].id, leadSource.id, campaign.id))
+      lead4 = await Lead.create(mocks.mockLead(adminUser.id, leadStatus[3].id, leadSource.id, campaign.id))
     } catch (err) {
       console.log(err.toString())
     }
@@ -119,9 +122,12 @@ describe('LEAD CONTROLLER: tests', () => {
       const { error } = missingParamError('reqUserId')
       expect(res.json).toHaveBeenCalledWith(error)
     })
+    // it("POST: Should return 400 if userid provided does not exists in campaign users", async () => {
+
+    // }),
     it('POST: Should return 409 if existing lead already exists', async () => {
       const res = mocks.mockRes()
-      const fakeLead = mocks.mockLead(adminUser.id, leadStatus[0].id, leadSource.id, lead.phone)
+      const fakeLead = mocks.mockLead(adminUser.id, leadStatus[0].id, leadSource.id, campaign.id, lead.phone)
       const req = mocks.mockReq(fakeLead, {}, null, { reqUserId: adminUser.id, admin: adminUser.admin })
       await leadController.create(req, res)
       const { error } = conflictError('phone')
@@ -130,7 +136,7 @@ describe('LEAD CONTROLLER: tests', () => {
     })
     it('POST: Should return 200 if lead has been created', async () => {
       const res = mocks.mockRes()
-      const fakeLead = mocks.mockLead(adminUser.id, leadStatus[0].id, leadSource.id)
+      const fakeLead = mocks.mockLead(adminUser.id, leadStatus[0].id, leadSource.id, campaign.id)
       const req = mocks.mockReq(fakeLead, {}, { id: lead.id }, { reqUserId: adminUser.id, admin: adminUser.admin })
       await leadController.create(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
@@ -141,7 +147,7 @@ describe('LEAD CONTROLLER: tests', () => {
     let leadToUpdate
     beforeAll(async () => {
       try {
-        const leadMock = mocks.mockLead(adminUser.id, leadStatus[0].id, leadSource.id)
+        const leadMock = mocks.mockLead(adminUser.id, leadStatus[0].id, leadSource.id, campaign.id)
         leadToUpdate = await Lead.create(leadMock)
       } catch (err) {
         console.log(err.toString())
@@ -204,7 +210,7 @@ describe('LEAD CONTROLLER: tests', () => {
     })
     it('PUT: Should return 409 if phone already used in another lead', async () => {
       const res = mocks.mockRes()
-      const fakeLead = mocks.mockLead(adminUser.id, leadStatus[0].id, leadSource.id, leadToUpdate.phone)
+      const fakeLead = mocks.mockLead(adminUser.id, leadStatus[0].id, leadSource.id, campaign.id, leadToUpdate.phone)
       fakeLead.id = lead.id
       const req = mocks.mockReq(fakeLead, null, null, { reqUserId: adminUser.id, admin: adminUser.admin })
       await leadController.update(req, res)
@@ -214,7 +220,7 @@ describe('LEAD CONTROLLER: tests', () => {
     })
     it('PUT: Should return 200 updated', async () => {
       const res = mocks.mockRes()
-      const fakeLead = mocks.mockLead(adminUser.id, leadStatus[0].id, leadSource.id, leadToUpdate.phone)
+      const fakeLead = mocks.mockLead(adminUser.id, leadStatus[0].id, leadSource.id, campaign.id, leadToUpdate.phone)
       fakeLead.id = leadToUpdate.id
       fakeLead.name = "New Lead Name"
       const req = mocks.mockReq(fakeLead, null, null, { reqUserId: adminUser.id, admin: adminUser.admin })

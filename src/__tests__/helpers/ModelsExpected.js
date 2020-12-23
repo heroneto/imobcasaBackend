@@ -44,7 +44,7 @@ class ModelsExpected {
       name: expect.any(String),
       phone: expect.any(String),
       sourceid: expect.any(String),
-      campaignid: null,
+      campaignid: expect.any(String),
       userid: expect.any(String),
       active: expect.any(Boolean),
       statusid: expect.any(String),

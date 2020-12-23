@@ -4,9 +4,9 @@ module.exports = (sequelize, DataTypes) => {
   const lead = sequelize.define('lead', {
     name: DataTypes.STRING,
     phone: DataTypes.STRING,
-    sourceid: DataTypes.INTEGER,
-    campaignid: DataTypes.INTEGER,
-    userid: DataTypes.INTEGER,
+    sourceid: DataTypes.UUID,
+    campaignid: DataTypes.UUID,
+    userid: DataTypes.UUID,
     active: DataTypes.BOOLEAN,
     statusid: DataTypes.INTEGER,
     negociationStartedAt: DataTypes.DATE,
