@@ -142,13 +142,22 @@ describe('LEAD CONTROLLER: tests', () => {
       const { error } = invalidParamError('statusid')
       expect(res.json).toHaveBeenCalledWith(error)
     }),
+    it("POST: Should return 400 if invalid campaignid was provided", async () => {
+      const res = mocks.mockRes()
+      const fakeLead = mocks.mockLead(adminUser.id, leadStatus[0].id, leadSource.id, "invalidCampaignId")
+      const req = mocks.mockReq(fakeLead, {}, { id: lead.id }, { reqUserId: adminUser.id, admin: adminUser.admin })
+      await leadController.create(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      const { error } = invalidParamError('campaignid')
+      expect(res.json).toHaveBeenCalledWith(error)
+    }),
     it("POST: Should return 400 if userid provided does not exists in campaign users", async () => {
       const res = mocks.mockRes()
       const fakeLead = mocks.mockLead(limitedUser.id, leadStatus[0].id, leadSource.id, campaign.id)
       const req = mocks.mockReq(fakeLead, {}, { id: lead.id }, { reqUserId: adminUser.id, admin: adminUser.admin })
       await leadController.create(req, res)
       expect(res.status).toHaveBeenCalledWith(400)
-      const { error } = invalidParamError('userid')
+      const { error } = invalidParamError("User does not exists in campaign")
       expect(res.json).toHaveBeenCalledWith(error)
     }),
     it('POST: Should return 409 if existing lead already exists', async () => {
