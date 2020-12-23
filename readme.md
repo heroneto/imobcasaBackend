@@ -48,12 +48,16 @@ O Lead representa um cliente em potencial, O Lead deve ser atrelado sempre à um
 - **[x]Feat [x]Test** Edição qualquer Lead se for admin
 - **[x]Feat [x]Test** Remoção do meu Lead
 - **[x]Feat [x]Test** Remoção de qualquer Lead se for admin
-- **[ ]Feat [ ]Test** ~~ Inativação do meu Lead ~~
-- **[ ]Feat [ ]Test** ~~ Inativação de qualquer Lead se for admin ~~ 
+- **[ ]Feat [ ]Test** ~~Inativação do meu Lead~~
+- **[ ]Feat [ ]Test** ~~Inativação de qualquer Lead se for admin~~ 
 - **[ ]Feat [ ]Test** ~~Listar todos os Leads de um usuário~~
 - **[ ]Feat [ ]Test** ~~Alterar Status do Lead: Envolve alteração de tarefas dependendo do status a movimentar.~~
-- **[ ]Feat [ ]Test** Recebimento de Lead via Webhook API Facebook
+
+
+## FB Webhook
+- **[ ]Feat [ ]Test** Recebimento de Lead via Webhook API Facebook - [Documentação de Webhook do Facebook](https://developers.facebook.com/docs/graph-api/webhooks/getting-started)
 - **[ ]Feat [ ]Test** Coleta de informações referentes ao Lead recebido via Webhook API Facebook
+- **[ ]Feat [ ]Test** Coleta de informações referentes a campanha do Lead recebido via Webhook API Facebook
 - **[ ]Feat [ ]Test** Distrubuição de Lead recebido via Webhook API Facebook com base em Score dos usuários da campanha: *Algoritmo será definido ainda*
 
 
@@ -61,11 +65,11 @@ O Lead representa um cliente em potencial, O Lead deve ser atrelado sempre à um
 A tarefa é um item que fica associado ao Lead e ao usuário, representando um agendamento ou cobrança que será/deveria ser feita.
 O Lead pode ter, ao longo do histórico, várias tarefas, mas apenas uma deve estar ativa, a antiga deve ser inativada para criação de uma nova tarefa. Tarefas não podem ser removidas.
 - **[x]Feat [x]Test** Criação de nova tarefa
-- **[ ]Feat [ ]Test** ~~ Leitura de tarefa atual ~~
+- **[ ]Feat [ ]Test** ~~Leitura de tarefa atual~~
 - **[x]Feat [x]Test** Listagem de tarefas de um Lead
 - **[x]Feat [x]Test** Edição de tarefa
 - **[x]Feat [x]Test** Remoção de tarefa
-- **[ ]Feat [ ]Test** ~~ Alteração de status de tarefa.~~
+- **[ ]Feat [ ]Test** ~~Alteração de status de tarefa.~~
 
 
 ## UsersCampaigns
