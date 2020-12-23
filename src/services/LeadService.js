@@ -1,6 +1,8 @@
 const Service = require('./Service')
 const LeadRepository = require('../repositories/LeadRepository')
 const UserCampaignRespository = require('../repositories/UserCampaignRespository')
+const UserRepository = require('../repositories/UserRepository')
+const LeadStatusRepository = require('../repositories/LeadStatusRepository')
 
 class LeadService extends Service{
   _getOneRequiredFields = ["id", "reqUserId", "admin"]
@@ -14,6 +16,8 @@ class LeadService extends Service{
     super()
     this._leadRepository = new LeadRepository()
     this._userCampaignRespository = new UserCampaignRespository()
+    this._userRepository = new UserRepository()
+    this._leadStatusRepository = new LeadStatusRepository()
   }
 
 
@@ -53,17 +57,33 @@ class LeadService extends Service{
 
   async create(fields){
     await this._checkRequiredFields(this._createRequiredFields, fields)
-    if(!fields.admin && fields.userid !== fields.reqUserId){
+    const {name, phone, sourceid, campaignid, userid, active, statusid, negociationStartedAt, reqUserId, admin } = fields
+    
+    if(!admin && userid !== reqUserId){
       await this._throwForbidenError()
     }
-    const leadFinded = await this._leadRepository.findByPhone(fields.phone)
+    
+    const user = await this._userRepository.getOne({id: userid})
+    await this._checkEntityExsits(user, "userid")
+
+    const leadStatus = await this._leadStatusRepository.getOne({id: statusid})
+    await this._checkEntityExsits(leadStatus, "statusid")
+
+    const leadFinded = await this._leadRepository.findByPhone(phone)
     if(leadFinded){
       await this._throwConflictError("phone")
     }
-
     
-
-    const usercampaign = await this._userCampaignRespository.getOne(fields)
+    const usercampaign = await this._userCampaignRespository.getOne({
+      name, 
+      phone, 
+      sourceid, 
+      campaignid, 
+      userid, 
+      active, 
+      statusid, 
+      negociationStartedAt
+    })
     await this._checkEntityExsits(usercampaign, "userid")
 
     return await this._leadRepository.create(fields)
