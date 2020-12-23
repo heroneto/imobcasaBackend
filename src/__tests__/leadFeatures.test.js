@@ -142,6 +142,15 @@ describe('LEAD CONTROLLER: tests', () => {
       const { error } = invalidParamError('statusid')
       expect(res.json).toHaveBeenCalledWith(error)
     }),
+    it("POST: Should return 400 if invalid sourceid was provided", async () => {
+      const res = mocks.mockRes()
+      const fakeLead = mocks.mockLead(adminUser.id, leadStatus[0].id, "invalidsourceid", campaign.id)
+      const req = mocks.mockReq(fakeLead, {}, { id: lead.id }, { reqUserId: adminUser.id, admin: adminUser.admin })
+      await leadController.create(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      const { error } = invalidParamError('sourceid')
+      expect(res.json).toHaveBeenCalledWith(error)
+    }),
     it("POST: Should return 400 if invalid campaignid was provided", async () => {
       const res = mocks.mockRes()
       const fakeLead = mocks.mockLead(adminUser.id, leadStatus[0].id, leadSource.id, "invalidCampaignId")
