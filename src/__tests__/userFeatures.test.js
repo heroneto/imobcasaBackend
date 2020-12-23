@@ -1,7 +1,7 @@
 const UserController = require('../controllers/user/UserController')
 const userController = new UserController()
 const databaseSetup = require('../database')
-const { missingParamError, invalidParamError } = require('../controllers/config/Errors')
+const { missingParamError, invalidParamError } = require('../helpers/Errors')
 const { User } = require('../models')
 const Mocks = require('./helpers/Mocks')
 const ModelsExpected = require('./helpers/ModelsExpected')

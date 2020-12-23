@@ -1,9 +1,9 @@
 const { Router } = require('express')
 const TaskService = require('../../services/TaskService')
 const ServiceException = require('../../helpers/Exceptions/ServiceException')
-const AuthenticationMiddleware = require('../../middlewares/authentication')
-const { internalError } = require('../config').protocols
-const { serverError } = require('../config').errors
+const AuthenticationMiddleware = require('../../middlewares/authentication/AuthenticationMiddleware')
+const { internalError } = require('../../helpers/Protocols')
+const { serverError } = require('../../helpers/Errors')
 
 
 class TaskController {

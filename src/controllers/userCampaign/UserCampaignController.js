@@ -1,8 +1,8 @@
 const { Router } = require('express')
 const UserCamapignService = require('../../services/UserCampaingService')
 const ServiceException = require('../../helpers/Exceptions/ServiceException')
-const { internalError } = require('../config').protocols
-const { serverError } = require('../config').errors
+const { internalError } = require('../../helpers/Protocols')
+const { serverError } = require('../../helpers/Errors')
 
 class UserCampaignController{
   path = "/campaign/:campaignid/user/:userid"

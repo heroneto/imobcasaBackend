@@ -1,8 +1,8 @@
 const { Router } = require('express')
 const CampaignService = require('../../services/CampaignService')
 const ServiceException = require('../../helpers/Exceptions/ServiceException')
-const { internalError } = require('../config').protocols
-const { serverError } = require('../config').errors
+const { internalError } = require('../../helpers/Protocols')
+const { serverError } = require('../../helpers/Errors')
 
 class CampaignController {
   path = "/campaigns"

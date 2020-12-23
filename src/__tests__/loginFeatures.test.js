@@ -1,6 +1,6 @@
 const AuthenticationController = require('../controllers/authentication/AuthenticationController')
 const authenticationController = new AuthenticationController()
-const { invalidParamError, missingParamError } = require('../controllers/config').errors
+const { invalidParamError, missingParamError } = require('../helpers/Errors')
 const {User} = require('../models')
 const Mocks = require('./helpers/Mocks')
 const ModelsExpected = require('./helpers/ModelsExpected')

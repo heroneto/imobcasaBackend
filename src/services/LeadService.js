@@ -66,8 +66,7 @@ class LeadService extends Service{
     if(!admin && userid !== reqUserId){
       await this._throwForbidenError()
     }
-    
-    
+       
     const user = await this._userRepository.getOne({id: userid})
     await this._checkEntityExsits(user, "userid")
 
@@ -79,9 +78,7 @@ class LeadService extends Service{
 
     const campaign = await this._campaignRepository.getOne({id: campaignid})
     await this._checkEntityExsits(campaign, "campaignid")
-
-    
-
+  
     const leadFinded = await this._leadRepository.findByPhone(phone)
     if(leadFinded){
       await this._throwConflictError("phone")

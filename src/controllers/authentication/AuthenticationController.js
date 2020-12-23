@@ -1,6 +1,6 @@
 const { Router } = require('express')
-const { internalError } = require('../config').protocols
-const { serverError } = require('../config').errors
+const { serverError } = require('../../helpers/Errors')
+const { internalError } = require('../../helpers/Protocols')
 const AuthService = require('../../services/AuthService')
 const ServiceException = require('../../helpers/Exceptions/ServiceException')
 
