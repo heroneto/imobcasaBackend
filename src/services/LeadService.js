@@ -74,6 +74,9 @@ class LeadService extends Service{
     const leadStatus = await this._leadStatusRepository.getOne({id: statusid})
     await this._checkEntityExsits(leadStatus, "statusid")
 
+    const leadSource = await this._leadSourceRepository.getOne({id: sourceid})
+    await this._checkEntityExsits(leadSource, "sourceid")
+
     const campaign = await this._campaignRepository.getOne({id: campaignid})
     await this._checkEntityExsits(campaign, "campaignid")
 
