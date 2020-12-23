@@ -123,7 +123,25 @@ describe('LEAD CONTROLLER: tests', () => {
       expect(res.status).toHaveBeenCalledWith(400)
       const { error } = missingParamError('reqUserId')
       expect(res.json).toHaveBeenCalledWith(error)
-    })
+    }),
+    it("POST: Should return 400 if invalid userid was provided", async () => {
+      const res = mocks.mockRes()
+      const fakeLead = mocks.mockLead("invalidUserId", leadStatus[0].id, leadSource.id, campaign.id)
+      const req = mocks.mockReq(fakeLead, {}, { id: lead.id }, { reqUserId: adminUser.id, admin: adminUser.admin })
+      await leadController.create(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      const { error } = invalidParamError('userid')
+      expect(res.json).toHaveBeenCalledWith(error)
+    }),
+    it("POST: Should return 400 if invalid statusid was provided", async () => {
+      const res = mocks.mockRes()
+      const fakeLead = mocks.mockLead(adminUser.id, "invalidStatusId", leadSource.id, campaign.id)
+      const req = mocks.mockReq(fakeLead, {}, { id: lead.id }, { reqUserId: adminUser.id, admin: adminUser.admin })
+      await leadController.create(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      const { error } = invalidParamError('statusid')
+      expect(res.json).toHaveBeenCalledWith(error)
+    }),
     it("POST: Should return 400 if userid provided does not exists in campaign users", async () => {
       const res = mocks.mockRes()
       const fakeLead = mocks.mockLead(limitedUser.id, leadStatus[0].id, leadSource.id, campaign.id)
