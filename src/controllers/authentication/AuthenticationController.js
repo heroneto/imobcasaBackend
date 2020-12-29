@@ -24,14 +24,7 @@ class AuthenticationController {
     try{
       const authService = new AuthService()
       const token = await authService.authenticate(req.body)
-      res.status(200)
-      // res.cookie('jwt', token, {
-      //   expires: new Date(Date.now() + 8 * 3600000),
-      //   secure: false,
-      //   httpOnly: true,
-      //   signed: true
-      // })
-      return res.json(token)
+      return res.status(200).json(token)
     }catch(err){
       if(err instanceof ServiceException){
         const {statusCode, message} = err
@@ -47,15 +40,8 @@ class AuthenticationController {
   async refreshToken(req, res){
     try{
       const authService = new AuthService()
-      const token = await authService.refreshToken(req.body)
-      res.status(200)
-      // res.cookie('jwt', token, {
-      //   expires: new Date(Date.now() + 8 * 3600000),
-      //   secure: false,
-      //   httpOnly: true,
-      //   signed: true
-      // })
-      return res.json(token)
+      const tokens = await authService.refreshToken(req.body)
+      return res.status(200).json(tokens)
     }catch(err){
       if(err instanceof ServiceException){
         const {statusCode, message} = err

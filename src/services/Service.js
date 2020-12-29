@@ -1,10 +1,10 @@
 const ServiceException = require('../helpers/Exceptions/ServiceException')
-const { forbiden, invalidRequest, unauthorized, internalError, noContent, conflict } = require('../helpers').protocols
-const { invalidParamError, missingParamError, serverError, noResultsError, forbidenError, conflictError } = require('../helpers').errors
-const jwt = require('jsonwebtoken')
+const { forbiden, invalidRequest, unauthorized, conflict } = require('../helpers/Protocols')
+const { invalidParamError, missingParamError, forbidenError, conflictError } = require('../helpers/Errors')
+const JwtImplementation = require('../implementations/jwt')
 
 class Service{
-
+  
   _throwException(body,statusCode){
     throw new ServiceException(body, statusCode)
   }
@@ -56,7 +56,8 @@ class Service{
 
   async _checkToken(token) {
     try {
-      const jwtDecoded = await jwt.verify(token, process.env.JWT_SECRET)
+      const jwtImplementation = new JwtImplementation()
+      const jwtDecoded = await jwtImplementation.decodeToken(token)
       const actualTime = new Date().getTime() / 1000
       if (actualTime > jwtDecoded.exp) {
         this._throwUnalthorizedError("token")

@@ -2,6 +2,7 @@ const Service = require('./Service')
 const {User} = require('../models')
 const UserRepository = require ('../repositories/UserRepository')
 const jwt = require('jsonwebtoken')
+const JwtImplementation = require('../implementations/jwt')
 
 class AuthService extends Service {
 
@@ -12,6 +13,7 @@ class AuthService extends Service {
   constructor() {
     super()
     this._userRepository = new UserRepository()
+    this._jwtImplementation = new JwtImplementation()
   }
 
 
@@ -45,16 +47,15 @@ class AuthService extends Service {
     await this._checkActiveUser(user)
     await this._checkPassword(user, fields.password)
 
-    const accessToken =  await user.generateToken(user.id, user.admin)
-    const refreshToken =  await user.generateRefreshToken(user.id)
+    const accessToken = await this._jwtImplementation.generateAccessToken(user.id, user.admin)
+    const refreshToken = await this._jwtImplementation.generateRefreshToken(user.id, user.admin)
     return {
       accessToken, 
-      refreshToken
+      refreshToken,
     }
   }
 
-  async checkAuthentication(fields) {
-    
+  async checkAuthentication(fields) {    
     await this._checkRequiredFields(this._checkAuthenticationRequiredFields, fields)
     const jwt = fields.authorization.split(" ")[1]
     await this._checkEntityExsits(jwt, "token")
@@ -65,8 +66,7 @@ class AuthService extends Service {
     await this._checkRequiredFields(this._refreshTokenRequiredFields, fields)
     const refreshTokenDecoded = await this._checkToken(fields.refreshToken)
     const user = await this._userRepository.getOne({id: refreshTokenDecoded.id})
-
-    return user.generateToken(user.id, user.admin)
+    return await this._jwtImplementation.generateAccessToken(user.id, user.admin)
   }
 }
 
