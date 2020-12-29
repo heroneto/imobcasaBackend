@@ -1,4 +1,5 @@
 const { User } = require('../../models')
+const JwtImplementation = require('../../implementations/jwt')
 
 class Mocks {
 
@@ -48,15 +49,15 @@ class Mocks {
   }
 
   async mockJwtToken(id) {
+    const jwtImplementation = new JwtImplementation()
     const user = await User.findOne({ where: { id: id } })
-    const token = await user.generateToken(user.id, user.admin)
-    return token
+    return await jwtImplementation.generateAccessToken(user.id, user.admin)
   }
 
   async mockRefreshToken(id) {
+    const jwtImplementation = new JwtImplementation()
     const user = await User.findOne({ where: { id: id } })
-    const token = await user.generateRefreshToken(user.id, user.admin)
-    return token
+    return await jwtImplementation.generateRefreshToken(user.id, user.admin)
   }
 
   mockLead(userid, statusid, sourceId, campaignid = null, phone = (Math.round(Math.random() * 100000000000).toString())) {
