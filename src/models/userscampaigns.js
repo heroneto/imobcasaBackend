@@ -6,10 +6,15 @@ module.exports = (sequelize, DataTypes) => {
     userid: DataTypes.UUID,
     lastLeadReceivedTime: DataTypes.DATE,
     score: DataTypes.INTEGER,
+    enabled: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true
+    }
   }, {
     hooks: {
       beforeCreate: (usersCampaigns) => {
         usersCampaigns.id = uuidV4()
+        usersCampaigns.lastLeadReceivedTime = Date.now()
       }
     }    
   });

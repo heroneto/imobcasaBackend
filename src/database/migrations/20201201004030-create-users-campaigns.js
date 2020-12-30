@@ -25,11 +25,17 @@ module.exports = {
       },
       lastLeadReceivedTime: {
         type: Sequelize.DATE,
-        allowNull: true,
+        allowNull: false,
+        defaultValue: Sequelize.NOW
       },
       score: {
         type: Sequelize.INTEGER,
         allowNull: true,
+      },
+      enabled: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: true,
       },
       createdAt: {
         allowNull: false,

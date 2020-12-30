@@ -37,7 +37,7 @@ describe('LEAD CONTROLLER: tests', () => {
       lead3 = await Lead.create(mocks.mockLead(adminUser.id, leadStatus[2].id, leadSource.id, campaign.id))
       lead4 = await Lead.create(mocks.mockLead(adminUser.id, leadStatus[3].id, leadSource.id, campaign.id))
     } catch (err) {
-      console.log(err.toString())
+      console.error(err)
     }
   }),
   afterAll(async () => {
@@ -79,6 +79,7 @@ describe('LEAD CONTROLLER: tests', () => {
     it('GET: Should return 400 with forbiden message if reqUserId does not match with userid in lead properties', async () => {
       const res = mocks.mockRes()
       const req = mocks.mockReq({}, {}, { id: lead.id }, { reqUserId: limitedUser.id, admin: limitedUser.admin })
+      console.log(req)
       await leadController.getOne(req, res)
       const { error } = forbidenError()
       expect(res.status).toBeCalledWith(403)

@@ -72,9 +72,12 @@ O Lead pode ter, ao longo do histórico, várias tarefas, mas apenas uma deve es
 - **[ ]Feat [ ]Test** ~~Alteração de status de tarefa.~~
 
 
+
 ## UsersCampaigns
 Representa uma ligação de usuários com as campanhas, utilizada para avaliação do Score dos usuários com as campanhas.
-- **[ ]Feat [ ]Test** Alteração de Score do usuário: *Algoritmo será definido ainda*
+- **[ ]Feat [ ]Test** Alteração de Score do usuário
+- **[ ]Feat [ ]Test** Alterar de Enabled para true do usuário ao responder um Lead.
+- **[ ]Feat [ ]Test** Alterar Enabled do usuário para false ao receber um Lead.
 
 
 # Entidades
