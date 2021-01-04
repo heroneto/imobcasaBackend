@@ -1,6 +1,6 @@
 const UserCampaignController = require("../controllers/userCampaign/UserCampaignController")
 const userCampaignController = new UserCampaignController()
-const { User, Campaign } = require('../models')
+const { User, Campaign, Userscampaigns } = require('../models')
 const databaseSetup = require('../database')
 const { missingParamError, invalidParamError } = require("../helpers/Errors")
 const ModelsExpected = require('./helpers/ModelsExpected')
@@ -32,8 +32,10 @@ describe("USERCAMPAIGN tests", () => {
 
   afterAll(async () => {
     try{
+      await Userscampaigns.destroy({where: {}})
       await User.destroy({where: {}})
       await Campaign.destroy({where: {}})
+     
     }catch(err){
       console.log(err)
     }
@@ -96,7 +98,7 @@ describe("USERCAMPAIGN tests", () => {
       expect(res.json).toHaveBeenCalledWith(expect.objectContaining(modelsExpected.userCampaignModel()))
     })
 
-    test("Should return 400 if user already exists in campaign", async () => {
+    test("Should return 400 if userid already exists in campaign", async () => {
       const parameters = {
         userid: userid,
         campaignid: campaignid
@@ -131,6 +133,64 @@ describe("USERCAMPAIGN tests", () => {
       await userCampaignController.list(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
       expect(res.json).toHaveBeenCalledWith(expect.arrayContaining([expect.objectContaining(modelsExpected.userCampaignModel())]))
+    })
+  })
+
+  describe("ENABLE User Campaign tests", () => {
+    const requiredFields = ["userid", "campaignid"]
+    for(const field of requiredFields){
+      test(`Should return 400 if no ${field} has been send`, async () => {
+        const parameters = {
+          userid: userid,
+          campaignid: campaignid
+        }
+        delete parameters[`${field}`]
+        const res = mocks.mockRes()
+        const req = mocks.mockReq(null, null, parameters)
+        
+        await userCampaignController.enable(req, res)
+        const { error } = missingParamError(field)
+        expect(res.status).toHaveBeenCalledWith(400)
+        expect(res.json).toHaveBeenCalledWith(error)
+      })
+    }
+    test(`Should return 400 if invalid userid has been provided`, async () => {
+      const parameters = {
+        userid: 'Invalid UserID',
+        campaignid: campaignid
+      }
+      const res = mocks.mockRes()
+      const req = mocks.mockReq(null, null, parameters)
+      
+      await userCampaignController.enable(req, res)
+      const { error } = invalidParamError('userid or campaignid')
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toHaveBeenCalledWith(error)
+    })
+    test(`Should return 400 if invalid userid has been provided`, async () => {
+      const parameters = {
+        userid: userid,
+        campaignid: 'invalid Campaign ID'
+      }
+      const res = mocks.mockRes()
+      const req = mocks.mockReq(null, null, parameters)
+      
+      await userCampaignController.enable(req, res)
+      const { error } = invalidParamError('userid or campaignid')
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toHaveBeenCalledWith(error)
+    })
+    test(`Should return 400 if invalid userid has been provided`, async () => {
+      const parameters = {
+        userid: userid,
+        campaignid: campaignid
+      }
+      const res = mocks.mockRes()
+      const req = mocks.mockReq(null, null, parameters)
+      
+      await userCampaignController.enable(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.json).toHaveBeenCalledWith(expect.objectContaining(modelsExpected.userCampaignModel()))
     })
   })
 
@@ -189,7 +249,5 @@ describe("USERCAMPAIGN tests", () => {
       expect(res.status).toHaveBeenCalledWith(200)
       expect(res.json).toHaveBeenCalledWith(1)
     })
-
-
   })
 })

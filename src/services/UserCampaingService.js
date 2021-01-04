@@ -6,6 +6,7 @@ const CampaignRespository = require('../repositories/CampaignRepository')
 class UserCampaingService extends Service{
   _requiredFields = ["userid", "campaignid"]  
   _listRequiredFields = ["campaignid"]
+  _enableRequiredFields = ["userid", "campaignid"]  
 
   constructor(){
     super()
@@ -40,9 +41,10 @@ class UserCampaingService extends Service{
     return await this._userCampaignRespository.add(fields)
   }
 
-  async remove(fields){
+  async remove(fields){    
     await this._checkRequiredFields(this._requiredFields, fields)
-    return await this._userCampaignRespository.remove(fields)
+    const { userid, campaignid } = fields
+    return await this._userCampaignRespository.remove({ userid, campaignid })
   }
 
   async list(fields){
@@ -50,6 +52,17 @@ class UserCampaingService extends Service{
     return await this._userCampaignRespository.list(fields)
   }
 
+  async enable(fields){
+    await this._checkRequiredFields(this._enableRequiredFields, fields)
+    const { userid, campaignid } = fields
+    const userCampaignReg = await this._userCampaignRespository.getOne({
+      userid,
+      campaignid
+    })
+    await this._checkEntityExsits(userCampaignReg, 'userid or campaignid')
+    return await this._userCampaignRespository.enable(userCampaignReg)
+
+  }
 
 }
 

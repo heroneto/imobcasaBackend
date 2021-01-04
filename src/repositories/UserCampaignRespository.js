@@ -33,6 +33,12 @@ class UserCampaignResposotory{
       }
     })
   }
+
+  async enable(userCampaign){
+    return await userCampaign.update({
+      enable: true
+    })
+  }
 }
 
 
