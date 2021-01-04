@@ -17,6 +17,7 @@ class UserCampaignController{
     this.routes.post(this.path, this.add)
     this.routes.delete(this.path, this.remove)
     this.routes.put(`${this.path}/enable`, this.enable)
+    this.routes.put(`${this.path}/disable`, this.disable)
   }
 
   async list(request, response){
@@ -77,6 +78,24 @@ class UserCampaignController{
     try {
       const userCamapignService = new UserCamapignService()
       const result = await userCamapignService.enable(request.params)
+      return response.status(200).json(result)
+    } catch (err) {
+      if (err instanceof ServiceException) {
+        const { statusCode, message } = err
+        return response.status(statusCode).json(message)
+      } else {
+        console.error(err)
+        const { error } = serverError()
+        const { statusCode, body } = internalError(error)
+        return response.status(statusCode).send(body)
+      }
+    }
+  }
+
+  async disable(request, response){
+    try {
+      const userCamapignService = new UserCamapignService()
+      const result = await userCamapignService.disable(request.params)
       return response.status(200).json(result)
     } catch (err) {
       if (err instanceof ServiceException) {

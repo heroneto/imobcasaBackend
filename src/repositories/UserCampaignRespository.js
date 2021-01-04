@@ -36,7 +36,13 @@ class UserCampaignResposotory{
 
   async enable(userCampaign){
     return await userCampaign.update({
-      enable: true
+      enabled: true
+    })
+  }
+
+  async disable(userCampaign){
+    return await userCampaign.update({
+      enabled: false
     })
   }
 }
