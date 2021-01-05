@@ -1,4 +1,5 @@
 const { Userscampaigns } = require('../models')
+const userscampaigns = require('../models/userscampaigns')
 
 
 class UserCampaignResposotory{
@@ -45,6 +46,14 @@ class UserCampaignResposotory{
       enabled: false
     })
   }
+
+  async update(userCampaign, fields){
+    userCampaign.enabled = fields.enabled
+    userCampaign.lastLeadReceivedTime = fields.lastLeadReceivedTime
+    userCampaign.score = fields.score
+    return await userCampaign.save()
+  }
+
 }
 
 

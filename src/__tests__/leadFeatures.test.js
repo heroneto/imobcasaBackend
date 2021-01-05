@@ -79,7 +79,6 @@ describe('LEAD CONTROLLER: tests', () => {
     it('GET: Should return 400 with forbiden message if reqUserId does not match with userid in lead properties', async () => {
       const res = mocks.mockRes()
       const req = mocks.mockReq({}, {}, { id: lead.id }, { reqUserId: limitedUser.id, admin: limitedUser.admin })
-      console.log(req)
       await leadController.getOne(req, res)
       const { error } = forbidenError()
       expect(res.status).toBeCalledWith(403)

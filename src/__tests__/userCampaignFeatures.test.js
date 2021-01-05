@@ -241,7 +241,7 @@ describe("USERCAMPAIGN tests", () => {
       expect(res.status).toHaveBeenCalledWith(400)
       expect(res.json).toHaveBeenCalledWith(error)
     })
-    test(`Should return 400 if invalid userid has been provided`, async () => {
+    test(`Should return 200 if valid userid and campaignid has been provided`, async () => {
       const parameters = {
         userid: userid,
         campaignid: campaignid
@@ -258,6 +258,110 @@ describe("USERCAMPAIGN tests", () => {
     })
   })
 
+
+  describe("UPDATE User in Campaign tests", () => {
+    const requiredParamFields = ["userid", "campaignid"]
+    for(const field of requiredParamFields){
+      test(`Should return 400 if no ${field} has been send`, async () => {
+        const parameters = {
+          userid: userid,
+          campaignid: campaignid
+        }
+        delete parameters[`${field}`]
+        const body = {
+          score: 50,
+          enabled: true,
+          lastLeadReceivedTime: "2021-01-04T23:55:28.666Z"
+        }
+        const res = mocks.mockRes()
+        const req = mocks.mockReq(body, null, parameters)
+        
+        await userCampaignController.update(req, res)
+        const { error } = missingParamError(field)
+        expect(res.status).toHaveBeenCalledWith(400)
+        expect(res.json).toHaveBeenCalledWith(error)
+      })
+    }
+    const requiredBodyFields = ["score", "enabled", "lastLeadReceivedTime"]
+    for(const field of requiredBodyFields){
+      test(`Should return 400 if no ${field} has been send`, async () => {
+        const parameters = {
+          userid: userid,
+          campaignid: campaignid
+        }
+        const body = {
+          score: 50,
+          enabled: true,
+          lastLeadReceivedTime: "2021-01-04T23:55:28.666Z"
+        }
+        delete body[`${field}`]
+        const res = mocks.mockRes()
+        const req = mocks.mockReq(body, null, parameters)
+        
+        await userCampaignController.update(req, res)
+        const { error } = missingParamError(field)
+        expect(res.status).toHaveBeenCalledWith(400)
+        expect(res.json).toHaveBeenCalledWith(error)
+      })
+    }
+    test(`Should return 400 if invalid userid has been provided`, async () => {
+      const parameters = {
+        userid: 'Invalid UserID',
+        campaignid: campaignid
+      }
+      const body = {
+        score: 50,
+        enabled: true,
+        lastLeadReceivedTime: "2021-01-04T23:55:28.666Z"
+      }
+      const res = mocks.mockRes()
+      const req = mocks.mockReq(body, null, parameters)
+      
+      await userCampaignController.update(req, res)
+      const { error } = invalidParamError('userid or campaignid')
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toHaveBeenCalledWith(error)
+    })
+    test(`Should return 400 if invalid userid has been provided`, async () => {
+      const parameters = {
+        userid: userid,
+        campaignid: 'invalid Campaign ID'
+      }
+      const body = {
+        score: 50,
+        enabled: true,
+        lastLeadReceivedTime: "2021-01-04T23:55:28.666Z"
+      }
+      const res = mocks.mockRes()
+      const req = mocks.mockReq(body, null, parameters)
+      
+      await userCampaignController.update(req, res)
+      const { error } = invalidParamError('userid or campaignid')
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toHaveBeenCalledWith(error)
+    })
+    test(`Should return 200 if all fields has been provided and user updated`, async () => {
+      const parameters = {
+        userid: userid,
+        campaignid: campaignid
+      }
+      const body = {
+        score: 100,
+        enabled: false,
+        lastLeadReceivedTime: "2021-01-04T23:55:28.666Z"
+      }
+      const res = mocks.mockRes()
+      const req = mocks.mockReq(body, null, parameters)
+      
+      await userCampaignController.update(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
+        ...modelsExpected.userCampaignModel(),
+        ...body,
+        lastLeadReceivedTime: expect.any(Date),
+      }))
+    })
+  })
   describe("DELETE User Campaign tests", () => {
     const requiredFields = ["userid", "campaignid"]  
     for(const field of requiredFields){

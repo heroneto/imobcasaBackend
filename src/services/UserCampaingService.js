@@ -7,7 +7,8 @@ class UserCampaingService extends Service{
   _requiredFields = ["userid", "campaignid"]  
   _listRequiredFields = ["campaignid"]
   _enableRequiredFields = ["userid", "campaignid"]  
-  _disableRequiredFields = ["userid", "campaignid"]  
+  _disableRequiredFields = ["userid", "campaignid"]
+  _updateRequiredFields = ["userid", "campaignid", "score", "enabled", "lastLeadReceivedTime"]
 
   constructor(){
     super()
@@ -74,7 +75,22 @@ class UserCampaingService extends Service{
     })
     await this._checkEntityExsits(userCampaignReg, 'userid or campaignid')
     return await this._userCampaignRespository.disable(userCampaignReg)
+  }
 
+  async update(fields){
+    await this._checkRequiredFields(this._updateRequiredFields, fields)
+    const { userid, campaignid, lastLeadReceivedTime, score, enabled } = fields
+    const userCampaignReg = await this._userCampaignRespository.getOne({
+      userid,
+      campaignid
+    })
+    await this._checkEntityExsits(userCampaignReg, 'userid or campaignid')
+
+    return await this._userCampaignRespository.update(userCampaignReg, {
+      lastLeadReceivedTime,
+      score,
+      enabled
+    })
   }
 
 }
