@@ -1,4 +1,4 @@
 module.exports = {
-  auth: require('./authentication'),
-  admin: require('./authorization')
+  AuthenticationMiddleware: require("./AuthenticationMiddleware"),
+  AuthorizationMiddleware: require("./AuthorizationMiddleware")
 }

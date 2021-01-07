@@ -1,5 +1,5 @@
-const AuthenticationController = require('../controllers/authentication/AuthenticationController')
-const authenticationController = new AuthenticationController()
+const {LoginController} = require('../controllers')
+const loginController = new LoginController()
 const { invalidParamError, missingParamError } = require('../helpers/Errors')
 const {User} = require('../models')
 const Mocks = require('./helpers/Mocks')
@@ -36,7 +36,7 @@ describe('AUTH CONTROLLER: tests', () => {
         delete fakeUser[`${field}`]
         const req = mocks.mockReq(fakeUser)
         const res = mocks.mockRes()
-        await authenticationController.authenticate(req, res)
+        await loginController.authenticate(req, res)
         const { error } = missingParamError(field)
         expect(res.status).toHaveBeenCalledWith(400)
         expect(res.json).toBeCalledWith(error)
@@ -48,7 +48,7 @@ describe('AUTH CONTROLLER: tests', () => {
         fakeUser[`${field}`] = 'invalidParameter'
         const req = mocks.mockReq(fakeUser)
         const res = mocks.mockRes()  
-        await authenticationController.authenticate(req, res)
+        await loginController.authenticate(req, res)
         const { error } = invalidParamError('Username or Password')
         expect(res.status).toHaveBeenCalledWith(401)
         expect(res.json).toBeCalledWith(error)
@@ -58,7 +58,7 @@ describe('AUTH CONTROLLER: tests', () => {
       const {username, password} = mocks.mockUser()
       const req = mocks.mockReq({username, password})
       const res = mocks.mockRes()
-      await authenticationController.authenticate(req, res)
+      await loginController.authenticate(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
       expect(res.json).toHaveBeenCalledWith(expect.objectContaining(modelsExpected.loginExpected()))
     })
@@ -68,7 +68,7 @@ describe('AUTH CONTROLLER: tests', () => {
     it("Should return 400 if no refreshToken has been provided", async () => {
       const req = mocks.mockReq()
       const res = mocks.mockRes()
-      await authenticationController.refreshToken(req, res)
+      await loginController.refreshToken(req, res)
       const { error } = missingParamError("refreshToken")
       expect(res.status).toHaveBeenCalledWith(400)
       expect(res.json).toHaveBeenCalledWith(error)
@@ -79,7 +79,7 @@ describe('AUTH CONTROLLER: tests', () => {
       }
       const req = mocks.mockReq(body)
       const res = mocks.mockRes()
-      await authenticationController.refreshToken(req, res)
+      await loginController.refreshToken(req, res)
       const { error } = invalidParamError("token")
       expect(res.status).toHaveBeenCalledWith(401)
       expect(res.json).toHaveBeenCalledWith(error)
@@ -95,7 +95,7 @@ describe('AUTH CONTROLLER: tests', () => {
       }
       const req = mocks.mockReq(body)
       const res = mocks.mockRes()
-      await authenticationController.refreshToken(req, res)
+      await loginController.refreshToken(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
       expect(res.json).toHaveBeenCalledWith(expect.any(String))
     })

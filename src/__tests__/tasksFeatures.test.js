@@ -1,4 +1,4 @@
-const TaskController = require('../controllers/tasks/TaskController')
+const {TaskController} = require('../controllers')
 const taskController = new TaskController()
 const { Task, User, Lead, LeadSource, LeadStatus, TaskType } = require('../models')
 const databaseSetup = require('../database')

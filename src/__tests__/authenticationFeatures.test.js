@@ -1,4 +1,4 @@
-const AuthMiddleware = require("../middlewares/authentication/AuthenticationMiddleware")
+const AuthMiddleware = require("../middlewares/AuthenticationMiddleware")
 const authMiddleware = new AuthMiddleware()
 const { invalidParamError, missingParamError } = require('../helpers/Errors')
 const { User } = require('../models')

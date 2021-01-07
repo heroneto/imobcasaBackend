@@ -1,4 +1,4 @@
-const LeadController = require('../controllers/leads/LeadController')
+const {LeadController} = require('../controllers')
 const leadController = new LeadController()
 const { invalidParamError, missingParamError, forbidenError, conflictError } = require('../helpers').errors
 const { Lead, User, LeadSource, LeadStatus, Userscampaigns, Campaign } = require('../models')

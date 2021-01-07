@@ -1,4 +1,4 @@
-const CampaignController = require('../controllers/campaign/CampaignController')
+const {CampaignController} = require('../controllers')
 const campaignController = new CampaignController()
 const {Campaign} = require('../models')
 const databaseSetup = require('../database')

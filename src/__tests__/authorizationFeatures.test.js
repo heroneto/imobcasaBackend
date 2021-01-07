@@ -1,5 +1,5 @@
 const { invalidParamError, missingParamError, forbidenError } = require('../helpers/Errors')
-const AuthorizationMiddleware = require('../middlewares/authorization/AuthorizationMiddleware')
+const { AuthorizationMiddleware } = require('../middlewares')
 const authorizationMiddleware = new AuthorizationMiddleware()
 const {User} = require('../models')
 const Mocks = require('./helpers/Mocks')

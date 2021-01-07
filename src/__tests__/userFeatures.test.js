@@ -1,4 +1,4 @@
-const UserController = require('../controllers/user/UserController')
+const {UserController} = require('../controllers')
 const userController = new UserController()
 const databaseSetup = require('../database')
 const { missingParamError, invalidParamError } = require('../helpers/Errors')
