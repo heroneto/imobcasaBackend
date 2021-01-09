@@ -26,6 +26,15 @@ describe("LEAD WEBHOOK Controller Tests", () => {
         expect(res.json).toHaveBeenCalledWith(error)
       })
     }
+    test('Should return 400 if invalid hub.mode has been provided', async () => {
+      const res = mocks.mockRes()
+        const mockedQuery = mocks.mockSubscriveRequest('invalidMode')
+        const req = mocks.mockReq(null, mockedQuery)
+        const { error } = invalidParamError('hub.mode')
+        await leadWebhookController.subscrive(req, res)
+        expect(res.status).toHaveBeenCalledWith(400)
+        expect(res.json).toHaveBeenCalledWith(error)
+    })
   })
 
 })

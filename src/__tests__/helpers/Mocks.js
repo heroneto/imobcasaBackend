@@ -140,11 +140,11 @@ class Mocks {
     }
   }
 
-  mockSubscriveRequest(){
+  mockSubscriveRequest(hubmode = 'subscrive', verifyToken = process.env.FB_SUB_TOKEN, hubChallenge = "challengeSecret"){
     return {
-      'hub.mode': "subscrive",
-      'hub.verify_token': process.env.FB_SUB_TOKEN,
-      'hub.challenge': "chalengesercret",
+      'hub.mode': hubmode,
+      'hub.verify_token': verifyToken,
+      'hub.challenge': hubChallenge,
     }
   }
 }
