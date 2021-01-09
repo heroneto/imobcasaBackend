@@ -139,6 +139,14 @@ class Mocks {
       active: 1
     }
   }
+
+  mockSubscriveRequest(){
+    return {
+      'hub.mode': "subscrive",
+      'hub.verify_token': process.env.FB_SUB_TOKEN,
+      'hub.challenge': "chalengesercret",
+    }
+  }
 }
 
 module.exports = Mocks
