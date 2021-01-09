@@ -45,6 +45,14 @@ describe("LEAD WEBHOOK Controller Tests", () => {
         expect(res.status).toHaveBeenCalledWith(400)
         expect(res.json).toHaveBeenCalledWith(error)
     })
+    test('Should return 200 and hub.challenge if valid fields has been provided', async () => {
+      const res = mocks.mockRes()
+        const mockedQuery = mocks.mockSubscriveRequest()
+        const req = mocks.mockReq(null, mockedQuery)
+        await leadWebhookController.subscrive(req, res)
+        expect(res.status).toHaveBeenCalledWith(200)
+        expect(res.json).toHaveBeenCalledWith(mockedQuery['hub.challenge'])
+    })
   })
 
 })
