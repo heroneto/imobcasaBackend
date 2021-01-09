@@ -10,6 +10,9 @@ class LeadWebhookService extends Service {
 
   async subscrive(fields) {
     await this._checkRequiredFields(this._subRequiredFields, fields)
+    if(fields['hub.mode'] !== "subscrive"){
+      this._throwInvalidParamError('hub.mode')
+    }
     return true
   }
 
