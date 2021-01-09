@@ -5,5 +5,6 @@ module.exports = {
   LeadService: require('./LeadService'),
   TaskService: require('./TaskService'),
   UserCampaignService: require('./UserCampaignService'),
-  UserService: require('./UserService')
+  UserService: require('./UserService'),
+  LeadWebhookService: require('./LeadWebhookService')
 }
