@@ -16,7 +16,7 @@ class LeadWebhookService extends Service {
     if(fields['hub.verify_token'] !== process.env.FB_SUB_TOKEN){
       this._throwInvalidParamError('hub.verify_token')
     }
-    return true
+    return fields['hub.challenge']
   }
 
 }
