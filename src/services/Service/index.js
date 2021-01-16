@@ -1,6 +1,6 @@
 const ServiceException = require('../../helpers/Exceptions/ServiceException')
 const { forbiden, invalidRequest, unauthorized, conflict } = require('../../helpers/Protocols')
-const { invalidParamError, missingParamError, forbidenError, conflictError } = require('../../helpers/Errors')
+const { invalidParamError, missingParamError, forbidenError, conflictError, missingBodyContent } = require('../../helpers/Errors')
 const JwtImplementation = require('../../implementations/jwt')
 
 class Service {
@@ -17,6 +17,12 @@ class Service {
 
   _throwMissingParamError(param){
     const { error } = missingParamError(param)
+    const { statusCode, body } = invalidRequest(error)
+    this._throwException(body, statusCode)
+  }
+
+  _throwMissingBodyError(){
+    const { error } = missingBodyContent()
     const { statusCode, body } = invalidRequest(error)
     this._throwException(body, statusCode)
   }
@@ -51,6 +57,12 @@ class Service {
   _checkEntityExsits(entity, param = "id"){
     if (!entity) {
       this._throwInvalidParamError(param)
+    }
+  }
+
+  async _checkBodyExists(body){
+    if(!body){
+      await this._throwMissingBodyError()
     }
   }
 

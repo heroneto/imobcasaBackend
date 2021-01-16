@@ -9,20 +9,25 @@ class WebhookService  extends Service{
     super()
   }
 
+
+
   async createSignatureValue(){
 
   }
 
+
+
   async checkSignature(headers, body){
     await this._checkRequiredFields(this._headersRequiredFields, headers)
+    await this._checkBodyExists(body)
     const payload = JSON.stringify(body)
+    await this._checkEntityExsits(payload, 'body')
     const hmac = crypto.createHmac('sha1', this._appSecretKey)
     const digest = Buffer.from('sha1=' + hmac.update(payload).digest('hex'), 'utf8')
     const checksum = Buffer.from(headers['x-hub-signature'], 'utf8')
     if (checksum.length !== digest.length || !crypto.timingSafeEqual(digest, checksum)) {
       await this._throwInvalidParamError("x-hub-signature")
     }
-    console.log("SUCESSO")
   }
  
 }
