@@ -19,6 +19,10 @@ class LeadWebhookService extends Service {
     return fields['hub.challenge']
   }
 
+  async addLead(fields){
+    return fields
+  }
+
 }
 
 module.exports = LeadWebhookService
