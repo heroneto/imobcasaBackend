@@ -8,7 +8,7 @@ class WebhookMiddleware {
   async checkSignature (req, res, next){
     try{
       const webhookService = new WebhookService()
-      const result = await webhookService.checkSignature(req.headers, req.body)
+      await webhookService.checkSignature(req.headers, req.body)
       next()
     }catch(err){     
       if(err instanceof ServiceException){
