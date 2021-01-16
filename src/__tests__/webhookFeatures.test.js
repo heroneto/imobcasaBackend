@@ -21,7 +21,19 @@ describe("WEBHOOK Middlware Tests", () => {
       expect(res.status).toHaveBeenCalledWith(400)
       expect(res.json).toHaveBeenCalledWith(error)
     })
-    
+    test("Should return 400 if no body has been provided", async() => {
+      const res = mocks.mockRes()     
+      const header = {
+        ['x-hub-signature']: "ANYSIGNATURE"
+      }
+      const req = mocks.mockReq(null, null, null, null, header)
+      const next = mocks.mockNext()
+      const { error } = missingBodyContent()
+      await webhookMiddleware.checkSignature(req, res, next)
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toHaveBeenCalledWith(error)
+    })
+
     test("SHould return 400 if invalid X-Hub-Signature has been provided", async() => {
       const res = mocks.mockRes()     
       const header = {
