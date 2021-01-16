@@ -11,7 +11,7 @@ const databaseSetup = require('../database')
 describe("WEBHOOK Middlware Tests", () => {
 
   describe("CHECKSIGNATURE Tests", () => {
-    test("Should return 400 if no X-Hub-Signature has been provided", async () => {
+    test("1 - Should return 400 if no X-Hub-Signature has been provided", async () => {
       const leadgen = mocks.mockLeadWebhook()
       const res = mocks.mockRes()
       const req = mocks.mockReq(leadgen, null, null, null, {})
@@ -21,7 +21,7 @@ describe("WEBHOOK Middlware Tests", () => {
       expect(res.status).toHaveBeenCalledWith(400)
       expect(res.json).toHaveBeenCalledWith(error)
     })
-    test("Should return 400 if no body has been provided", async() => {
+    test("2 - Should return 400 if no body has been provided", async() => {
       const res = mocks.mockRes()     
       const header = {
         ['x-hub-signature']: "ANYSIGNATURE"
@@ -34,7 +34,7 @@ describe("WEBHOOK Middlware Tests", () => {
       expect(res.json).toHaveBeenCalledWith(error)
     })
 
-    test("SHould return 400 if invalid X-Hub-Signature has been provided", async() => {
+    test("3 - Should return 400 if invalid X-Hub-Signature has been provided", async() => {
       const res = mocks.mockRes()     
       const header = {
         ['x-hub-signature']: "INVALIDXHUBSIGNATURE"
@@ -47,7 +47,7 @@ describe("WEBHOOK Middlware Tests", () => {
       expect(res.json).toHaveBeenCalledWith(error)
     })
 
-    test("Should call Next if X-Hub-Signature has been provided", async() => {
+    test("4 - Should call Next if X-Hub-Signature has been provided", async() => {
       const res = mocks.mockRes()     
       const xhubsignature = mocks.mockXHubSignature(mocks.mockLeadWebhook())
       const header = {
