@@ -1,13 +1,8 @@
-const { LeadWebhookController } = require('../controllers')
-const leadWebhookController = new LeadWebhookController()
 const { WebhookMiddleware } = require('../middlewares')
 const webhookMiddleware = new WebhookMiddleware()
 const { invalidParamError, missingParamError, missingBodyContent } = require('../helpers/Errors')
 const Mocks = require('./helpers/Mocks')
-const ModelsExpected = require('./helpers/ModelsExpected')
 const mocks = new Mocks()
-const modelsExpected = new ModelsExpected
-const databaseSetup = require('../database')
 
 
 describe("WEBHOOK Middlware Tests", () => {
