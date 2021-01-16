@@ -21,15 +21,19 @@ class WebhookService  extends Service{
     return Buffer.from(xHubSignature, 'utf8')
   }
 
+  _checkDigestChecksumMatch(digest, checksum)  {
+    if (checksum.length !== digest.length || !crypto.timingSafeEqual(digest, checksum)) {
+      this._throwInvalidParamError("x-hub-signature")
+    }
+  }
+
 
   async checkSignature(headers, body){
     await this._checkRequiredFields(this._headersRequiredFields, headers)
     await this._checkBodyExists(body)
     const digest = this._createDigest(body)
     const checksum = this._createChecksum(headers['x-hub-signature'])
-    if (checksum.length !== digest.length || !crypto.timingSafeEqual(digest, checksum)) {
-      await this._throwInvalidParamError("x-hub-signature")
-    }
+    this._checkDigestChecksumMatch(digest, checksum)
   }
  
 }
