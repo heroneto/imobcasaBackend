@@ -1,6 +1,6 @@
 const { User } = require('../../models')
 const JwtImplementation = require('../../implementations/jwt')
-
+const crypto = require('crypto')
 class Mocks {
 
 
@@ -145,6 +145,27 @@ class Mocks {
       'hub.mode': hubmode,
       'hub.verify_token': verifyToken,
       'hub.challenge': hubChallenge,
+    }
+  }
+
+  mockXHubSignature(body, appSecret = process.env.FB_APP_SECRET_KEY){
+    const payload = JSON.stringify(body)
+    const hmac = crypto.createHmac('sha1', appSecret)
+    return Buffer.from('sha1=' + hmac.update(payload).digest('hex'), 'utf8')
+    
+  }
+
+  mockLeadWebhook(){
+    return {
+      field: "leadgen",
+      value: {
+        ad_id: "444444444",
+        form_id: "444444444444",
+        leadgen_id: "444444444444",
+        created_time: 1610306426,
+        page_id: "444444444444",
+        adgroup_id: "44444444444"
+      }
     }
   }
 }
