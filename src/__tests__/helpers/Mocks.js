@@ -150,22 +150,34 @@ class Mocks {
 
   mockXHubSignature(body, appSecret = process.env.FB_APP_SECRET_KEY){
     const payload = JSON.stringify(body)
-    const hmac = crypto.createHmac('sha1', appSecret)
-    return Buffer.from('sha1=' + hmac.update(payload).digest('hex'), 'utf8')
-    
+    return `sha1=${crypto.createHmac('sha1', appSecret).update(payload).digest('hex')}`
   }
 
-  mockLeadWebhook(){
+  mockLeadWebhook(
+    id = Math.floor(Math.random() * 10**15).toString(),
+    formId = Math.floor(Math.random() * 10**16).toString(),
+    leadgenId = Math.floor(Math.random() * 10**15).toString(),
+    pageId = Math.floor(Math.random() * 10**15).toString(),
+    ){
     return {
-      field: "leadgen",
-      value: {
-        ad_id: "444444444",
-        form_id: "444444444444",
-        leadgen_id: "444444444444",
-        created_time: 1610306426,
-        page_id: "444444444444",
-        adgroup_id: "44444444444"
-      }
+      object: "page",
+      entry: [
+        {
+          id: id,
+          time: Date.now(),
+          changes: [
+            {
+              value: {
+                form_id: formId,
+                leadgen_id: leadgenId,
+                created_time: Date.now(),
+                page_id: pageId
+              },
+              field: "leadgen"
+            }
+          ]
+        }
+      ]
     }
   }
 }

@@ -13,16 +13,20 @@ class WebhookService  extends Service{
 
   _createDigest(body){
     const payload = JSON.stringify(body)
-    const hmac = crypto.createHmac('sha1', this._appSecretKey)
-    return Buffer.from('sha1=' + hmac.update(payload).digest('hex'), 'utf8')
+    return crypto.createHmac('sha1', this._appSecretKey).update(payload).digest('hex')
   }
 
-  _createChecksum(xHubSignature){
-    return Buffer.from(xHubSignature, 'utf8')
+  _createDigestBuffer(digest){
+    return Buffer.from(digest, 'utf8')
   }
 
-  _checkDigestChecksumMatch(digest, checksum)  {
-    if (checksum.length !== digest.length || !crypto.timingSafeEqual(digest, checksum)) {
+  _createChecksumBuffer(xHubSignature){
+    const [alg, sig] = xHubSignature.split('=')
+    return Buffer.from(sig, 'utf8')
+  }
+
+  _checkDigestChecksumMatch(digestBuffer, checksumBuffer)  {
+    if (checksumBuffer.length !== digestBuffer.length || !crypto.timingSafeEqual(digestBuffer, checksumBuffer)) {
       this._throwInvalidParamError("x-hub-signature")
     }
   }
@@ -32,8 +36,9 @@ class WebhookService  extends Service{
     await this._checkRequiredFields(this._headersRequiredFields, headers)
     await this._checkBodyExists(body)
     const digest = this._createDigest(body)
-    const checksum = this._createChecksum(headers['x-hub-signature'])
-    this._checkDigestChecksumMatch(digest, checksum)
+    const digestBuffer = this._createDigestBuffer(this._createDigest(body))
+    const checksumBuffer = this._createChecksumBuffer(headers['x-hub-signature'])
+    this._checkDigestChecksumMatch(digestBuffer, checksumBuffer)
   }
  
 }
