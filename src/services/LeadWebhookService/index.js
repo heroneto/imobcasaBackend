@@ -17,7 +17,7 @@ class LeadWebhookService extends Service {
 
 
   _checkEntryField(fields){
-    const { entry } = fields
+    const { entry } = fields    
     this._checkFieldExists(entry, 'entry')
     if(entry.length === 0){
       this._throwInvalidParamError("entry")
@@ -25,17 +25,29 @@ class LeadWebhookService extends Service {
   }
 
   _checkChangesField(fields){
-    const { changes } = fields.entry
-    this._checkFieldExists(changes, 'changes')
-    if(changes.length === 0){
-      this._throwInvalidParamError("changes")
+    const { entry: entries } = fields
+    for(const entry of entries){
+      const { changes } = entry
+      this._checkFieldExists(changes, 'changes')
+      if(changes.length === 0){
+        this._throwInvalidParamError("changes")
+      }
+    }
+
+  }
+
+  _checkValueField(fields){
+    const { entry: entries } = fields
+    for(const entry of entries){
+      const { changes } = entry
+      for(const change of changes){
+        const { value } = change
+        this._checkFieldExists(value, 'value')
+      }
     }
   }
 
-  checkChangesFields(){
-    
-  }
-
+  
 
   async subscrive(fields) {
     await this._checkRequiredFields(this._subRequiredFields, fields)
@@ -63,7 +75,7 @@ class LeadWebhookService extends Service {
     */
     this._checkEntryField(fields)
     this._checkChangesField(fields)
-    
+    this._checkValueField(fields)
     return fields
   }
 
