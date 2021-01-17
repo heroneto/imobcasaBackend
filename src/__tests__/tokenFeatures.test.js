@@ -5,11 +5,21 @@ const Mocks = require('./helpers/Mocks')
 const ModelsExpected = require('./helpers/ModelsExpected')
 const mocks = new Mocks()
 const modelsExpected = new ModelsExpected
-
-
+const databaseSetup = require('../database')
+const { Token } = require('../models')
 
 describe("TOKEN Controller Tests", () => {
   describe("SET TOKEN Tests", () => {
+
+
+    beforeAll(async () => {
+      await databaseSetup()
+    })
+
+    afterAll(async () => {
+      await Token.destroy({})      
+    })
+
     test("Should return 400 if no token field has been provided", async() => {
       const res = mocks.mockRes()
       const req = mocks.mockReq()
@@ -35,6 +45,7 @@ describe("TOKEN Controller Tests", () => {
       const req = mocks.mockReq(body)
       await tokensController.setToken(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.json).toHaveBeenCalledWith(expect.objectContaining(modelsExpected.tokenExpected()))
     })
   })
 })
