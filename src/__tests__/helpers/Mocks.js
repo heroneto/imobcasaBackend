@@ -1,6 +1,6 @@
 const { User } = require('../../models')
 const JwtImplementation = require('../../implementations/jwt')
-
+const crypto = require('crypto')
 class Mocks {
 
 
@@ -140,11 +140,44 @@ class Mocks {
     }
   }
 
-  mockSubscriveRequest(){
+  mockSubscriveRequest(hubmode = 'subscrive', verifyToken = process.env.FB_SUB_TOKEN, hubChallenge = "challengeSecret"){
     return {
-      'hub.mode': "subscrive",
-      'hub.verify_token': process.env.FB_SUB_TOKEN,
-      'hub.challenge': "chalengesercret",
+      'hub.mode': hubmode,
+      'hub.verify_token': verifyToken,
+      'hub.challenge': hubChallenge,
+    }
+  }
+
+  mockXHubSignature(body, appSecret = process.env.FB_APP_SECRET_KEY){
+    const payload = JSON.stringify(body)
+    return `sha1=${crypto.createHmac('sha1', appSecret).update(payload).digest('hex')}`
+  }
+
+  mockLeadWebhook(
+    id = Math.floor(Math.random() * 10**15).toString(),
+    formId = Math.floor(Math.random() * 10**16).toString(),
+    leadgenId = Math.floor(Math.random() * 10**15).toString(),
+    pageId = Math.floor(Math.random() * 10**15).toString(),
+    ){
+    return {
+      object: "page",
+      entry: [
+        {
+          id: id,
+          time: Date.now(),
+          changes: [
+            {
+              value: {
+                form_id: formId,
+                leadgen_id: leadgenId,
+                created_time: Date.now(),
+                page_id: pageId
+              },
+              field: "leadgen"
+            }
+          ]
+        }
+      ]
     }
   }
 }
