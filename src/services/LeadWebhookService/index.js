@@ -2,13 +2,11 @@ const Service = require('../Service')
 
 class LeadWebhookService extends Service {
   _subRequiredFields = ['hub.mode', 'hub.verify_token', 'hub.challenge']
-  _addLeadRequiredFields = [ 
-    "ad_id",
+  _addLeadValueRequiredFields = [ 
     "form_id",
     "leadgen_id",
     "created_time",
-    "page_id",
-    "adgroup_id",
+    "page_id"
    ]
   constructor() {
     super()
@@ -47,6 +45,17 @@ class LeadWebhookService extends Service {
     }
   }
 
+  _checkRequiredValueFields(fields){
+    const { entry: entries } = fields
+    for(const entry of entries){
+      const { changes } = entry
+      for(const change of changes){
+        const { value } = change
+        this._checkRequiredFields(this._addLeadValueRequiredFields, value)
+      }
+    }
+  }
+
   
 
   async subscrive(fields) {
@@ -76,6 +85,7 @@ class LeadWebhookService extends Service {
     this._checkEntryField(fields)
     this._checkChangesField(fields)
     this._checkValueField(fields)
+    this._checkRequiredValueFields(fields)
     return fields
   }
 
