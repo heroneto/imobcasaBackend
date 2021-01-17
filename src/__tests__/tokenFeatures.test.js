@@ -18,5 +18,14 @@ describe("TOKEN Controller Tests", () => {
       expect(res.status).toHaveBeenCalledWith(400)
       expect(res.json).toHaveBeenCalledWith(error)
     })
+    test("Should return 400 if invalid token has been provided", async() => {
+      const res = mocks.mockRes()
+      const body = {
+        accessToken: "INVALIDACCESSTOKEN"
+      }
+      const req = mocks.mockReq(body)
+      await tokensController.setToken(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+    })
   })
 })
