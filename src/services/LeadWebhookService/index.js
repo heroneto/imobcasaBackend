@@ -24,8 +24,12 @@ class LeadWebhookService extends Service {
     }
   }
 
-  _checkChangesField(){
-
+  _checkChangesField(fields){
+    const { changes } = fields.entry
+    this._checkFieldExists(changes, 'changes')
+    if(changes.length === 0){
+      this._throwInvalidParamError("changes")
+    }
   }
 
   checkChangesFields(){
@@ -58,6 +62,7 @@ class LeadWebhookService extends Service {
             1 - Validar existência de requiredFields
     */
     this._checkEntryField(fields)
+    this._checkChangesField(fields)
     
     return fields
   }
