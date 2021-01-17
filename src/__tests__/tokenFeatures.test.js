@@ -27,5 +27,14 @@ describe("TOKEN Controller Tests", () => {
       await tokensController.setToken(req, res)
       expect(res.status).toHaveBeenCalledWith(400)
     })
+    test("Should return 200 if valid Token has been provided", async () => {
+      const res = mocks.mockRes()
+      const body = {
+        accessToken: mocks.mockFBMarketingToken()
+      }
+      const req = mocks.mockReq(body)
+      await tokensController.setToken(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+    })
   })
 })
