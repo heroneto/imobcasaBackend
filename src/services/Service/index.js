@@ -1,6 +1,6 @@
 const ServiceException = require('../../helpers/Exceptions/ServiceException')
-const { forbiden, invalidRequest, unauthorized, conflict } = require('../../helpers/Protocols')
-const { invalidParamError, missingParamError, forbidenError, conflictError, missingBodyContent } = require('../../helpers/Errors')
+const { forbiden, invalidRequest, unauthorized, conflict, noContent } = require('../../helpers/Protocols')
+const { invalidParamError, missingParamError, forbidenError, conflictError, missingBodyContent, noContentError } = require('../../helpers/Errors')
 const JwtImplementation = require('../../implementations/jwt')
 
 class Service {
@@ -42,6 +42,12 @@ class Service {
   _throwForbidenError(param = ""){
     const { error } = forbidenError(param)
     const { statusCode, body } = forbiden(error)
+    this._throwException(body, statusCode)
+  }
+
+  _throwNoContentError(param = "id"){
+    const { error } = noContentError(param)
+    const { statusCode, body } = noContent(error)
     this._throwException(body, statusCode)
   }
 

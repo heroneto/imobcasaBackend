@@ -13,12 +13,19 @@ class TokenService extends Service {
   async setToken(fields) {
     this._checkRequiredFields(this._requiredFields, fields)
     const { accessToken } = fields
-    const {data} = await checkToken(accessToken)
+    const {data} = await checkToken(accessToken)      
     const tokenData = {
       fb_marketing_token: data.access_token
-    }
-    
+    }    
     return await this._tokenRepository.setToken(tokenData)
+  }
+
+  async getTokens(){
+    const result = await this._tokenRepository.getTokens()
+    if(result.length === 0){
+      this._throwNoContentError("accessToken")
+    }    
+    return result
   }
 }
 
