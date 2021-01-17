@@ -60,6 +60,12 @@ class Service {
     }
   }
 
+  _checkFieldExists(field, param = 'id'){
+    if (!field) {
+      this._throwMissingParamError(param)
+    }
+  }
+
   async _checkBodyExists(body){
     if(!body){
       await this._throwMissingBodyError()

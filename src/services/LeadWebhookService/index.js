@@ -14,9 +14,14 @@ class LeadWebhookService extends Service {
     super()
   }
 
+
+
   _checkEntryField(fields){
     const { entry } = fields
-    this._checkEntityExsits(entry, 'entry')
+    this._checkFieldExists(entry, 'entry')
+    if(entry.length === 0){
+      this._throwInvalidParamError("entry")
+    }
   }
 
   _checkChangesField(){
