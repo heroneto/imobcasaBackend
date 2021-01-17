@@ -14,6 +14,19 @@ class LeadWebhookService extends Service {
     super()
   }
 
+  _checkEntryField(fields){
+    const { entry } = fields
+    this._checkEntityExsits(entry, 'entry')
+  }
+
+  _checkChangesField(){
+
+  }
+
+  checkChangesFields(){
+    
+  }
+
 
   async subscrive(fields) {
     await this._checkRequiredFields(this._subRequiredFields, fields)
@@ -27,9 +40,20 @@ class LeadWebhookService extends Service {
   }
 
   async addLead(fields){
-    //verificar campos requeridos
-    //
-    await this._checkRequiredFields(this._addLeadRequiredFields, fields.value)
+    
+    /*
+      1 - Validar existência de Entry
+      2 - Validar tamanho do entry
+      Para cada entry:
+        1 - Validar existência de changes
+        2 - Validar tamanho do Changes
+        Para cada Changes: 
+          1 - Validar exitência de value
+          dentro de value:
+            1 - Validar existência de requiredFields
+    */
+    this._checkEntryField(fields)
+    
     return fields
   }
 
