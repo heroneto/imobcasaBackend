@@ -29,6 +29,16 @@ describe("WEBHOOK FEATURES Tests", () => {
       expect(res.status).toHaveBeenCalledWith(400)
       expect(res.json).toHaveBeenCalledWith(error)
     })
+    test("Should return 400 if no changes field has been provided", async () => {
+      const res = mocks.mockRes()
+      const body = mocks.mockLeadWebhook()
+      delete body.entry[0].changes
+      const req = mocks.mockReq(body)
+      const { error } = missingParamError('changes')
+      await webhookController.addLead(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toHaveBeenCalledWith(error)
+    })
     // const requiredFields = [
     //   "ad_id",
     //   "form_id",
