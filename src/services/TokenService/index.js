@@ -11,10 +11,10 @@ class TokenService extends Service {
   async setToken(fields) {
     this._checkRequiredFields(this._requiredFields, fields)
     const { accessToken } = fields
-    const result = await checkToken(accessToken)
+    const {data} = await checkToken(accessToken)
+    console.log(data)
     return true
   }
-
 }
 
 module.exports = TokenService
