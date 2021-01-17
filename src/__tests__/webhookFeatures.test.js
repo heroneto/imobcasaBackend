@@ -78,24 +78,5 @@ describe("WEBHOOK FEATURES Tests", () => {
         expect(res.json).toHaveBeenCalledWith(error)
       })
     }
-
-    // const requiredFields = [
-    //   "ad_id",
-    //   "form_id",
-    //   "leadgen_id",
-    //   "created_time",
-    //   "page_id",
-    //   "adgroup_id",
-    // ]
-    // for (const field of requiredFields) {
-    //   test(`Should return 400 if no ${field} has been provided`, async () => {
-    //     const res = mocks.mockRes()
-    //     const body = mocks.mockLeadWebhook()
-    //     delete body[`${field}`]
-    //     const req = mocks.mockReq(body)
-    //     await webhookController.addLead(req, res)
-    //     expect(res.status).toHaveBeenCalledWith(400)
-    //   })
-    // }
   })
 })
