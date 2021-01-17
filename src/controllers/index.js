@@ -5,5 +5,6 @@ module.exports = {
   TaskController: require('./TaskController'),
   UserCampaignController: require('./UserCampaignController'),
   UserController: require('./UserController'),
-  WebhookController: require('./webhookController')
+  WebhookController: require('./webhookController'),
+  TokensController: require('./TokensController')
 }

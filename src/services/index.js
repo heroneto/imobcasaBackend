@@ -7,5 +7,6 @@ module.exports = {
   UserCampaignService: require('./UserCampaignService'),
   UserService: require('./UserService'),
   LeadWebhookService: require('./LeadWebhookService'),
-  WebhookService: require('./WebhookService')
+  WebhookService: require('./WebhookService'),
+  TokenService: require('./TokenService')
 }
