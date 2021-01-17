@@ -60,6 +60,25 @@ describe("WEBHOOK FEATURES Tests", () => {
       expect(res.status).toHaveBeenCalledWith(400)
       expect(res.json).toHaveBeenCalledWith(error)
     })
+    const valueRequiredFields = [
+      "form_id",
+      "leadgen_id",
+      "created_time",
+      "page_id"
+    ]
+    for (const field of valueRequiredFields) {
+      test(`Should return 400 if no ${field} has been provided in value field`, async () => {
+        const res = mocks.mockRes()
+        const body = mocks.mockLeadWebhook()
+        delete body.entry[0].changes[0].value[`${field}`]
+        const req = mocks.mockReq(body)
+        const { error } = missingParamError(field)
+        await webhookController.addLead(req, res)
+        expect(res.status).toHaveBeenCalledWith(400)
+        expect(res.json).toHaveBeenCalledWith(error)
+      })
+    }
+
     // const requiredFields = [
     //   "ad_id",
     //   "form_id",
