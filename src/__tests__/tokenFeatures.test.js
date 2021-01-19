@@ -88,21 +88,17 @@ describe("TOKEN Controller Tests", () => {
       expect(res.status).toHaveBeenCalledWith(200)
       expect(res.json).toHaveBeenCalledWith(expect.arrayContaining([expect.objectContaining(modelsExpected.tokenExpected())]))
     })
-
-    // let token
-    // beforeAll(async () => {
-    //   const tokenData = {
-    //     fb_marketing_token: mocks.mockFBMarketingToken()
-    //   }
-    //   token = await Token.create(tokenData)
-    // })
-
-    // afterAll(async () => {
-    //   Token.destroy({where: {}})
-    // })
-
+  })
+  
+  describe("UPDATE TOKEN Tests", () => {
+    test(`Should return 400 if no tokenId has been provided`, async () => {      
+      const res = mocks.mockRes()
+      const req = mocks.mockReq({})
+      await tokensController.updateToken(req, res)
+      const { error } = missingParamError("tokenId")
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toHaveBeenCalledWith(error)
+    })
     
-
-
   })
 })
