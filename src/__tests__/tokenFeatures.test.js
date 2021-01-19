@@ -157,14 +157,34 @@ describe("TOKEN Controller Tests", () => {
   })
 
   describe("CHECK TOKEN Tests", () => {
-    test("Should return 400 if no tokenId has been provided", async () => {
+    test("Should return 400 if no accessToken has been provided", async () => {
       const res = mocks.mockRes()
       const req = mocks.mockReq({})
       await tokensController.checkToken(req, res)
-      const { error } = missingParamError("tokenId")
+      const { error } = missingParamError("accessToken")
       expect(res.status).toHaveBeenCalledWith(400)
       expect(res.json).toHaveBeenCalledWith(error)      
-    })  })
+    })
+    test(`Should return 400 if invalid accessToken has been provided`, async () => {      
+      const res = mocks.mockRes()
+      const body = {
+        accessToken: "Invalid access token"
+      }
+      const req = mocks.mockReq(body)
+      await tokensController.checkToken(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+    })
+    test(`Should return 200 if valid accessToken has been provided`, async () => {      
+      const res = mocks.mockRes()
+      const body = {
+        accessToken: mocks.mockFBMarketingToken()
+      }
+      const req = mocks.mockReq(body)
+      await tokensController.checkToken(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.json).toHaveBeenCalledWith(true)
+    })
+  })
 
 
 })
