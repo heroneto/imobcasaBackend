@@ -99,6 +99,17 @@ describe("TOKEN Controller Tests", () => {
       expect(res.status).toHaveBeenCalledWith(400)
       expect(res.json).toHaveBeenCalledWith(error)
     })
+    test(`Should return 400 if invalid tokenId has been provided`, async () => {      
+      const res = mocks.mockRes()
+      const body = {
+        tokenId: "Invalid token id"
+      }
+      const req = mocks.mockReq(body)
+      await tokensController.updateToken(req, res)
+      const { error } = invalidParamError("tokenId")
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toHaveBeenCalledWith(error)
+    })
     
   })
 })
