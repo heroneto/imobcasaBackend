@@ -5,6 +5,7 @@ const { TokenRepository } = require('../../repositories')
 class TokenService extends Service {
   _requiredFields = ["accessToken"]
   _updateTokenRequiredFields = ["tokenId"]
+  _removeTokenRequiredFields = ["tokenId"]
 
   constructor() {
     super()
@@ -40,6 +41,12 @@ class TokenService extends Service {
     this._checkEntityExsits(token, "tokenId")
     const {data} = await checkToken(token.fb_marketing_token)      
     return await this._tokenRepository.updateToken(token, data.access_token)
+  }
+
+  async removeToken(fields){
+    this._checkRequiredFields(this._removeTokenRequiredFields, fields)
+
+    return fields
   }
 }
 

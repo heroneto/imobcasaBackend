@@ -24,6 +24,14 @@ class TokenRepository {
     })
   }
 
+  async removeToken(tokenId){
+    return await Token.destroy({
+      where: {
+        id: tokenId
+      }
+    })
+  }
+
 }
 
 
