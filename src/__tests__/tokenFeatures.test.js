@@ -1,6 +1,6 @@
 const { TokensController } = require('../controllers')
 const tokensController = new TokensController()
-const { invalidParamError, missingParamError } = require('../helpers/Errors')
+const { invalidParamError, missingParamError, conflictError } = require('../helpers/Errors')
 const Mocks = require('./helpers/Mocks')
 const ModelsExpected = require('./helpers/ModelsExpected')
 const mocks = new Mocks()
@@ -57,6 +57,17 @@ describe("TOKEN Controller Tests", () => {
       await tokensController.setToken(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
       expect(res.json).toHaveBeenCalledWith(expect.objectContaining(modelsExpected.tokenExpected()))
+    })
+    test("Should return 400 if token already be set", async() => {
+      const res = mocks.mockRes()
+      const body = {
+        accessToken: mocks.mockFBMarketingToken()
+      }
+      const req = mocks.mockReq(body)
+      const { error } = conflictError("token already be set, please update existing token")
+      await tokensController.setToken(req, res)
+      expect(res.status).toHaveBeenCalledWith(409)
+      expect(res.json).toHaveBeenCalledWith(error)
     })
   })
 
