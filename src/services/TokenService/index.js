@@ -45,7 +45,9 @@ class TokenService extends Service {
 
   async removeToken(fields){
     this._checkRequiredFields(this._removeTokenRequiredFields, fields)
-
+    const { tokenId } = fields
+    const token = await this._tokenRepository.getOne(tokenId)
+    this._checkEntityExsits(token, "tokenId")
     return fields
   }
 }
