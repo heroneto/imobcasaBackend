@@ -48,7 +48,7 @@ class TokenService extends Service {
     const { tokenId } = fields
     const token = await this._tokenRepository.getOne(tokenId)
     this._checkEntityExsits(token, "tokenId")
-    return fields
+    return await this._tokenRepository.removeToken(tokenId)
   }
 }
 
