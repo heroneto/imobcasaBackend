@@ -4,9 +4,8 @@ module.exports = {
     return queryInterface.createTable('Tokens', {
       id: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.UUID,
       },
       fb_marketing_token: {
         type: Sequelize.STRING
