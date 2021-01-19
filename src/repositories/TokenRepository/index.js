@@ -11,6 +11,19 @@ class TokenRepository {
     return await Token.findAll()
   }
 
+  async updateToken(token, value){
+    token.fb_marketing_token = value
+    return await token.save()
+  }
+
+  async getOne(tokenId){
+    return await Token.findOne({
+      where: {
+        id: tokenId
+      }
+    })
+  }
+
 }
 
 

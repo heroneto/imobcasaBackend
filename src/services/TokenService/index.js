@@ -4,6 +4,7 @@ const { TokenRepository } = require('../../repositories')
 
 class TokenService extends Service {
   _requiredFields = ["accessToken"]
+  _updateTokenRequiredFields = ["tokenId"]
 
   constructor() {
     super()
@@ -30,6 +31,11 @@ class TokenService extends Service {
       this._throwNoContentError("accessToken")
     }    
     return result
+  }
+
+  async updateToken(fields){
+    this._checkRequiredFields(this._updateTokenRequiredFields, fields)
+    return fields
   }
 }
 
