@@ -120,7 +120,19 @@ describe("TOKEN Controller Tests", () => {
       await tokensController.updateToken(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
       expect(res.json).toHaveBeenCalledWith(expect.objectContaining(modelsExpected.tokenExpected()))
-    })
-    
+    })    
   })
+
+  describe("REMOVE TOKEN Tests", () => {
+    test("Should return 400 if no tokenId has been provided", async () => {
+      const res = mocks.mockRes()
+      const req = mocks.mockReq({})
+      await tokensController.removeToken(req, res)
+      const { error } = missingParamError("tokenId")
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toHaveBeenCalledWith(error)      
+    })
+  })
+
+
 })
