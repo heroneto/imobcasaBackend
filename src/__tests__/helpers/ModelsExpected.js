@@ -78,7 +78,7 @@ class ModelsExpected {
 
   tokenExpected() {
     return {
-      id: expect.any(Number),
+      id: expect.any(String),
       fb_marketing_token: expect.any(String),
       updatedAt: expect.any(Date),
       createdAt: expect.any(Date)
