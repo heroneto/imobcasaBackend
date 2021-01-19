@@ -115,6 +115,29 @@ class TokensController {
       }
     }
   }
+
+  async checkToken(request, response){
+    try {
+      const tokenService = new TokenService()
+      const result = await tokenService.checkToken(request.body)
+      return response.status(200).json(result)
+    } catch (err) {
+      if(AxiosException(err)){
+        const { status } = err.response
+        const { message } = err.response.data.error
+        return response.status(status).json(message)
+      }
+      if (err instanceof ServiceException) {
+        const { statusCode, message } = err
+        return response.status(statusCode).json(message)
+      } else {
+        console.error(err)
+        const { error } = serverError()
+        const { statusCode, body } = internalError(error)
+        return response.status(statusCode).send(body)
+      }
+    }
+  }
 }
 
 module.exports = TokensController

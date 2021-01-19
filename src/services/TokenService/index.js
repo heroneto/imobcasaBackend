@@ -6,6 +6,7 @@ class TokenService extends Service {
   _requiredFields = ["accessToken"]
   _updateTokenRequiredFields = ["tokenId"]
   _removeTokenRequiredFields = ["tokenId"]
+  _checkTokenRequiredFields = ["tokenId"]
 
   constructor() {
     super()
@@ -49,6 +50,12 @@ class TokenService extends Service {
     const token = await this._tokenRepository.getOne(tokenId)
     this._checkEntityExsits(token, "tokenId")
     return await this._tokenRepository.removeToken(tokenId)
+  }
+
+  async checkToken(fields){
+    this._checkRequiredFields(this._checkTokenRequiredFields, fields)
+
+    return fields
   }
 }
 
