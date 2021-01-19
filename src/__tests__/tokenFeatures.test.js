@@ -156,5 +156,15 @@ describe("TOKEN Controller Tests", () => {
     })  
   })
 
+  describe("CHECK TOKEN Tests", () => {
+    test("Should return 400 if no tokenId has been provided", async () => {
+      const res = mocks.mockRes()
+      const req = mocks.mockReq({})
+      await tokensController.checkToken(req, res)
+      const { error } = missingParamError("tokenId")
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toHaveBeenCalledWith(error)      
+    })  })
+
 
 })
