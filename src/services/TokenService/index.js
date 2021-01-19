@@ -36,9 +36,10 @@ class TokenService extends Service {
   async updateToken(fields){
     this._checkRequiredFields(this._updateTokenRequiredFields, fields)
     const { tokenId } = fields
-    const result = await this._tokenRepository.getOne(tokenId)
-    this._checkEntityExsits(result, "tokenId")
-    return fields
+    const token = await this._tokenRepository.getOne(tokenId)
+    this._checkEntityExsits(token, "tokenId")
+    const {data} = await checkToken(token.fb_marketing_token)      
+    return await this._tokenRepository.updateToken(token, data.access_token)
   }
 }
 
