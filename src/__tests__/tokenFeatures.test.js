@@ -143,6 +143,17 @@ describe("TOKEN Controller Tests", () => {
       expect(res.status).toHaveBeenCalledWith(400)
       expect(res.json).toHaveBeenCalledWith(error)
     })
+    test(`Should return 200 if valid tokenId has been provided`, async () => {      
+      const token = await Token.findOne()
+      const res = mocks.mockRes()
+      const body = {
+        tokenId: token.id
+      }
+      const req = mocks.mockReq(body)
+      await tokensController.removeToken(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.json).toHaveBeenCalledWith(1)
+    })  
   })
 
 
