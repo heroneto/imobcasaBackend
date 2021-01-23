@@ -5,9 +5,26 @@ const Mocks = require('./helpers/Mocks')
 const mocks = new Mocks()
 const ModelsExpected = require('./helpers/ModelsExpected')
 const modelsExpected = new ModelsExpected()
+const databaseSetup = require('../database')
+const { Token } = require('../models')
+
 
 
 describe("WEBHOOK CONTROLLER Tests", () => {
+  beforeAll(async () => {
+    await databaseSetup()
+    await Token.destroy({where: {}})   
+    const tokenData = {
+      fb_marketing_token: mocks.mockFBMarketingToken()
+    }  
+    await Token.create(tokenData)
+  })
+
+  afterAll(async () => {
+    await Token.destroy({where: {}})   
+
+  })
+
   describe("SUBSCRIVE Tests", () => {
     const subscriveRequiredFields = ['hub.mode', 'hub.verify_token', 'hub.challenge']
     for(const field of subscriveRequiredFields){
@@ -120,5 +137,20 @@ describe("WEBHOOK CONTROLLER Tests", () => {
         expect(res.json).toHaveBeenCalledWith(error)
       })
     }
+    test('Should not return 200 if invalid leadId has been provided', async () => {
+      const res = mocks.mockRes()
+      const body = mocks.mockLeadWebhook()
+      const req = mocks.mockReq(body)
+      await webhookController.addLead(req, res)
+      expect(res.status).not.toHaveBeenCalledWith(200)
+    })
+    // test('Should return 200 if valid leadId has been provided', async () => {
+    //   const res = mocks.mockRes()
+    //   const body = mocks.mockLeadWebhook(null, null, mocks.mockValidLeadID())
+      
+    //   const req = mocks.mockReq(body)
+    //   await webhookController.addLead(req, res)
+    //   expect(res.status).toHaveBeenCalledWith(200)
+    // })
   })
 })
