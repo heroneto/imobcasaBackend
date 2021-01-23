@@ -1,14 +1,14 @@
 const { internalError } = require('../../helpers/protocols')
 const { serverError } = require('../../helpers/errors')
-const { WebhookService } = require('../../services')
+const { XHubSignatureService } = require('../../services')
 const ServiceException = require('../../helpers/Exceptions/ServiceException')
 
-class WebhookMiddleware {
+class XHubSignatureMiddleware {
 
   async checkSignature (req, res, next){
     try{
-      const webhookService = new WebhookService()
-      await webhookService.checkSignature(req.headers, req.body)
+      const xHubSignatureService = new XHubSignatureService()
+      await xHubSignatureService.checkSignature(req.headers, req.body)
       next()
     }catch(err){     
       if(err instanceof ServiceException){
@@ -24,4 +24,4 @@ class WebhookMiddleware {
   }
 }
 
-module.exports = WebhookMiddleware
+module.exports = XHubSignatureMiddleware

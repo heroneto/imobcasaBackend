@@ -7,7 +7,49 @@ const ModelsExpected = require('./helpers/ModelsExpected')
 const modelsExpected = new ModelsExpected()
 
 
-describe("WEBHOOK FEATURES Tests", () => {
+describe("WEBHOOK CONTROLLER Tests", () => {
+  describe("SUBSCRIVE Tests", () => {
+    const subscriveRequiredFields = ['hub.mode', 'hub.verify_token', 'hub.challenge']
+    for(const field of subscriveRequiredFields){
+      test(`Should return 400 if no ${field} has been provided`, async () => {
+        const res = mocks.mockRes()
+        const mockedQuery = mocks.mockSubscriveRequest()
+        delete mockedQuery[`${field}`]
+        const req = mocks.mockReq(null, mockedQuery)
+        const { error } = missingParamError(field)
+        await webhookController.subscrive(req, res)
+        expect(res.status).toHaveBeenCalledWith(400)
+        expect(res.json).toHaveBeenCalledWith(error)
+      })
+    }
+    test('Should return 400 if invalid hub.mode has been provided', async () => {
+      const res = mocks.mockRes()
+        const mockedQuery = mocks.mockSubscriveRequest('invalidMode')
+        const req = mocks.mockReq(null, mockedQuery)
+        const { error } = invalidParamError('hub.mode')
+        await webhookController.subscrive(req, res)
+        expect(res.status).toHaveBeenCalledWith(400)
+        expect(res.json).toHaveBeenCalledWith(error)
+    })
+    test('Should return 400 if invalid hub.verify_token has been provided', async () => {
+      const res = mocks.mockRes()
+        const mockedQuery = mocks.mockSubscriveRequest()
+        mockedQuery['hub.verify_token'] = 'invalidVerifyToken'
+        const req = mocks.mockReq(null, mockedQuery)
+        const { error } = invalidParamError('hub.verify_token')
+        await webhookController.subscrive(req, res)
+        expect(res.status).toHaveBeenCalledWith(400)
+        expect(res.json).toHaveBeenCalledWith(error)
+    })
+    test('Should return 200 and hub.challenge if valid fields has been provided', async () => {
+      const res = mocks.mockRes()
+        const mockedQuery = mocks.mockSubscriveRequest()
+        const req = mocks.mockReq(null, mockedQuery)
+        await webhookController.subscrive(req, res)
+        expect(res.status).toHaveBeenCalledWith(200)
+        expect(res.json).toHaveBeenCalledWith(mockedQuery['hub.challenge'])
+    })
+  })
   describe("ADD LEAD Tests", () => {
     test("Should return 400 if no entry field has been provided", async () => {
       const res = mocks.mockRes()
