@@ -25,14 +25,13 @@ class ModelsExpected {
     }
   }
 
-  campaignModel() {
+  formModel() {
     return {
       id: expect.any(String),
       name: expect.any(String),
       active: expect.any(Boolean),
       fbCreatedDate: expect.any(Date),
-      fbCampaignId: expect.any(String),
-      fbAdAccountId: expect.any(String),
+      fbFormId: expect.any(String),
       createdAt: expect.any(Date),
       updatedAt: expect.any(Date)
     }

@@ -113,15 +113,14 @@ class Mocks {
     ]
   }
 
-  mockCampaign() {
-    const fakeCampaign = {
-      name: "fakeCampaignName",
+  mockForm() {
+    const fakeForm = {
+      name: "fakeFormName",
       active: true,
       fbCreatedDate: new Date(),
-      fbCampaignId: "Fake FB Campaign ID",
-      fbAdAccountId: "Fake FB AD Account ID"
+      fbFormId: "Fake FB Campaign ID",
     }
-    return fakeCampaign
+    return fakeForm
   }
 
   mockTask(userid, leadid, tasktypeid) {
