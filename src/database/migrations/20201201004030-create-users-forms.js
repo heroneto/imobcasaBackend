@@ -1,17 +1,17 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('usersCampaigns', {
+    return queryInterface.createTable('usersForms', {
       id: {
         allowNull: false,
         primaryKey: true,
         type: Sequelize.UUID
       },
-      campaignid: {
+      formid: {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
-          model: "Campaigns",
+          model: "Forms",
           key: "id"
         }
       },
@@ -48,6 +48,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('usersCampaigns');
+    return queryInterface.dropTable('usersForms');
   }
 };

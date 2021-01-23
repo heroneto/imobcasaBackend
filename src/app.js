@@ -1,6 +1,6 @@
 const Server = require('./Server')
 const {
-  CampaignController,
+  FormController,
   LeadController,
   LoginController,
   TaskController,
@@ -17,7 +17,7 @@ async function app() {
   try {
     await database()
     const server = new Server([
-      new CampaignController(),
+      new FormController(),
       new UserController(),
       new LoginController(),
       new UserCampaignController(),

@@ -1,7 +1,7 @@
 module.exports = {
   AuthorizationService: require('./AuthorizationService'),
   LoginService: require('./LoginService'),
-  CampaignService: require('./CampaignService'),
+  FormService: require('./FormService'),
   LeadService: require('./LeadService'),
   TaskService: require('./TaskService'),
   UserCampaignService: require('./UserCampaignService'),

@@ -13,7 +13,7 @@ const db = {
     sequelize,
     User: sequelize.import("./user"),
     Lead: sequelize.import("./lead"),
-    Campaign: sequelize.import("./campaign"),
+    Form: sequelize.import("./form"),
     Userscampaigns: sequelize.import("./userscampaigns"),
     LeadSource: sequelize.import("./leadsource"),
     LeadStatus: sequelize.import("./leadstatus"),

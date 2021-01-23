@@ -23,10 +23,10 @@ module.exports = {
           key: "id"
         }
       },
-      campaignid: {
+      formid: {
         type: Sequelize.UUID,
         references: {
-          model: "Campaigns",
+          model: "Forms",
           key: "id"
         }
       },

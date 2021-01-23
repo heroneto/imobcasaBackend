@@ -1,5 +1,5 @@
 module.exports = {
-  CampaignRepository: require('./CampaignRepository'),
+  FormRepository: require('./FormRepository'),
   LeadRepository: require('./LeadRepository'),
   LeadSourceRepository: require('./LeadSourceRepository'),
   LeadStatusRepository: require('./LeadStatusRepository'),

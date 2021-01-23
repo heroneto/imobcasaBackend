@@ -1,21 +1,20 @@
 'use strict';
 const { v4: uuidV4 } = require('uuid')
 module.exports = (sequelize, DataTypes) => {
-  const Campaign = sequelize.define('Campaign', {
+  const Form = sequelize.define('Forms', {
     name: DataTypes.STRING,
     active: DataTypes.BOOLEAN,
     fbCreatedDate: DataTypes.DATE,
-    fbCampaignId: DataTypes.STRING,
-    fbAdAccountId: DataTypes.STRING
+    fbFormId: DataTypes.STRING,
   }, {
     hooks: {
-      beforeCreate: (Campaign) => {
-        Campaign.id = uuidV4()
+      beforeCreate: (Form) => {
+        Form.id = uuidV4()
       }
     }
   });
-  Campaign.associate = function(models) {
+  Form.associate = function(models) {
     // associations can be defined here
   };
-  return Campaign;
+  return Form;
 };

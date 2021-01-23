@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Campaigns', {
+    return queryInterface.createTable('Forms', {
       id: {
         allowNull: false,
         primaryKey: true,
@@ -16,10 +16,7 @@ module.exports = {
       fbCreatedDate: {
         type: Sequelize.DATE
       },
-      fbCampaignId: {
-        type: Sequelize.STRING
-      },
-      fbAdAccountId: {
+      fbFormId: {
         type: Sequelize.STRING
       },
       createdAt: {
@@ -33,6 +30,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('Campaigns');
+    return queryInterface.dropTable('Forms');
   }
 };
