@@ -1,29 +1,29 @@
 const Service = require('../Service')
 const {
   LeadRepository,
-  UserCampaignRepository,
+  UserFormRepository,
   UserRepository,
   LeadStatusRepository,
   LeadSourceRepository,
-  CampaignRepository,
+  FormRepository,
 } = require('../../repositories')
 
 
 class LeadService extends Service{
   _getOneRequiredFields = ["id", "reqUserId", "admin"]
-  _createRequiredFields =  ["name", "phone", "sourceid", "campaignid", "userid", "active", "statusid", "negociationStartedAt", "reqUserId", "admin"]
+  _createRequiredFields =  ["name", "phone", "sourceid", "formid", "userid", "active", "statusid", "negociationStartedAt", "reqUserId", "admin"]
   _listRequiredFields = ["reqUserId", "admin", "skip", "limit", "statusId"]
-  _updateRequiredFields = ["id", "name", "phone", "sourceid", "campaignid", "userid", "active", "statusid", "negociationStartedAt", "reqUserId", "admin"]
+  _updateRequiredFields = ["id", "name", "phone", "sourceid", "formid", "userid", "active", "statusid", "negociationStartedAt", "reqUserId", "admin"]
   _deleteRequiredFields = ["id"]
   _searchRequiredFields = ["value", "reqUserId", "admin"]
 
   constructor(){
     super()
     this._leadRepository = new LeadRepository()
-    this._userCampaignRepository = new UserCampaignRepository()
+    this._userFormRepository = new UserFormRepository()
     this._userRepository = new UserRepository()
     this._leadStatusRepository = new LeadStatusRepository()
-    this._campaignRepository = new CampaignRepository()
+    this._formRepository = new FormRepository
     this._leadSourceRepository = new LeadSourceRepository()
   }
 
@@ -64,7 +64,7 @@ class LeadService extends Service{
 
   async create(fields){
     await this._checkRequiredFields(this._createRequiredFields, fields)
-    const {name, phone, sourceid, campaignid, userid, active, statusid, negociationStartedAt, reqUserId, admin } = fields
+    const {name, phone, sourceid, formid, userid, active, statusid, negociationStartedAt, reqUserId, admin } = fields
     
     if(!admin && userid !== reqUserId){
       await this._throwForbidenError()
@@ -79,19 +79,19 @@ class LeadService extends Service{
     const leadSource = await this._leadSourceRepository.getOne({id: sourceid})
     await this._checkEntityExsits(leadSource, "sourceid")
 
-    const campaign = await this._campaignRepository.getOne({id: campaignid})
-    await this._checkEntityExsits(campaign, "campaignid")
+    const form = await this._formRepository.getOne({id: formid})
+    await this._checkEntityExsits(form, "formid")
   
     const leadFinded = await this._leadRepository.findByPhone(phone)
     if(leadFinded){
       await this._throwConflictError("phone")
     }
     
-    const usercampaign = await this._userCampaignRepository.getOne({
-      campaignid, 
+    const userform = await this._userFormRepository.getOne({
+      formid, 
       userid, 
     })
-    await this._checkEntityExsits(usercampaign, "User does not exists in campaign")
+    await this._checkEntityExsits(userform, "User does not exists in form")
 
     return await this._leadRepository.create(fields)
   }

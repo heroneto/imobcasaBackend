@@ -4,8 +4,8 @@ const ServiceException = require('../../helpers/Exceptions/ServiceException')
 const { internalError } = require('../../helpers/Protocols')
 const { serverError } = require('../../helpers/Errors')
 
-class CampaignController {
-  path = "/campaigns"
+class FormController {
+  path = "/forms"
   routes = Router()
   constructor() {
     this.load()
@@ -58,8 +58,8 @@ class CampaignController {
   async getOne(request, response) {
     try {
       const formService = new FormService()
-      const campaign = await formService.getOne(request.params)
-      return response.status(200).json(campaign)
+      const form = await formService.getOne(request.params)
+      return response.status(200).json(form)
     } catch (err) {
       if (err instanceof ServiceException) {
         const { statusCode, message } = err
@@ -77,8 +77,8 @@ class CampaignController {
   async list(request, response) {
     try {
       const formService = new FormService()
-      const campaigns = await formService.list()
-      return response.status(200).json(campaigns)
+      const forms = await formService.list()
+      return response.status(200).json(forms)
     } catch (err) {
       if (err instanceof ServiceException) {
         const { statusCode, message } = err
@@ -95,8 +95,8 @@ class CampaignController {
   async create(req, res) {
     try {
       const formService = new FormService()
-      const campaign = await formService.create(req.body)
-      return res.status(201).json(campaign)
+      const form = await formService.create(req.body)
+      return res.status(201).json(form)
     } catch (err) {
       if (err instanceof ServiceException) {
         const { statusCode, message } = err
@@ -112,4 +112,4 @@ class CampaignController {
 
 }
 
-module.exports = CampaignController
+module.exports = FormController

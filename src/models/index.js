@@ -14,7 +14,7 @@ const db = {
     User: sequelize.import("./user"),
     Lead: sequelize.import("./lead"),
     Form: sequelize.import("./form"),
-    Userscampaigns: sequelize.import("./userscampaigns"),
+    UsersForms: sequelize.import("./usersforms"),
     LeadSource: sequelize.import("./leadsource"),
     LeadStatus: sequelize.import("./leadstatus"),
     Task: sequelize.import("./task"),

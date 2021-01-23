@@ -3,7 +3,7 @@ module.exports = {
   LeadController: require('./LeadController'),
   LoginController: require('./LoginController'),
   TaskController: require('./TaskController'),
-  UserCampaignController: require('./UserCampaignController'),
+  UserFormController: require('./UserFormController'),
   UserController: require('./UserController'),
   WebhookController: require('./webhookController'),
   TokensController: require('./TokensController')

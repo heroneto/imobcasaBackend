@@ -1,12 +1,12 @@
-const { WebhookController } = require('../controllers')
+const { WebhookController } = require('../../controllers')
 const webhookController = new WebhookController()
-const { invalidParamError, missingParamError, missingBodyContent } = require('../helpers/Errors')
-const Mocks = require('./helpers/Mocks')
+const { invalidParamError, missingParamError, missingBodyContent } = require('../../helpers/Errors')
+const Mocks = require('../helpers/Mocks')
 const mocks = new Mocks()
-const ModelsExpected = require('./helpers/ModelsExpected')
+const ModelsExpected = require('../helpers/ModelsExpected')
 const modelsExpected = new ModelsExpected()
-const databaseSetup = require('../database')
-const { Token } = require('../models')
+const databaseSetup = require('../../database')
+const { Token } = require('../../models')
 
 
 

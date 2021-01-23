@@ -21,9 +21,9 @@ class FormService extends Service{
 
   async getOne(fields){
     await this._checkRequiredFields(this._getOneRequiredFields, fields)
-    const campaign = await this._formRepository.getOne(fields)
-    this._checkEntityExsits(campaign)
-    return campaign
+    const form = await this._formRepository.getOne(fields)
+    this._checkEntityExsits(form)
+    return form
   }
 
   async inactivate(fields){

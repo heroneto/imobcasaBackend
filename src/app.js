@@ -4,7 +4,7 @@ const {
   LeadController,
   LoginController,
   TaskController,
-  UserCampaignController,
+  UserFormController,
   UserController,
   WebhookController,
   TokensController
@@ -20,7 +20,7 @@ async function app() {
       new FormController(),
       new UserController(),
       new LoginController(),
-      new UserCampaignController(),
+      new UserFormController(),
       new LeadController(),
       new TaskController(),
       new WebhookController(),

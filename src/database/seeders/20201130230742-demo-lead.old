@@ -6,7 +6,7 @@
 //     name: "Demo Lead",
 //     phone: "11123456789",
 //     sourceid: 1,
-//     campaignid: 1,
+//     formid: 1,
 //     userid: 1,
 //     createdAt: new Date(),
 //     updatedAt: new Date,

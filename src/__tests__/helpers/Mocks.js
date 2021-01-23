@@ -60,12 +60,12 @@ class Mocks {
     return await jwtImplementation.generateRefreshToken(user.id, user.admin)
   }
 
-  mockLead(userid, statusid, sourceId, campaignid = null, phone = (Math.round(Math.random() * 100000000000).toString())) {
+  mockLead(userid, statusid, sourceId, formid = null, phone = (Math.round(Math.random() * 100000000000).toString())) {
     const fakeLead = {
       name: "Fake Lead",
       phone,
       sourceid: sourceId,
-      campaignid: campaignid,
+      formid: formid,
       userid: userid,
       active: true,
       statusid: statusid,
@@ -74,10 +74,10 @@ class Mocks {
     return fakeLead
   }
 
-  mockUsersCampaings(userid, campaignid){
+  mockUserForm(userid, formid){
     return {
       userid,
-      campaignid
+      formid
     }
   }
 
@@ -118,7 +118,7 @@ class Mocks {
       name: "fakeFormName",
       active: true,
       fbCreatedDate: new Date(),
-      fbFormId: "Fake FB Campaign ID",
+      fbFormId: "Fake FB Form ID",
     }
     return fakeForm
   }

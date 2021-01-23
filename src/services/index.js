@@ -4,7 +4,7 @@ module.exports = {
   FormService: require('./FormService'),
   LeadService: require('./LeadService'),
   TaskService: require('./TaskService'),
-  UserCampaignService: require('./UserCampaignService'),
+  UserFormService: require('./UserFormService'),
   UserService: require('./UserService'),
   WebhookService: require('./WebhookService'),
   XHubSignatureService: require('./XHubSignatureService'),

@@ -86,7 +86,7 @@ O Lead pode ter, ao longo do histórico, várias tarefas, mas apenas uma deve es
 
 
 
-## UsersCampaigns
+## UsersForms
 Representa uma ligação de usuários com as campanhas, utilizada para avaliação do Score dos usuários com as campanhas.
 - **[x]Feat [x]Test** Update(enabled, lastLeadRecevedTime, score)
 - **[x]Feat [x]Test** Alteração de enabled para True

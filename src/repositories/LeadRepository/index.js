@@ -42,7 +42,7 @@ class LeadRepository {
     lead.name = fields.name
     lead.phone = fields.phone
     lead.sourceid = fields.sourceid
-    lead.campaignid = fields.campaignid
+    lead.formid = fields.formid
     lead.userid = fields.userid
     lead.active = fields.active
     lead.statusid = fields.statusid

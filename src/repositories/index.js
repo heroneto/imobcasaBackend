@@ -5,7 +5,7 @@ module.exports = {
   LeadStatusRepository: require('./LeadStatusRepository'),
   TaskRepository: require('./TaskRepository'),
   TaskTypeRepository: require('./TaskTypeRepository'),
-  UserCampaignRepository: require('./UserCampaignRepository'),
+  UserFormRepository: require('./UserFormRepository'),
   UserRepository: require('./UserRepository'),
   TokenRepository: require('./TokenRepository')
 }
