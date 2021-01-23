@@ -88,14 +88,8 @@ class LeadService extends Service{
     }
     
     const usercampaign = await this._userCampaignRepository.getOne({
-      name, 
-      phone, 
-      sourceid, 
       campaignid, 
       userid, 
-      active, 
-      statusid, 
-      negociationStartedAt
     })
     await this._checkEntityExsits(usercampaign, "User does not exists in campaign")
 
