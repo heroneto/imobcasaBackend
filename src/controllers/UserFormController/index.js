@@ -5,8 +5,8 @@ const { internalError } = require('../../helpers/Protocols')
 const { serverError } = require('../../helpers/Errors')
 
 class UserFormController{
-  path = "/form/:formid/user/:userid"
-  listPath = "/form/:formid/users/"  
+  path = "/forms/:formid/user/:userid"
+  listPath = "/forms/:formid/users/"  
   routes = Router()
   constructor() {
     this.load()
