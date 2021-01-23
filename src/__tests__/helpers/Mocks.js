@@ -92,19 +92,23 @@ class Mocks {
     return [
       {
         name: 'To do',
-        description: 'Represents an item that is in the queue for execution'
+        description: 'Represents an item that is in the queue for execution',
+        order: 1,
       },
       {
         name: 'Negociação em andamento',
         description: 'A negocaiação deste Lead está em andamento',
+        order: 2,
       },
       {
         name: 'Negociação concluída',
         description: 'A negociação deste Lead foi concluída com sucesso',
+        order: 3,
       },
       {
         name: 'Arquivado',
         description: 'Este Lead está arquivado.',
+        order: 0,
       }
     ]
   }

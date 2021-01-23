@@ -20,6 +20,10 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
+      },
+      order: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
       }
     });
   },
