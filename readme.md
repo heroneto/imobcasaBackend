@@ -56,10 +56,22 @@ O Lead representa um cliente em potencial, O Lead deve ser atrelado sempre à um
 
 ## FB Webhook
 - **[x]Feat [x]Test** Inscrição do App
-- **[ ]Feat [ ]Test** Recebimento de Lead via Webhook API Facebook - [Documentação de Webhook do Facebook](https://developers.facebook.com/docs/graph-api/webhooks/getting-started)
-- **[ ]Feat [ ]Test** Coleta de informações referentes ao Lead recebido via Webhook API Facebook
-- **[ ]Feat [ ]Test** Coleta de informações referentes a campanha do Lead recebido via Webhook API Facebook
 - **[ ]Feat [ ]Test** Distrubuição de Lead recebido via Webhook API Facebook com base em Score dos usuários da campanha: *Algoritmo será definido ainda*
+
+## FB Webhook - Leads
+- **[x]Feat [x]Test** Recebimento de Lead via Webhook API Facebook - [Documentação de Webhook do Facebook](https://developers.facebook.com/docs/graph-api/webhooks/getting-started)
+- **[x]Feat [x]Test** Validar X-Auth da requisição
+- **[x]Feat [x]Test** Validar campos do Lead recebido.
+- **[ ]Feat [ ]Test** Coletar Lead via ID recebido.
+- **[ ]Feat [ ]Test** Coleta de informações referentes a campanha do Lead recebido via Webhook API Facebook
+
+## FB Access Token
+- **[ ]Feat [ ]Test** Criação de Token: Deve criar um Token novo caso não exista
+- **[ ]Feat [ ]Test** Atualização de Token: Deve atualizar um token existente mediante ID recebido.
+- **[ ]Feat [ ]Test** Remoção de Token: Deve poder remover o token.
+- **[ ]Feat [ ]Test** Leitura de Token: Deve ler o token cadastrado.
+- **[ ]Feat [ ]Test** checagem de Token: Deve poder checar o token passado para verificar se é válido.
+
 
 
 ## Tarefa
