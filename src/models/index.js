@@ -18,8 +18,7 @@ const db = {
     LeadSource: sequelize.import("./leadsource"),
     LeadStatus: sequelize.import("./leadstatus"),
     Task: sequelize.import("./task"),
-    TaskType: sequelize.import("./tasktype"),
-    Token: sequelize.import('./tokens')
+    TaskType: sequelize.import("./tasktype")
 }
 
 Object.keys(db).forEach(model => {

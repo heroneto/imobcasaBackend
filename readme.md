@@ -55,7 +55,6 @@ O Lead representa um cliente em potencial, O Lead deve ser atrelado sempre à um
 
 
 ## FB Webhook
-- **[x]Feat [x]Test** Inscrição do App
 - **[ ]Feat [ ]Test** Recebimento de Lead via Webhook API Facebook - [Documentação de Webhook do Facebook](https://developers.facebook.com/docs/graph-api/webhooks/getting-started)
 - **[ ]Feat [ ]Test** Coleta de informações referentes ao Lead recebido via Webhook API Facebook
 - **[ ]Feat [ ]Test** Coleta de informações referentes a campanha do Lead recebido via Webhook API Facebook
