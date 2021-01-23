@@ -180,6 +180,10 @@ class Mocks {
       ]
     }
   }
+
+  mockFBMarketingToken(){
+    return "EAAHZB7hHSoq4BAFsFeAHpONhIkOB4iz64iGaqVU6EvmEfgz0lKnRrVnKDBkDCB5UXkqj8ZCeVFQIw3D3YPfYpsxTZC6movOIKQNI6HKwe6AhfuZAUGJcFvndhpcizTIvWEGo11YSXw75GuDuVctjHN5XJ7VqxMMZD"
+  }
 }
 
 module.exports = Mocks
