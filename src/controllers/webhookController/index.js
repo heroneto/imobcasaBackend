@@ -8,7 +8,7 @@ const { XHubSignatureMiddleware } = require('../../middlewares')
 
 class LeadWebhookController {
   routes = Router()
-  basePath = "/leads/facebook"
+  basePath = "/webhook/leads"
 
   constructor() {
     this._xHubSignatureMiddleware = new XHubSignatureMiddleware()

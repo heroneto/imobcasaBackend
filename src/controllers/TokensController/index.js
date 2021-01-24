@@ -9,7 +9,7 @@ const { AuthenticationMiddleware, AuthorizationMiddleware } = require('../../mid
 
 class TokensController {
   routes = Router()
-  basePath = "/app/config/token"
+  basePath = "/config/token"
 
   constructor(){
     this._authenticationMiddleware  = new AuthenticationMiddleware()
