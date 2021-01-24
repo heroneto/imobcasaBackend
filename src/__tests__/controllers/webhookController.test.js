@@ -6,22 +6,56 @@ const mocks = new Mocks()
 const ModelsExpected = require('../helpers/ModelsExpected')
 const modelsExpected = new ModelsExpected()
 const databaseSetup = require('../../database')
-const { Token } = require('../../models')
+const { Token, UsersForms, User, Form, Lead, LeadSource, LeadStatus } = require('../../models')
 
 
 
 describe("WEBHOOK CONTROLLER Tests", () => {
+  let users = []
+  let usersForms = []
+  let form
+  const fakeFormID = mocks.mockFakeFormID()
+
   beforeAll(async () => {
     await databaseSetup()
-    await Token.destroy({where: {}})   
+    await Token.destroy({where: {}})
+    await UsersForms.destroy({where: {}})
+    await Lead.destroy({where:{}})
+    await LeadSource.destroy({where: {}})
+    await LeadStatus.destroy({where: {}})
+    await Form.destroy({where: {}})
+    await User.destroy({where: {}})
+    
+    const statusMocks = mocks.mockLeadStatus()
+    for (const mock of statusMocks) {
+      await LeadStatus.create(mock)
+    }
+    await LeadSource.create(mocks.mockLeadSource("Facebook"))
+
     const tokenData = {
       fb_marketing_token: mocks.mockFBMarketingToken()
     }  
     await Token.create(tokenData)
+    users.push(await User.create(mocks.mockUser(false, "mockedUser1")))
+    users.push(await User.create(mocks.mockUser(false, "mockedUser2")))
+    users.push(await User.create(mocks.mockUser(false, "mockedUser3")))
+    users.push(await User.create(mocks.mockUser(false, "mockedUser4")))
+    users.push(await User.create(mocks.mockUser(false, "mockedUser5")))
+    form = await Form.create(mocks.mockForm(fakeFormID))
+    
+    users.forEach(async (user) => {
+      usersForms.push(await UsersForms.create(mocks.mockUserForm(user.id, form.id)))
+    })
   })
 
   afterAll(async () => {
-    await Token.destroy({where: {}})   
+    await Token.destroy({where: {}})
+    await UsersForms.destroy({where: {}})
+    await Lead.destroy({where:{}})
+    await LeadSource.destroy({where: {}})
+    await LeadStatus.destroy({where: {}})
+    await Form.destroy({where: {}})
+    await User.destroy({where: {}})
 
   })
 
@@ -144,13 +178,14 @@ describe("WEBHOOK CONTROLLER Tests", () => {
       await webhookController.addLead(req, res)
       expect(res.status).not.toHaveBeenCalledWith(200)
     })
-    // test('Should return 200 if valid leadId has been provided', async () => {
-    //   const res = mocks.mockRes()
-    //   const body = mocks.mockLeadWebhook(null, null, mocks.mockValidLeadID())
+    test('Should return 200 if valid leadId has been provided', async () => {
+      const res = mocks.mockRes()
+      const body = mocks.mockLeadWebhook(undefined, fakeFormID, mocks.mockValidLeadID())
       
-    //   const req = mocks.mockReq(body)
-    //   await webhookController.addLead(req, res)
-    //   expect(res.status).toHaveBeenCalledWith(200)
-    // })
+      const req = mocks.mockReq(body)
+      await webhookController.addLead(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.json).toHaveBeenCalledWith(expect.arrayContaining([expect.objectContaining(modelsExpected.leadModel())]))
+    })
   })
 })
