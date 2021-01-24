@@ -35,7 +35,8 @@ module.exports = {
         references: {
           model: 'users',
           key: 'id'
-        }
+        },
+        allowNull: true
       },
       active: {
         type: Sequelize.BOOLEAN,
