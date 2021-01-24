@@ -43,6 +43,14 @@ class FormRepository {
 
   }
 
+  async getByFBFormID(fbFormId){  
+    return await Form.findOne({
+      where: {
+        fbFormId
+      }
+    })
+  }
+
 }
 
 module.exports = FormRepository

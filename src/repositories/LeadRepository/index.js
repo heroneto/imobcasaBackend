@@ -84,6 +84,15 @@ class LeadRepository {
       }
     })
   }
+
+  async findOrCreateLead(fields){
+    return await Lead.findOrCreate({
+      where: {
+        phone: fields.phone
+      },
+      defaults: fields      
+    })
+  }
 }
 
 module.exports = LeadRepository

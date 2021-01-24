@@ -1,4 +1,4 @@
-const { UsersForms } = require('../../models')
+const { UsersForms, Form } = require('../../models')
 
 
 class UserFormRepository{
@@ -53,6 +53,15 @@ class UserFormRepository{
     return await userForm.save()
   }
 
+  async getUserToDistibute(formId){
+    return await UsersForms.findOne({
+      where: {
+        enabled: true,
+        formid: formId,
+      },
+      order: [['lastLeadReceivedTime', 'asc']]
+    })
+  }
 }
 
 
