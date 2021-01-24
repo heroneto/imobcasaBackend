@@ -36,9 +36,9 @@ class Mocks {
     }
   }
 
-  mockUser(admin = true) {
+  mockUser(admin = true, username = "mockedUser") {
     return {
-      username: "validUser",
+      username: username,
       fullName: "ValidFullName",
       email: "valid@email.com",
       password: "validPassword",
@@ -81,9 +81,9 @@ class Mocks {
     }
   }
 
-  mockLeadSource() {
+  mockLeadSource(name="Manual") {
     return {
-      name: "Manual",
+      name,
       active: true,
     }
   }
@@ -113,12 +113,12 @@ class Mocks {
     ]
   }
 
-  mockForm() {
+  mockForm(fbFormId = "FAKE FORM ID") {
     const fakeForm = {
       name: "fakeFormName",
       active: true,
       fbCreatedDate: new Date(),
-      fbFormId: "Fake FB Form ID",
+      fbFormId
     }
     return fakeForm
   }
@@ -191,6 +191,11 @@ class Mocks {
   mockValidLeadID(){
     return "1176190902783627"
   }
+
+  mockFakeFormID(){
+    return Math.floor(Math.random() * 10**16).toString()
+  }
+
 }
 
 module.exports = Mocks
