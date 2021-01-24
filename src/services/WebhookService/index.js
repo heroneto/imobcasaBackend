@@ -143,7 +143,8 @@ class LeadWebhookService extends Service {
     const leadAndFormIds = this._extractLeadAndFormIds(fields)
     const tokens = await this._tokenRepository.getTokens()
     const token = tokens[0]
-    const result = await this._requestLeadData(leadAndFormIds, token.fb_marketing_token)
+    this._checkEntityExsits(token, "accessToken")
+    const result = await this._requestLeadData(leadAndFormIds, token?.fb_marketing_token)
     let leadsData = this._extractLeadData(result)
     leadsData = this._mergeFormAndLeadData(leadAndFormIds, leadsData)
     
@@ -153,17 +154,20 @@ class LeadWebhookService extends Service {
     let leadsCreated = []
     for(const lead of leadsData){
       const form = await this._formRepository.getByFBFormID(lead?.fbFormID)
-      const usersForms = await this._userFormRepository.getUserToDistibute(form?.id)
-      lead.userid = usersForms?.userid
-      lead.formid = form?.id
-      lead.sourceid = leadSourceID
-      lead.statusid = leadStatusID
-      Reflect.deleteProperty(lead, 'leadgenId')
-      Reflect.deleteProperty(lead, 'fbFormID')
-      lead.active = true      
-      lead.negociationStartedAt = Date.now()
-      const leadCreated = await this._leadRepository.findOrCreateLead(lead)
-      leadsCreated.push(leadCreated[0])
+      if(form){
+        const usersForms = await this._userFormRepository.getUserToDistibute(form?.id)        
+        lead.userid = usersForms?.userid ? usersForms?.userid : null
+        lead.formid = form?.id
+        lead.sourceid = leadSourceID
+        lead.statusid = leadStatusID
+        Reflect.deleteProperty(lead, 'leadgenId')
+        Reflect.deleteProperty(lead, 'fbFormID')
+        lead.active = true      
+        lead.negociationStartedAt = Date.now()
+        const leadCreated = await this._leadRepository.findOrCreateLead(lead)
+        leadsCreated.push(leadCreated[0])
+      }
+
     }
 
 
