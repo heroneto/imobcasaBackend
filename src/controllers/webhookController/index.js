@@ -3,11 +3,12 @@ const { internalError } = require('../../helpers/Protocols')
 const { serverError } = require('../../helpers/Errors')
 const { WebhookService } = require('../../services')
 const ServiceException = require('../../helpers/Exceptions/ServiceException')
+const AxiosException = require('../../helpers/Exceptions/AxiosException')
 const { XHubSignatureMiddleware } = require('../../middlewares')
 
 class LeadWebhookController {
   routes = Router()
-  basePath = "/leads/facebook"
+  basePath = "/webhook/leads"
 
   constructor() {
     this._xHubSignatureMiddleware = new XHubSignatureMiddleware()
@@ -47,6 +48,11 @@ class LeadWebhookController {
       const result = await webhookService.addLead(request.body)
       return response.status(200).json(result)
     } catch (err) {
+      if(AxiosException(err)){
+        const { status } = err.response
+        const { message } = err.response.data.error
+        return response.status(status).json(message)
+      }
       if (err instanceof ServiceException) {
         const { statusCode, message } = err
         return response.status(statusCode).json(message)

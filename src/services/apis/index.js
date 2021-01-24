@@ -1,3 +1,4 @@
 module.exports = {
-  checkToken: require('./checkToken')
+  checkToken: require('./checkToken'),
+  getLead: require('./getLead')
 }

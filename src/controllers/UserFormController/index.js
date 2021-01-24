@@ -1,12 +1,12 @@
 const { Router } = require('express')
-const { UserCampaignService } = require('../../services/')
+const { UserFormService } = require('../../services')
 const ServiceException = require('../../helpers/Exceptions/ServiceException')
 const { internalError } = require('../../helpers/Protocols')
 const { serverError } = require('../../helpers/Errors')
 
-class UserCampaignController{
-  path = "/campaign/:campaignid/user/:userid"
-  listPath = "/campaign/:campaignid/users/"  
+class UserFormController{
+  path = "/forms/:formid/user/:userid"
+  listPath = "/forms/:formid/users/"  
   routes = Router()
   constructor() {
     this.load()
@@ -23,8 +23,8 @@ class UserCampaignController{
 
   async list(request, response){
     try {
-      const userCampaignService = new UserCampaignService()
-      const result = await userCampaignService.list(request.params)
+      const userFormService = new UserFormService()
+      const result = await userFormService.list(request.params)
       return response.status(200).json(result)
     } catch (err) {
       if (err instanceof ServiceException) {
@@ -41,8 +41,8 @@ class UserCampaignController{
 
   async add(request,response){
     try {
-      const userCampaignService = new UserCampaignService()
-      const result = await userCampaignService.add(request.params)
+      const userFormService = new UserFormService()
+      const result = await userFormService.add(request.params)
       return response.status(200).json(result)
     } catch (err) {
       if (err instanceof ServiceException) {
@@ -59,8 +59,8 @@ class UserCampaignController{
 
   async remove(request,response){
     try {
-      const userCampaignService = new UserCampaignService()
-      const result = await userCampaignService.remove(request.params)
+      const userFormService = new UserFormService()
+      const result = await userFormService.remove(request.params)
       return response.status(200).json(result)
     } catch (err) {
       if (err instanceof ServiceException) {
@@ -77,8 +77,8 @@ class UserCampaignController{
 
   async update(request,response){
     try {
-      const userCampaignService = new UserCampaignService()
-      const result = await userCampaignService.update({
+      const userFormService = new UserFormService()
+      const result = await userFormService.update({
         ...request.params,
         ...request.body
       })
@@ -98,8 +98,8 @@ class UserCampaignController{
 
   async enable(request, response){
     try {
-      const userCampaignService = new UserCampaignService()
-      const result = await userCampaignService.enable(request.params)
+      const userFormService = new UserFormService()
+      const result = await userFormService.enable(request.params)
       return response.status(200).json(result)
     } catch (err) {
       if (err instanceof ServiceException) {
@@ -116,8 +116,8 @@ class UserCampaignController{
 
   async disable(request, response){
     try {
-      const userCampaignService = new UserCampaignService()
-      const result = await userCampaignService.disable(request.params)
+      const userFormService = new UserFormService()
+      const result = await userFormService.disable(request.params)
       return response.status(200).json(result)
     } catch (err) {
       if (err instanceof ServiceException) {
@@ -133,4 +133,4 @@ class UserCampaignController{
   }
 }
 
-module.exports = UserCampaignController
+module.exports = UserFormController

@@ -1,12 +1,12 @@
-const {LoginController} = require('../controllers')
+const {LoginController} = require('../../controllers')
 const loginController = new LoginController()
-const { invalidParamError, missingParamError } = require('../helpers/Errors')
-const {User} = require('../models')
-const Mocks = require('./helpers/Mocks')
-const ModelsExpected = require('./helpers/ModelsExpected')
+const { invalidParamError, missingParamError } = require('../../helpers/Errors')
+const {User} = require('../../models')
+const Mocks = require('../helpers/Mocks')
+const ModelsExpected = require('../helpers/ModelsExpected')
 const mocks = new Mocks()
 const modelsExpected = new ModelsExpected
-const databaseSetup = require('../database')
+const databaseSetup = require('../../database')
 
 describe('AUTH CONTROLLER: tests', () => {
   let user

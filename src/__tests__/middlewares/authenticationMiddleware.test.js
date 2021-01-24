@@ -1,9 +1,9 @@
-const AuthMiddleware = require("../middlewares/AuthenticationMiddleware")
+const AuthMiddleware = require("../../middlewares/AuthenticationMiddleware")
 const authMiddleware = new AuthMiddleware()
-const { invalidParamError, missingParamError } = require('../helpers/Errors')
-const { User } = require('../models')
-const databaseSetup = require('../database')
-const Mocks = require('./helpers/Mocks')
+const { invalidParamError, missingParamError } = require('../../helpers/Errors')
+const { User } = require('../../models')
+const databaseSetup = require('../../database')
+const Mocks = require('../helpers/Mocks')
 const mocks = new Mocks()
 
 

@@ -1,8 +1,8 @@
 'use strict';
 const { v4: uuidV4 } = require('uuid')
 module.exports = (sequelize, DataTypes) => {
-  const usersCampaigns = sequelize.define('usersCampaigns', {
-    campaignid: DataTypes.UUID,
+  const usersForms = sequelize.define('usersForms', {
+    formid: DataTypes.UUID,
     userid: DataTypes.UUID,
     lastLeadReceivedTime: DataTypes.DATE,
     score: DataTypes.INTEGER,
@@ -12,14 +12,14 @@ module.exports = (sequelize, DataTypes) => {
     }
   }, {
     hooks: {
-      beforeCreate: (usersCampaigns) => {
-        usersCampaigns.id = uuidV4()
-        usersCampaigns.lastLeadReceivedTime = Date.now()
+      beforeCreate: (usersForms) => {
+        usersForms.id = uuidV4()
+        usersForms.lastLeadReceivedTime = Date.now()
       }
     }    
   });
-  usersCampaigns.associate = function(models) {
+  usersForms.associate = function(models) {
     // associations can be defined here
   };
-  return usersCampaigns;
+  return usersForms;
 };

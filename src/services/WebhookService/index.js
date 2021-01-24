@@ -1,113 +1,190 @@
 const Service = require('../Service')
+const { getLead } = require('../apis')
+const { 
+    TokenRepository, 
+    UserFormRepository, 
+    FormRepository, 
+    LeadSourceRepository, 
+    LeadStatusRepository,
+    LeadRepository
+  } = require('../../repositories')
 
 class LeadWebhookService extends Service {
   _subRequiredFields = ['hub.mode', 'hub.verify_token', 'hub.challenge']
-  _addLeadValueRequiredFields = [ 
+  _addLeadValueRequiredFields = [
     "form_id",
     "leadgen_id",
     "created_time",
     "page_id"
-   ]
+  ]
   constructor() {
     super()
+    this._tokenRepository = new TokenRepository()
+    this._userFormRepository = new UserFormRepository()
+    this._formRepository = new FormRepository()
+    this._leadSourceRepository = new LeadSourceRepository()
+    this._leadStatusRepository = new LeadStatusRepository()
+    this._leadRepository = new LeadRepository()
   }
 
 
 
-  _checkEntryField(fields){
-    const { entry } = fields    
+  _checkEntryField(fields) {
+    const { entry } = fields
     this._checkFieldExists(entry, 'entry')
-    if(entry.length === 0){
+    if (entry.length === 0) {
       this._throwInvalidParamError("entry")
     }
   }
 
-  _checkChangesField(fields){
+  _checkChangesField(fields) {
     const { entry: entries } = fields
-    for(const entry of entries){
+    for (const entry of entries) {
       const { changes } = entry
       this._checkFieldExists(changes, 'changes')
-      if(changes.length === 0){
+      if (changes.length === 0) {
         this._throwInvalidParamError("changes")
       }
     }
 
   }
 
-  _checkValueField(fields){
+  _checkValueField(fields) {
     const { entry: entries } = fields
-    for(const entry of entries){
+    for (const entry of entries) {
       const { changes } = entry
-      for(const change of changes){
+      for (const change of changes) {
         const { value } = change
         this._checkFieldExists(value, 'value')
       }
     }
   }
 
-  _checkRequiredValueFields(fields){
+  _checkRequiredValueFields(fields) {
     const { entry: entries } = fields
-    for(const entry of entries){
+    for (const entry of entries) {
       const { changes } = entry
-      for(const change of changes){
+      for (const change of changes) {
         const { value } = change
         this._checkRequiredFields(this._addLeadValueRequiredFields, value)
       }
     }
   }
 
-  _getLeadIds(fields){
-    const ids = []
+  _extractLeadAndFormIds(fields){
+    const data = []
     const { entry: entries } = fields
-    for(const entry of entries){
+    for (const entry of entries) {
       const { changes } = entry
-      for(const change of changes){
+      for (const change of changes) {
         const { value } = change
-        ids.push(value.leadgen_id)
+        data.push({
+          leadgenId: value.leadgen_id,
+          fbFormID: value.form_id
+        })
       }
     }
-    return ids
+    return data
   }
 
-  async _requestLeadData(ids = []){
-    for(const id of ids){
+  _mergeFormAndLeadData(forms = [], leadData = []){
+    return leadData.map(lead => {
+      const form = forms.find(form => form.leadgenId === lead.leadgenId)
+      return {
+        ...lead,
+        fbFormID: form.fbFormID
+      }
+    })
+  }
+
+  async _requestLeadData(leadsData = [], token) {
+    let results = []
+    for (const lead of leadsData) {
       //call api request
+      results.push(await getLead(lead.leadgenId, token))
     }
+    return results
+  }
+
+  _extractLeadData(leadsReceived) {
+    const data = leadsReceived.map(lead => {
+      const [ fullNameField, phoneNumberField ] = lead.field_data
+      const [ name ] = fullNameField?.values
+      const [ phone ] = phoneNumberField?.values
+      return {
+        leadgenId: lead.id,
+        name,
+        phone
+      }
+    })
+    return data
+  }
+  
+  _mergeLeadWithUser(leads = []){
+
   }
 
   async subscrive(fields) {
     await this._checkRequiredFields(this._subRequiredFields, fields)
-    if(fields['hub.mode'] !== "subscrive"){
+    if (fields['hub.mode'] !== "subscrive") {
       this._throwInvalidParamError('hub.mode')
     }
-    if(fields['hub.verify_token'] !== process.env.FB_SUB_TOKEN){
+    if (fields['hub.verify_token'] !== process.env.FB_SUB_TOKEN) {
       this._throwInvalidParamError('hub.verify_token')
     }
     return fields['hub.challenge']
   }
 
-  async addLead(fields){
-    
-    /*
-      1 - Validar existência de Entry
-      2 - Validar tamanho do entry
-      Para cada entry:
-        1 - Validar existência de changes
-        2 - Validar tamanho do Changes
-        Para cada Changes: 
-          1 - Validar exitência de value
-          dentro de value:
-            1 - Validar existência de requiredFields
-    */
+  async addLead(fields) {
     this._checkEntryField(fields)
     this._checkChangesField(fields)
     this._checkValueField(fields)
     this._checkRequiredValueFields(fields)
-    const leadsIds = this._getLeadIds(fields)
-    const leadsData = this._requestLeadData(leadIds)
+    const leadAndFormIds = this._extractLeadAndFormIds(fields)
+    const tokens = await this._tokenRepository.getTokens()
+    const token = tokens[0]
+    this._checkEntityExsits(token, "accessToken")
+    const result = await this._requestLeadData(leadAndFormIds, token?.fb_marketing_token)
+    let leadsData = this._extractLeadData(result)
+    leadsData = this._mergeFormAndLeadData(leadAndFormIds, leadsData)
+    
+    const { id: leadSourceID }  = await this._leadSourceRepository.getFacebookSourceID()
+    const { id: leadStatusID }  = await this._leadStatusRepository.getBacklogStatusID()
+
+    let leadsCreated = []
+    for(const lead of leadsData){
+      const form = await this._formRepository.getByFBFormID(lead?.fbFormID)
+      if(form){
+        const usersForms = await this._userFormRepository.getUserToDistibute(form?.id)        
+        lead.userid = usersForms?.userid ? usersForms?.userid : null
+        lead.formid = form?.id
+        lead.sourceid = leadSourceID
+        lead.statusid = leadStatusID
+        Reflect.deleteProperty(lead, 'leadgenId')
+        Reflect.deleteProperty(lead, 'fbFormID')
+        lead.active = true      
+        lead.negociationStartedAt = Date.now()
+        const leadCreated = await this._leadRepository.findOrCreateLead(lead)
+        leadsCreated.push(leadCreated[0])
+      }
+
+    }
 
 
-    return fields
+    return leadsCreated
+
+    /**
+     * 1 - Extrair Ids dos Leads para coleta na API
+     * 2 - Coletar Token para coleta na API
+     * 3 - Resultado da API
+     * 4 - Dados dos Leads extraídos da API
+     * 5 - Dados dos Leads unificados com Form
+     * 6 - Para cada Lead
+     *  1 - coletar FormID pelo fbFormID
+     *  2 - Atribuir UserID com base em regra de distribuição.
+     *  3 - add: formid, sourceid, statusid,  active=true, negociationStartedAt
+     * 7 - Retornar Leads
+     */
   }
 
 }

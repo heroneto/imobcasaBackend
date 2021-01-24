@@ -3,14 +3,13 @@ const { v4:uuidV4 } = require('uuid')
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.bulkInsert('Campaigns', [
+    return queryInterface.bulkInsert('Forms', [
       {
         id: uuidV4(),
         name: 'Penha',
         active: 1,
         fbCreatedDate: new Date(),
-        fbCampaignId: "_123IDteste",
-        fbAdAccountId: "_123IDteste",
+        fbFormId: "_123IDteste",
         createdAt: new Date(),
         updatedAt: new Date()
       }
@@ -18,6 +17,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('Campaigns');
+    return queryInterface.dropTable('Forms');
   }
 };

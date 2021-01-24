@@ -1,7 +1,7 @@
-const { XHubSignatureMiddleware } = require('../middlewares')
+const { XHubSignatureMiddleware } = require('../../middlewares')
 const xHubSignatureMiddleware = new XHubSignatureMiddleware()
-const { invalidParamError, missingParamError, missingBodyContent } = require('../helpers/Errors')
-const Mocks = require('./helpers/Mocks')
+const { invalidParamError, missingParamError, missingBodyContent } = require('../../helpers/Errors')
+const Mocks = require('../helpers/Mocks')
 const mocks = new Mocks()
 
 

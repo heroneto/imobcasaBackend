@@ -1,13 +1,13 @@
-const { TokensController } = require('../controllers')
+const { TokensController } = require('../../controllers')
 const tokensController = new TokensController()
-const { invalidParamError, missingParamError, conflictError } = require('../helpers/Errors')
-const Mocks = require('./helpers/Mocks')
-const ModelsExpected = require('./helpers/ModelsExpected')
+const { invalidParamError, missingParamError, conflictError } = require('../../helpers/Errors')
+const Mocks = require('../helpers/Mocks')
+const ModelsExpected = require('../helpers/ModelsExpected')
 const mocks = new Mocks()
 const modelsExpected = new ModelsExpected
-const databaseSetup = require('../database')
-const { Token } = require('../models')
-const noContentError = require('../helpers/Errors/no-content-error')
+const databaseSetup = require('../../database')
+const { Token } = require('../../models')
+const noContentError = require('../../helpers/Errors/no-content-error')
 
 
 

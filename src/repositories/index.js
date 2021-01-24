@@ -1,11 +1,11 @@
 module.exports = {
-  CampaignRepository: require('./CampaignRepository'),
+  FormRepository: require('./FormRepository'),
   LeadRepository: require('./LeadRepository'),
   LeadSourceRepository: require('./LeadSourceRepository'),
   LeadStatusRepository: require('./LeadStatusRepository'),
   TaskRepository: require('./TaskRepository'),
   TaskTypeRepository: require('./TaskTypeRepository'),
-  UserCampaignRepository: require('./UserCampaignRepository'),
+  UserFormRepository: require('./UserFormRepository'),
   UserRepository: require('./UserRepository'),
   TokenRepository: require('./TokenRepository')
 }

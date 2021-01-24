@@ -1,13 +1,13 @@
-const {Campaign} = require('../../models')
+const {Form} = require('../../models')
 
 
-class CampaignRepository {
+class FormRepository {
 
   async create (fields) {
-    return await Campaign.create(fields)
+    return await Form.create(fields)
   }
   async getOne(fields){
-    return await Campaign.findOne({
+    return await Form.findOne({
       where: {
         id: fields.id
       }
@@ -15,11 +15,11 @@ class CampaignRepository {
   }
 
   async list(){
-    return await Campaign.findAll()
+    return await Form.findAll()
   }
 
   async inactivate(fields){
-    return await Campaign.update({
+    return await Form.update({
       active: false
     }, {
       where: {
@@ -28,7 +28,7 @@ class CampaignRepository {
     })    
   }
   async activate(fields){
-    return await Campaign.update({
+    return await Form.update({
       active: true
     }, {
       where: {
@@ -43,6 +43,14 @@ class CampaignRepository {
 
   }
 
+  async getByFBFormID(fbFormId){  
+    return await Form.findOne({
+      where: {
+        fbFormId
+      }
+    })
+  }
+
 }
 
-module.exports = CampaignRepository
+module.exports = FormRepository
