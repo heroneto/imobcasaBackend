@@ -1,5 +1,5 @@
-const { internalError } = require('../../helpers/protocols')
-const { serverError } = require('../../helpers/errors')
+const { internalError } = require('../../helpers/Protocols')
+const { serverError } = require('../../helpers/Errors')
 const { XHubSignatureService } = require('../../services')
 const ServiceException = require('../../helpers/Exceptions/ServiceException')
 
