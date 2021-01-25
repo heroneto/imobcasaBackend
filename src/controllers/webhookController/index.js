@@ -28,7 +28,7 @@ class LeadWebhookController {
     try {
       const webhookService = new WebhookService()
       const result = await webhookService.subscrive(request.query)
-      return response.status(200).json(result)
+      return response.status(200).send(result)
     } catch (err) {
       if (err instanceof ServiceException) {
         const { statusCode, message } = err
