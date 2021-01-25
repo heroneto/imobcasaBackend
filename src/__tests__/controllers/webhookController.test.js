@@ -92,7 +92,7 @@ describe("WEBHOOK CONTROLLER Tests", () => {
         const req = mocks.mockReq(null, mockedQuery)
         await webhookController.subscrive(req, res)
         expect(res.status).toHaveBeenCalledWith(200)
-        expect(res.json).toHaveBeenCalledWith(mockedQuery['hub.challenge'])
+        expect(res.send).toHaveBeenCalledWith(mockedQuery['hub.challenge'])
     })
   })
   describe("ADD LEAD Tests", () => {
