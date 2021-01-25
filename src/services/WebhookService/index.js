@@ -173,7 +173,7 @@ class LeadWebhookService extends Service {
 
     let leadsCreated = []
     for(const lead of leadsData){
-      const form = await this._formRepository.getByFBFormID(lead?.fbFormID)
+      const form = await this._formRepository.getByFBFormID(lead.fbFormID)
       if(form){
         const usersForms = await this._getUserToDistribute(form.id)
         const leadNormalized = this._normalizeLeadData(
