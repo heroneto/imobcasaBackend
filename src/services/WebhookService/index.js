@@ -181,7 +181,7 @@ class LeadWebhookService extends Service {
             leadStatusID, 
             leadSourceID, 
             form.id, 
-            usersForms?.userid ? usersForms?.userid : null
+            usersForms.userid ? usersForms.userid : null
             )
         const leadCreated = await this._leadRepository.findOrCreateLead(leadNormalized)
         leadsCreated.push(leadCreated[0])
