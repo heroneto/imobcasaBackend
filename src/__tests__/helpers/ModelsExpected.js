@@ -37,6 +37,21 @@ class ModelsExpected {
     }
   }
 
+  facebookPageFormModel(){
+    return {
+     after: expect.any(String),
+     next: expect.any(String),
+     forms: expect.arrayContaining([
+       expect.objectContaining({
+        id: expect.any(String),
+        locale: expect.any(String),
+        name: expect.any(String),
+        status: expect.any(String)
+       })
+     ])
+    }
+  }
+
   leadModel() {
     return {
       id: expect.any(String),
