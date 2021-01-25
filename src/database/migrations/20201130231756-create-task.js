@@ -38,7 +38,7 @@ module.exports = {
         type: Sequelize.DATE
       },
       tasktypeid: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.UUID,
         references: {
           model: 'tasktypes',
           key: 'id'

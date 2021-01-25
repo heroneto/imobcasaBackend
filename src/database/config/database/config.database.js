@@ -23,12 +23,19 @@ module.exports = {
     "logging": false
   },
   "production": {
-    "username": process.env.DBUSER,
-    "password": process.env.DBPASSWORD,
+    "username": process.env.DB_USER,
+    "password": process.env.DB_PASSWORD,
     "database": "imobcasa",
-    "host": process.env.DBHOST,
+    "host": process.env.DB_HOST,
     "dialect": "mysql",
     "operatorsAliases": "0",
-    "logging": false
+    "logging": false,
+    "dialectOptions": {
+      "ssl": {
+        "key": process.env.DB_SSL_KEY,
+        "cert": process.env.DB_SSL_CERT,
+        "ca": process.env.DB_SSL_CA
+      }
+    }    
   }
 }
