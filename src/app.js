@@ -7,7 +7,8 @@ const {
   UserFormController,
   UserController,
   WebhookController,
-  TokensController
+  TokensController,
+  FacebookController
 } = require('./controllers')
 
 const database = require('./database')
@@ -24,7 +25,8 @@ async function app() {
       new LeadController(),
       new TaskController(),
       new WebhookController(),
-      new TokensController()
+      new TokensController(),
+      new FacebookController()
     ])
 
     await server.listen()

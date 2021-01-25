@@ -6,5 +6,6 @@ module.exports = {
   UserFormController: require('./UserFormController'),
   UserController: require('./UserController'),
   WebhookController: require('./webhookController'),
-  TokensController: require('./TokensController')
+  TokensController: require('./TokensController'),
+  FacebookController: require('./facebookController')
 }
