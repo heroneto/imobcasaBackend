@@ -16,7 +16,7 @@ class LeadWebhookController {
   }
 
   async _load() {
-    this.routes.get(`${this.basePath}/sub`, this.subscrive)
+    this.routes.get(`${this.basePath}`, this.subscrive)
     this.routes.route(`${this.basePath}`)
       .all(this._xHubSignatureMiddleware.checkSignature)
       .post(this.addLead)
