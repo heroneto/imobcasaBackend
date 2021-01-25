@@ -6,7 +6,7 @@ const mocks = new Mocks()
 const ModelsExpected = require('../helpers/ModelsExpected')
 const modelsExpected = new ModelsExpected()
 const databaseSetup = require('../../database')
-const { Token, UsersForms, User, Form, Lead, LeadSource, LeadStatus } = require('../../models')
+const { UsersForms, User, Form, Lead, LeadSource, LeadStatus } = require('../../models')
 
 
 
@@ -18,7 +18,6 @@ describe("WEBHOOK CONTROLLER Tests", () => {
 
   beforeAll(async () => {
     await databaseSetup()
-    await Token.destroy({where: {}})
     await UsersForms.destroy({where: {}})
     await Lead.destroy({where:{}})
     await LeadSource.destroy({where: {}})
@@ -32,10 +31,6 @@ describe("WEBHOOK CONTROLLER Tests", () => {
     }
     await LeadSource.create(mocks.mockLeadSource("Facebook"))
 
-    const tokenData = {
-      fb_marketing_token: mocks.mockFBMarketingToken()
-    }  
-    await Token.create(tokenData)
     users.push(await User.create(mocks.mockUser(false, "mockedUser1")))
     users.push(await User.create(mocks.mockUser(false, "mockedUser2")))
     users.push(await User.create(mocks.mockUser(false, "mockedUser3")))
@@ -49,7 +44,6 @@ describe("WEBHOOK CONTROLLER Tests", () => {
   })
 
   afterAll(async () => {
-    await Token.destroy({where: {}})
     await UsersForms.destroy({where: {}})
     await Lead.destroy({where:{}})
     await LeadSource.destroy({where: {}})

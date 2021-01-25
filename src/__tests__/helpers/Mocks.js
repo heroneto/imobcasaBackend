@@ -1,6 +1,9 @@
 const { User } = require('../../models')
 const JwtImplementation = require('../../implementations/jwt')
 const crypto = require('crypto')
+const { getPageForms } = require('../../services/apis')
+
+
 class Mocks {
 
 
@@ -195,6 +198,13 @@ class Mocks {
   mockFakeFormID(){
     return Math.floor(Math.random() * 10**16).toString()
   }
+
+
+  async mockAfterProp(){
+    const {paging} = await getPageForms()  
+    const { cursors } = paging
+    return cursors.after
+  }  
 
 }
 

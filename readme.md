@@ -23,16 +23,16 @@ Autenticação no App para acessar.
 A autorização servirá para validar se o usuário possui acesso à telas especificas de configuração do App.
 - **[x]Feat [x]Test** Verifcar se usuário possui privilégios de administrador.
 
-## Campanhas
-A campanha representa um produto anunciado/conjunto de anuncios no facebook. É possível atrelar vários usuários na campanha para que recebam os Leads referentes àquela campanha.
-- **[x]Feat [x]Test** Cadastro de campanha
-- **[x]Feat [x]Test** Leitura de campanha
-- **[x]Feat [x]Test** Listar campanhas
-- **[x]Feat [x]Test** Adição de usuários da campanha
-- **[x]Feat [x]Test** Remoção de usuários da campanha
-- **[x]Feat [x]Test** Listar usuários da campanha
-- **[x]Feat [x]Test** Inativação de campanha
-- **[x]Feat [x]Test** ativação de campanha
+## Forms
+O formulário representa um anúncio no facebook. É possível atrelar vários usuários em um formulário para que recebam os Leads que se cadastrem através dele.
+- **[x]Feat [x]Test** Cadastro de Form
+- **[x]Feat [x]Test** Leitura de Form
+- **[x]Feat [x]Test** Listar Forms
+- **[x]Feat [x]Test** Adição de usuários da Form
+- **[x]Feat [x]Test** Remoção de usuários da Form
+- **[x]Feat [x]Test** Listar usuários da Form
+- **[x]Feat [x]Test** Inativação de Form
+- **[x]Feat [x]Test** ativação de Form
 
 
 ## Lead
@@ -56,23 +56,27 @@ O Lead representa um cliente em potencial, O Lead deve ser atrelado sempre à um
 
 ## FB Webhook
 - **[x]Feat [x]Test** Inscrição do App
-- **[ ]Feat [ ]Test** Distrubuição de Lead recebido via Webhook API Facebook com base em Score dos usuários da campanha: *Algoritmo será definido ainda*
+- **[x]Feat [x]Test** Distrubuição de Lead recebido via Webhook API Facebook.
+
 
 ## FB Webhook - Leads
 - **[x]Feat [x]Test** Recebimento de Lead via Webhook API Facebook - [Documentação de Webhook do Facebook](https://developers.facebook.com/docs/graph-api/webhooks/getting-started)
 - **[x]Feat [x]Test** Validar X-Auth da requisição
 - **[x]Feat [x]Test** Validar campos do Lead recebido.
-- **[ ]Feat [ ]Test** Coletar Lead via ID recebido.
-- **[ ]Feat [ ]Test** Coleta de informações referentes a campanha do Lead recebido via Webhook API Facebook
+- **[x]Feat [x]Test** Coletar Lead via ID recebido.
+- **[ ]Feat [ ]Test** ~~Coleta de informações referentes do Form do Lead recebido via Webhook API Facebook~~
+
+
+## FB Page Forms
+- **[x]Feat [x]Test** Lista todos os formulários da página do facebook de forma paginada
+
 
 ## FB Access Token
-- **[ ]Feat [ ]Test** Criação de Token: Deve criar um Token novo caso não exista
-- **[ ]Feat [ ]Test** Atualização de Token: Deve atualizar um token existente mediante ID recebido.
-- **[ ]Feat [ ]Test** Remoção de Token: Deve poder remover o token.
-- **[ ]Feat [ ]Test** Leitura de Token: Deve ler o token cadastrado.
-- **[ ]Feat [ ]Test** checagem de Token: Deve poder checar o token passado para verificar se é válido.
-
-
+- **[ ]Feat [ ]Test** ~~Criação de Token: Deve criar um Token novo caso não exista~~
+- **[ ]Feat [ ]Test** ~~Atualização de Token: Deve atualizar um token existente mediante ID recebido.~~
+- **[ ]Feat [ ]Test** ~~Remoção de Token: Deve poder remover o token.~~
+- **[ ]Feat [ ]Test** ~~Leitura de Token: Deve ler o token cadastrado.~~
+- **[ ]Feat [ ]Test** ~~checagem de Token: Deve poder checar o token passado para verificar se é válido.~~
 
 ## Tarefa
 A tarefa é um item que fica associado ao Lead e ao usuário, representando um agendamento ou cobrança que será/deveria ser feita.
@@ -84,13 +88,15 @@ O Lead pode ter, ao longo do histórico, várias tarefas, mas apenas uma deve es
 - **[x]Feat [x]Test** Remoção de tarefa
 - **[ ]Feat [ ]Test** ~~Alteração de status de tarefa.~~
 
-
-
 ## UsersForms
-Representa uma ligação de usuários com as campanhas, utilizada para avaliação do Score dos usuários com as campanhas.
+Representa uma ligação de usuários com os formulários, utilizada para avaliação do Score dos usuários com os formulários.
 - **[x]Feat [x]Test** Update(enabled, lastLeadRecevedTime, score)
 - **[x]Feat [x]Test** Alteração de enabled para True
 - **[x]Feat [x]Test** Alteração de enabled para false
+
+## Notificações
+Necessário pensar em como notificar usuários quando um Lead for atribuído.
+
 
 
 # Entidades
@@ -98,6 +104,15 @@ Entidades de banco de dados estão descritas no SQLDBM e no DrawIO.
 
 <img src="" />
 
+
+# ENV necessários
+- PRIVATE_KEY = Chave privada para assinatura da autenticação JWT
+- PUBLIC_KEY =Chave pública para verificação assinatura da autenticação JWT
+- FB_SUB_TOKEN = Token usado para verificar inscrição do Webhook
+- FB_APP_SECRET_KEY = APP Secret usado para requisições de dados do Lead
+- FB_APP_TOKEN = Token de autenticação para requisições de dados do Lead
+- FB_PAGE_TOKEN = TOKEN de autenticação para requisições da listagem de formulários
+- FB_PAGE_ID = ID da página do Facebook da IMOBCASA
 
 ***
 Em construção...

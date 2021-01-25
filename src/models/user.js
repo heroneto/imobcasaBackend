@@ -1,6 +1,5 @@
 'use strict';
 var bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken')
 const path = require('path')
 const { v4: uuidV4 } = require('uuid')
 require('dotenv').config({ path: path.resolve(__dirname, '../../.env') })
@@ -25,17 +24,6 @@ module.exports = (sequelize, DataTypes) => {
   });
   user.prototype.validPassword = async function (password) {
     return await bcrypt.compareSync(password, this.password)
-  }
-  user.prototype.generateToken = async function (id, admin) {
-    return await jwt.sign({ id, admin }, process.env.JWT_SECRET, {
-      expiresIn: process.env.NODE_ENV === 'production' ? '1d' : '1m',
-    });
-  }
-
-  user.prototype.generateRefreshToken = async function(id){
-    return await jwt.sign({id}, process.env.JWT_SECRET, {
-      expiresIn: process.env.NODE_ENV === 'production' ? '30d' : '1d'
-    })
   }
 
   user.associate = function (models) {
