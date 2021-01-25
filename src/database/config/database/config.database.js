@@ -32,9 +32,9 @@ module.exports = {
     "logging": false,
     "dialectOptions": {
       "ssl": {
-        "key": process.env.DB_SSL_KEY,
-        "cert": process.env.DB_SSL_CERT,
-        "ca": process.env.DB_SSL_CA
+        "key": process.env.DB_SSL_KEY.replace(/\\n/gm, '\n'),
+        "cert": process.env.DB_SSL_CERT.replace(/\\n/gm, '\n'),
+        "ca": process.env.DB_SSL_CA.replace(/\\n/gm, '\n')
       }
     }    
   }
