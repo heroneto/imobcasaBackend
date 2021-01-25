@@ -5,7 +5,7 @@ const path = require('path')
 require('dotenv').config({path: path.resolve(__dirname, '..', '..', '.env')})
 
 class Server {
-  port = process.env.POST || 8000
+  port = process.env.PORT || 8000
   secret = process.env.JWT_SECRET
   token = 'teste'
   controllers
