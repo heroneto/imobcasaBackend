@@ -1,8 +1,8 @@
 const jwt = require('jsonwebtoken')
 
 class JwtImplementation {
-  privateKey = process.env.PRIVATE_KEY
-  publicKey = process.env.PUBLIC_KEY
+  privateKey = process.env.PRIVATE_KEY.replace(/\\n/gm, '\n')
+  publicKey = process.env.PUBLIC_KEY.replace(/\\n/gm, '\n')
 
 
   async generateAccessToken(id, admin){
