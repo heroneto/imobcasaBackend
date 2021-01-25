@@ -23,16 +23,16 @@ Autenticação no App para acessar.
 A autorização servirá para validar se o usuário possui acesso à telas especificas de configuração do App.
 - **[x]Feat [x]Test** Verifcar se usuário possui privilégios de administrador.
 
-## Campanhas
-A campanha representa um produto anunciado/conjunto de anuncios no facebook. É possível atrelar vários usuários na campanha para que recebam os Leads referentes àquela campanha.
-- **[x]Feat [x]Test** Cadastro de campanha
-- **[x]Feat [x]Test** Leitura de campanha
-- **[x]Feat [x]Test** Listar campanhas
-- **[x]Feat [x]Test** Adição de usuários da campanha
-- **[x]Feat [x]Test** Remoção de usuários da campanha
-- **[x]Feat [x]Test** Listar usuários da campanha
-- **[x]Feat [x]Test** Inativação de campanha
-- **[x]Feat [x]Test** ativação de campanha
+## Forms
+O formulário representa um anúncio no facebook. É possível atrelar vários usuários em um formulário para que recebam os Leads que se cadastrem através dele.
+- **[x]Feat [x]Test** Cadastro de Form
+- **[x]Feat [x]Test** Leitura de Form
+- **[x]Feat [x]Test** Listar Forms
+- **[x]Feat [x]Test** Adição de usuários da Form
+- **[x]Feat [x]Test** Remoção de usuários da Form
+- **[x]Feat [x]Test** Listar usuários da Form
+- **[x]Feat [x]Test** Inativação de Form
+- **[x]Feat [x]Test** ativação de Form
 
 
 ## Lead
@@ -56,7 +56,7 @@ O Lead representa um cliente em potencial, O Lead deve ser atrelado sempre à um
 
 ## FB Webhook
 - **[x]Feat [x]Test** Inscrição do App
-- **[ ]Feat [ ]Test** Distrubuição de Lead recebido via Webhook API Facebook com base em Score dos usuários da campanha: *Algoritmo será definido ainda*
+- **[x]Feat [x]Test** Distrubuição de Lead recebido via Webhook API Facebook.
 
 
 ## FB Webhook - Leads
@@ -88,13 +88,15 @@ O Lead pode ter, ao longo do histórico, várias tarefas, mas apenas uma deve es
 - **[x]Feat [x]Test** Remoção de tarefa
 - **[ ]Feat [ ]Test** ~~Alteração de status de tarefa.~~
 
-
-
 ## UsersForms
-Representa uma ligação de usuários com as campanhas, utilizada para avaliação do Score dos usuários com as campanhas.
+Representa uma ligação de usuários com os formulários, utilizada para avaliação do Score dos usuários com os formulários.
 - **[x]Feat [x]Test** Update(enabled, lastLeadRecevedTime, score)
 - **[x]Feat [x]Test** Alteração de enabled para True
 - **[x]Feat [x]Test** Alteração de enabled para false
+
+## Notificações
+Necessário pensar em como notificar usuários quando um Lead for atribuído.
+
 
 
 # Entidades
