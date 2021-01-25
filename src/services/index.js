@@ -1,10 +1,12 @@
 module.exports = {
   AuthorizationService: require('./AuthorizationService'),
   LoginService: require('./LoginService'),
-  CampaignService: require('./CampaignService'),
+  FormService: require('./FormService'),
   LeadService: require('./LeadService'),
   TaskService: require('./TaskService'),
-  UserCampaignService: require('./UserCampaignService'),
+  UserFormService: require('./UserFormService'),
   UserService: require('./UserService'),
-  LeadWebhookService: require('./LeadWebhookService')
+  WebhookService: require('./WebhookService'),
+  XHubSignatureService: require('./XHubSignatureService'),
+  FacebookService: require('./FacebookService')
 }

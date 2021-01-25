@@ -11,6 +11,14 @@ class LeadSourceRepository {
     })
   }
 
+  async getFacebookSourceID(){
+    return await LeadSource.findOne({
+      where: {
+        name: "Facebook"
+      }
+    })
+  }
+
 }
 
 module.exports = LeadSourceRepository

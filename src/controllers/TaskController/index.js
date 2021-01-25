@@ -28,6 +28,8 @@ class TaskController {
     this.routes.route(`${this.basePath}/:id`)
       .all(this.authenticationMid.checkAuthentication)
       .get(this._getOne)
+      .put(this._update)
+      .delete(this._delete)
   }
 
 

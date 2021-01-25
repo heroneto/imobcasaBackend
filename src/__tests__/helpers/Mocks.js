@@ -1,5 +1,8 @@
 const { User } = require('../../models')
 const JwtImplementation = require('../../implementations/jwt')
+const crypto = require('crypto')
+const { getPageForms } = require('../../services/apis')
+
 
 class Mocks {
 
@@ -36,9 +39,9 @@ class Mocks {
     }
   }
 
-  mockUser(admin = true) {
+  mockUser(admin = true, username = "mockedUser") {
     return {
-      username: "validUser",
+      username: username,
       fullName: "ValidFullName",
       email: "valid@email.com",
       password: "validPassword",
@@ -60,12 +63,12 @@ class Mocks {
     return await jwtImplementation.generateRefreshToken(user.id, user.admin)
   }
 
-  mockLead(userid, statusid, sourceId, campaignid = null, phone = (Math.round(Math.random() * 100000000000).toString())) {
+  mockLead(userid, statusid, sourceId, formid = null, phone = (Math.round(Math.random() * 100000000000).toString())) {
     const fakeLead = {
       name: "Fake Lead",
       phone,
       sourceid: sourceId,
-      campaignid: campaignid,
+      formid: formid,
       userid: userid,
       active: true,
       statusid: statusid,
@@ -74,16 +77,16 @@ class Mocks {
     return fakeLead
   }
 
-  mockUsersCampaings(userid, campaignid){
+  mockUserForm(userid, formid){
     return {
       userid,
-      campaignid
+      formid
     }
   }
 
-  mockLeadSource() {
+  mockLeadSource(name="Manual") {
     return {
-      name: "Manual",
+      name,
       active: true,
     }
   }
@@ -92,32 +95,35 @@ class Mocks {
     return [
       {
         name: 'To do',
-        description: 'Represents an item that is in the queue for execution'
+        description: 'Represents an item that is in the queue for execution',
+        order: 1,
       },
       {
         name: 'Negociação em andamento',
         description: 'A negocaiação deste Lead está em andamento',
+        order: 2,
       },
       {
         name: 'Negociação concluída',
         description: 'A negociação deste Lead foi concluída com sucesso',
+        order: 3,
       },
       {
         name: 'Arquivado',
         description: 'Este Lead está arquivado.',
+        order: 0,
       }
     ]
   }
 
-  mockCampaign() {
-    const fakeCampaign = {
-      name: "fakeCampaignName",
+  mockForm(fbFormId = "FAKE FORM ID") {
+    const fakeForm = {
+      name: "fakeFormName",
       active: true,
       fbCreatedDate: new Date(),
-      fbCampaignId: "Fake FB Campaign ID",
-      fbAdAccountId: "Fake FB AD Account ID"
+      fbFormId
     }
-    return fakeCampaign
+    return fakeForm
   }
 
   mockTask(userid, leadid, tasktypeid) {
@@ -140,13 +146,66 @@ class Mocks {
     }
   }
 
-  mockSubscriveRequest(){
+  mockSubscriveRequest(hubmode = 'subscrive', verifyToken = process.env.FB_SUB_TOKEN, hubChallenge = "challengeSecret"){
     return {
-      'hub.mode': "subscrive",
-      'hub.verify_token': process.env.FB_SUB_TOKEN,
-      'hub.challenge': "chalengesercret",
+      'hub.mode': hubmode,
+      'hub.verify_token': verifyToken,
+      'hub.challenge': hubChallenge,
     }
   }
+
+  mockXHubSignature(body, appSecret = process.env.FB_APP_SECRET_KEY){
+    const payload = JSON.stringify(body)
+    return `sha1=${crypto.createHmac('sha1', appSecret).update(payload).digest('hex')}`
+  }
+
+  mockLeadWebhook(
+    id = Math.floor(Math.random() * 10**15).toString(),
+    formId = Math.floor(Math.random() * 10**16).toString(),
+    leadgenId = Math.floor(Math.random() * 10**15).toString(),
+    pageId = Math.floor(Math.random() * 10**15).toString(),
+    ){
+    return {
+      object: "page",
+      entry: [
+        {
+          id: id,
+          time: Date.now(),
+          changes: [
+            {
+              value: {
+                form_id: formId,
+                leadgen_id: leadgenId,
+                created_time: Date.now(),
+                page_id: pageId
+              },
+              field: "leadgen"
+            }
+          ]
+        }
+      ]
+    }
+  }
+
+  mockFBMarketingToken(){
+    return "EAAHZB7hHSoq4BAFsFeAHpONhIkOB4iz64iGaqVU6EvmEfgz0lKnRrVnKDBkDCB5UXkqj8ZCeVFQIw3D3YPfYpsxTZC6movOIKQNI6HKwe6AhfuZAUGJcFvndhpcizTIvWEGo11YSXw75GuDuVctjHN5XJ7VqxMMZD"
+  }
+
+  mockValidLeadID(){
+    return "1176190902783627"
+  }
+
+  mockFakeFormID(){
+    return Math.floor(Math.random() * 10**16).toString()
+  }
+
+
+  async mockAfterProp(){
+    const {paging} = await getPageForms()  
+    const { cursors } = paging
+    return cursors.after
+  }  
+
 }
 
 module.exports = Mocks

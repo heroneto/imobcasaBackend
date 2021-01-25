@@ -2,7 +2,7 @@
 
 class ModelsExpected {
 
-  userModel(){
+  userModel() {
     return {
       active: expect.any(Boolean),
       createdAt: expect.any(Date),
@@ -15,36 +15,50 @@ class ModelsExpected {
     }
   }
 
-  userCampaignModel(){
+  userFormModel() {
     return {
       id: expect.any(String),
-      campaignid: expect.any(String),
+      formid: expect.any(String),
       userid: expect.any(String),
       createdAt: expect.any(Date),
-      updatedAt:expect.any(Date)
+      updatedAt: expect.any(Date)
     }
   }
 
-  campaignModel() {
+  formModel() {
     return {
       id: expect.any(String),
       name: expect.any(String),
       active: expect.any(Boolean),
       fbCreatedDate: expect.any(Date),
-      fbCampaignId: expect.any(String),
-      fbAdAccountId: expect.any(String),
+      fbFormId: expect.any(String),
       createdAt: expect.any(Date),
-      updatedAt:expect.any(Date)
+      updatedAt: expect.any(Date)
     }
   }
 
-  leadModel(){
+  facebookPageFormModel(){
+    return {
+     after: expect.any(String),
+     next: expect.any(String),
+     forms: expect.arrayContaining([
+       expect.objectContaining({
+        id: expect.any(String),
+        locale: expect.any(String),
+        name: expect.any(String),
+        status: expect.any(String)
+       })
+     ])
+    }
+  }
+
+  leadModel() {
     return {
       id: expect.any(String),
       name: expect.any(String),
       phone: expect.any(String),
       sourceid: expect.any(String),
-      campaignid: expect.any(String),
+      formid: expect.any(String),
       userid: expect.any(String),
       active: expect.any(Boolean),
       statusid: expect.any(String),
@@ -54,7 +68,7 @@ class ModelsExpected {
     }
   }
 
-  taskModel(){
+  taskModel() {
     return {
       id: expect.any(String),
       title: expect.any(String),
@@ -69,10 +83,19 @@ class ModelsExpected {
     }
   }
 
-  loginExpected(){
+  loginExpected() {
     return {
       accessToken: expect.any(String),
       refreshToken: expect.any(String)
+    }
+  }
+
+  tokenExpected() {
+    return {
+      id: expect.any(String),
+      fb_marketing_token: expect.any(String),
+      updatedAt: expect.any(Date),
+      createdAt: expect.any(Date)
     }
   }
 

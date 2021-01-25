@@ -1,12 +1,13 @@
 const Server = require('./Server')
 const {
-  CampaignController,
+  FormController,
   LeadController,
   LoginController,
   TaskController,
-  UserCampaignController,
+  UserFormController,
   UserController,
-  LeadWebhookController
+  WebhookController,
+  FacebookController
 } = require('./controllers')
 
 const database = require('./database')
@@ -16,13 +17,14 @@ async function app() {
   try {
     await database()
     const server = new Server([
-      new CampaignController(),
+      new FormController(),
       new UserController(),
       new LoginController(),
-      new UserCampaignController(),
+      new UserFormController(),
       new LeadController(),
       new TaskController(),
-      new LeadWebhookController()
+      new WebhookController(),
+      new FacebookController()
     ])
 
     await server.listen()

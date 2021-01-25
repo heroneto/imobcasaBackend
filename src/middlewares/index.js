@@ -1,4 +1,5 @@
 module.exports = {
   AuthenticationMiddleware: require("./AuthenticationMiddleware"),
-  AuthorizationMiddleware: require("./AuthorizationMiddleware")
+  AuthorizationMiddleware: require("./AuthorizationMiddleware"),
+  XHubSignatureMiddleware: require('./XHubSignatureMiddleware')
 }

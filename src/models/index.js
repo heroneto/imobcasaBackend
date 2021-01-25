@@ -13,12 +13,12 @@ const db = {
     sequelize,
     User: sequelize.import("./user"),
     Lead: sequelize.import("./lead"),
-    Campaign: sequelize.import("./campaign"),
-    Userscampaigns: sequelize.import("./userscampaigns"),
+    Form: sequelize.import("./form"),
+    UsersForms: sequelize.import("./usersforms"),
     LeadSource: sequelize.import("./leadsource"),
     LeadStatus: sequelize.import("./leadstatus"),
     Task: sequelize.import("./task"),
-    TaskType: sequelize.import("./tasktype")
+    TaskType: sequelize.import("./tasktype"),
 }
 
 Object.keys(db).forEach(model => {

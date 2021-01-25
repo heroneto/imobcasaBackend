@@ -11,6 +11,14 @@ class LeadStatusRepository {
     })
   }
 
+  async getBacklogStatusID(){
+    return await LeadStatus.findOne({
+      where: {
+        order: 1
+      }
+    })
+  }
+
 }
 
 module.exports = LeadStatusRepository
