@@ -107,8 +107,8 @@ class LeadWebhookService extends Service {
   _extractLeadData(leadsReceived) {
     const data = leadsReceived.map(lead => {
       const [ fullNameField, phoneNumberField ] = lead.field_data
-      const [ name ] = fullNameField?.values
-      const [ phone ] = phoneNumberField?.values
+      const [ name ] = fullNameField.values
+      const [ phone ] = phoneNumberField.values
       return {
         leadgenId: lead.id,
         name,
