@@ -147,7 +147,7 @@ class LeadWebhookService extends Service {
 
   async subscrive(fields) {
     await this._checkRequiredFields(this._subRequiredFields, fields)
-    if (fields['hub.mode'] !== "subscrive") {
+    if (fields['hub.mode'] !== "subscribe") {
       this._throwInvalidParamError('hub.mode')
     }
     if (fields['hub.verify_token'] !== process.env.FB_SUB_TOKEN) {
@@ -155,7 +155,7 @@ class LeadWebhookService extends Service {
     }
     return fields['hub.challenge']
   }
-
+s
   async addLead(fields) {
     const FB_APP_TOKEN = process.env.FB_APP_TOKEN
     this._checkEntityExsits(FB_APP_TOKEN, "appAccessToken")

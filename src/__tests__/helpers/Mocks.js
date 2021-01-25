@@ -146,7 +146,7 @@ class Mocks {
     }
   }
 
-  mockSubscriveRequest(hubmode = 'subscrive', verifyToken = process.env.FB_SUB_TOKEN, hubChallenge = "challengeSecret"){
+  mockSubscriveRequest(hubmode = 'subscribe', verifyToken = process.env.FB_SUB_TOKEN, hubChallenge = "challengeSecret"){
     return {
       'hub.mode': hubmode,
       'hub.verify_token': verifyToken,
