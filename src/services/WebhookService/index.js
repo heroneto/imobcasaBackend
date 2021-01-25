@@ -118,8 +118,31 @@ class LeadWebhookService extends Service {
     return data
   }
   
-  _mergeLeadWithUser(leads = []){
+  async _getUserToDistribute(formId){
+    let usersForms = await this._userFormRepository.getActiveUserToDistibute(formId)
+    if(!usersForms){
+      usersForms = await this._userFormRepository.getInactiveUserToDistibute(formId)
+    }
+    if(usersForms){
+      await this._userFormRepository.disable(usersForms)
+      await this._userFormRepository.updateLastLeadReceivedTime(usersForms)
+    }
+    return usersForms
+  }
 
+  _normalizeLeadData(lead, statusid, sourceid, formid, userid){
+    Reflect.deleteProperty(lead, 'leadgenId')
+    Reflect.deleteProperty(lead, 'fbFormID')
+
+    return {
+      ...lead,
+      userid,
+      statusid,
+      sourceid,
+      formid,
+      active: true,
+      negociationStartedAt: Date.now()
+    }
   }
 
   async subscrive(fields) {
@@ -152,16 +175,15 @@ class LeadWebhookService extends Service {
     for(const lead of leadsData){
       const form = await this._formRepository.getByFBFormID(lead?.fbFormID)
       if(form){
-        const usersForms = await this._userFormRepository.getUserToDistibute(form?.id)        
-        lead.userid = usersForms?.userid ? usersForms?.userid : null
-        lead.formid = form?.id
-        lead.sourceid = leadSourceID
-        lead.statusid = leadStatusID
-        Reflect.deleteProperty(lead, 'leadgenId')
-        Reflect.deleteProperty(lead, 'fbFormID')
-        lead.active = true      
-        lead.negociationStartedAt = Date.now()
-        const leadCreated = await this._leadRepository.findOrCreateLead(lead)
+        const usersForms = await this._getUserToDistribute(form.id)
+        const leadNormalized = this._normalizeLeadData(
+            lead, 
+            leadStatusID, 
+            leadSourceID, 
+            form.id, 
+            usersForms?.userid ? usersForms?.userid : null
+            )
+        const leadCreated = await this._leadRepository.findOrCreateLead(leadNormalized)
         leadsCreated.push(leadCreated[0])
       }
 

@@ -53,13 +53,27 @@ class UserFormRepository{
     return await userForm.save()
   }
 
-  async getUserToDistibute(formId){
+  async getActiveUserToDistibute(formId){
     return await UsersForms.findOne({
       where: {
         enabled: true,
         formid: formId,
       },
       order: [['lastLeadReceivedTime', 'asc']]
+    })
+  }
+  async getInactiveUserToDistibute(formId){
+    return await UsersForms.findOne({
+      where: {
+        enabled: false,
+        formid: formId,
+      },
+      order: [['lastLeadReceivedTime', 'asc']]
+    })
+  }
+  async updateLastLeadReceivedTime(userForm){
+    return await userForm.update({
+      lastLeadReceivedTime: Date.now()
     })
   }
 }
