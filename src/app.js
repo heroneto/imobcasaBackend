@@ -7,7 +7,6 @@ const {
   UserFormController,
   UserController,
   WebhookController,
-  TokensController,
   FacebookController
 } = require('./controllers')
 
@@ -25,7 +24,6 @@ async function app() {
       new LeadController(),
       new TaskController(),
       new WebhookController(),
-      new TokensController(),
       new FacebookController()
     ])
 

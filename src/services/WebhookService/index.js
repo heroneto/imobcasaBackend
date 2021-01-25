@@ -1,7 +1,6 @@
 const Service = require('../Service')
 const { getLead } = require('../apis')
 const { 
-    TokenRepository, 
     UserFormRepository, 
     FormRepository, 
     LeadSourceRepository, 
@@ -19,7 +18,6 @@ class LeadWebhookService extends Service {
   ]
   constructor() {
     super()
-    this._tokenRepository = new TokenRepository()
     this._userFormRepository = new UserFormRepository()
     this._formRepository = new FormRepository()
     this._leadSourceRepository = new LeadSourceRepository()
@@ -136,15 +134,14 @@ class LeadWebhookService extends Service {
   }
 
   async addLead(fields) {
+    const FB_APP_TOKEN = process.env.FB_APP_TOKEN
+    this._checkEntityExsits(FB_APP_TOKEN, "appAccessToken")
     this._checkEntryField(fields)
     this._checkChangesField(fields)
     this._checkValueField(fields)
     this._checkRequiredValueFields(fields)
     const leadAndFormIds = this._extractLeadAndFormIds(fields)
-    const tokens = await this._tokenRepository.getTokens()
-    const token = tokens[0]
-    this._checkEntityExsits(token, "accessToken")
-    const result = await this._requestLeadData(leadAndFormIds, token?.fb_marketing_token)
+    const result = await this._requestLeadData(leadAndFormIds, FB_APP_TOKEN)
     let leadsData = this._extractLeadData(result)
     leadsData = this._mergeFormAndLeadData(leadAndFormIds, leadsData)
     

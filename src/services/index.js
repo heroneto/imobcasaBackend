@@ -8,6 +8,5 @@ module.exports = {
   UserService: require('./UserService'),
   WebhookService: require('./WebhookService'),
   XHubSignatureService: require('./XHubSignatureService'),
-  TokenService: require('./TokenService'),
   FacebookService: require('./FacebookService')
 }
