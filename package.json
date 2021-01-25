@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/app.js",
   "scripts": {
-    "start": "set NODE_ENV=production && node dist/app.js",
+    "start": "set NODE_ENV=production && node ./src/app.js",
     "test": "jest --watch --runInBand --detectOpenHandles --forceExit",
     "dev": "set NODE_ENV=development && nodemon ./src/app.ts",
     "generateKeys": "openssl genrsa -out private.pem && openssl rsa -in private.pem -pubout -out public.pem"
