@@ -97,7 +97,7 @@ describe('AUTH CONTROLLER: tests', () => {
       const res = mocks.mockRes()
       await loginController.refreshToken(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
-      expect(res.json).toHaveBeenCalledWith(expect.any(String))
+      expect(res.json).toHaveBeenCalledWith(modelsExpected.loginExpected())
     })
   })
 })
