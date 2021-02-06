@@ -85,8 +85,13 @@ class ModelsExpected {
 
   loginExpected() {
     return {
-      accessToken: expect.any(String),
-      refreshToken: expect.any(String)
+      userId: expect.any(String),
+      fullName: expect.any(String),
+      email: expect.any(String),
+      tokens: {
+        accessToken: expect.any(String),
+        refreshToken: expect.any(String)
+      }
     }
   }
 

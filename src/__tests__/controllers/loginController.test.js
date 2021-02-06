@@ -12,7 +12,7 @@ describe('AUTH CONTROLLER: tests', () => {
   let user
   beforeAll(async () => {
     try{
-      databaseSetup()
+      await databaseSetup()
       user = await User.create(mocks.mockUser())
     }catch(err){
       console.log(err.toString())
