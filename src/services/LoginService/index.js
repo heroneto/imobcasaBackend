@@ -50,8 +50,13 @@ class LoginService extends Service {
     const accessToken = await this._jwtImplementation.generateAccessToken(user.id, user.admin)
     const refreshToken = await this._jwtImplementation.generateRefreshToken(user.id, user.admin)
     return {
-      accessToken, 
-      refreshToken,
+      userId: user.id,
+      fullName: user.fullName,
+      email: user.email,
+      tokens: {
+        accessToken,
+        refreshToken
+      }
     }
   }
 
