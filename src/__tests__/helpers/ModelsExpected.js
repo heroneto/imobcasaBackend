@@ -88,6 +88,8 @@ class ModelsExpected {
       userId: expect.any(String),
       fullName: expect.any(String),
       email: expect.any(String),
+      admin: expect.any(Boolean),
+      username: expect.any(String),
       tokens: {
         accessToken: expect.any(String),
         refreshToken: expect.any(String)

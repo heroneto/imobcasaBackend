@@ -53,6 +53,8 @@ class LoginService extends Service {
       userId: user.id,
       fullName: user.fullName,
       email: user.email,
+      admin: user.admin,
+      username: user.username,
       tokens: {
         accessToken,
         refreshToken
@@ -78,6 +80,8 @@ class LoginService extends Service {
       userId: user.id,
       fullName: user.fullName,
       email: user.email,
+      admin: user.admin,
+      username: user.username,
       tokens: {
         accessToken,
         refreshToken
