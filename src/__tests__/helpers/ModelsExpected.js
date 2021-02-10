@@ -90,6 +90,7 @@ class ModelsExpected {
       email: expect.any(String),
       admin: expect.any(Boolean),
       username: expect.any(String),
+      active: expect.any(Boolean),
       tokens: {
         accessToken: expect.any(String),
         refreshToken: expect.any(String)

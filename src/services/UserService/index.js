@@ -2,7 +2,7 @@ const Service = require('../Service')
 const { UserRepository } = require('../../repositories')
 
 class UserService extends Service {
-  _requiredFields = ['fullName', 'username', 'email', 'password', 'admin']
+  _requiredFields = ['fullName', 'username', 'email', 'password', 'admin', 'active']
   _updateRequiredFields = ['id']
   _deleteUserRequiredFields = ['id']
   _getUserRequiredFields = ['id']

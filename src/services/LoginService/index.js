@@ -55,6 +55,7 @@ class LoginService extends Service {
       email: user.email,
       admin: user.admin,
       username: user.username,
+      active: user.active,
       tokens: {
         accessToken,
         refreshToken
@@ -82,6 +83,7 @@ class LoginService extends Service {
       email: user.email,
       admin: user.admin,
       username: user.username,
+      active: user.active,
       tokens: {
         accessToken,
         refreshToken

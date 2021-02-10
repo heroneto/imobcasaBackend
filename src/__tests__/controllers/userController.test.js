@@ -36,7 +36,7 @@ describe('USER CONTROLLER: tests', () =>{
   })
 
   describe('POST User tests', () => {
-    const requiredFields = ['fullName', 'username', 'email', 'password', 'admin']
+    const requiredFields = ['fullName', 'username', 'email', 'password', 'admin', 'active']
     for(const field of requiredFields){
       test(`POST: Should return 400 if no ${field} has beem send`, async() =>{
         const user = mocks.mockUser()

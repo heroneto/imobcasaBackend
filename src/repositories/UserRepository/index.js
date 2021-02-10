@@ -24,6 +24,7 @@ class UserRepository {
     user.username = fields.username
     user.email = fields.email
     user.admin = fields.admin
+    user.active = fields.active
     await user.save()
     return user
   }
