@@ -18,6 +18,7 @@ beforeAll(async () => {
 
 describe('USER CONTROLLER: tests', () =>{
   let userId = ""
+  let userPwd = "validPassword"
   beforeAll(async () => {
     try{
       const user  = await User.create(mocks.mockUser())
@@ -96,6 +97,52 @@ describe('USER CONTROLLER: tests', () =>{
       await userController._update(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
       expect(res.json).toHaveBeenCalledWith(expect.objectContaining(modelsExpected.userModel()))
+    })
+  })
+
+  describe('CHANGE PWD tests', () => {
+    const requiredFields = ['password', 'newPassword']
+    for(const field of requiredFields){
+      test(`Should return 400 if no ${field} has been provided`, async () => {
+        const body = mocks.mockPwdChange("validPassword", "newValidPassword")
+        const locals = {
+          reqUserId: userId,
+          admin: true
+        } 
+        delete body[`${field}`]
+        const req = mocks.mockReq(body, null, null, locals)
+        const res = mocks.mockRes()
+        const { error } = missingParamError(field)
+        await userController.changePassword(req, res)
+        expect(res.status).toHaveBeenCalledWith(400)
+        expect(res.json).toHaveBeenCalledWith(error)
+      })
+    }
+    test(`Should return 400 if no reqUserID has been provided`, async () => {
+      const body = mocks.mockPwdChange("validPassword", "newValidPassword")
+      const locals = {
+        admin: true
+      } 
+      const req = mocks.mockReq(body, null, null, locals)
+      const res = mocks.mockRes()
+      const { error } = missingParamError('reqUserId')
+      await userController.changePassword(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toHaveBeenCalledWith(error)
+
+    })
+    test(`Should return 400 if no admin has been provided`, async () => {
+      const body = mocks.mockPwdChange("validPassword", "newValidPassword")
+      const locals = {
+        reqUserId: userId,
+      } 
+      const req = mocks.mockReq(body, null, null, locals)
+      const res = mocks.mockRes()
+      const { error } = missingParamError('admin')
+      await userController.changePassword(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toHaveBeenCalledWith(error)
+
     })
   })
 
