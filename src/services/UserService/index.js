@@ -6,7 +6,7 @@ class UserService extends Service {
   _updateRequiredFields = ['id']
   _deleteUserRequiredFields = ['id']
   _getUserRequiredFields = ['id']
-
+  _changePasswordRequiredFields = ['password', 'newPassword', 'reqUserId', 'admin']
 
   constructor(){
     super()
@@ -43,6 +43,11 @@ class UserService extends Service {
     const user = await this._userRepository.getOne(fields)
     await this._checkEntityExsits(user)
     return user
+  }
+
+  async changePassword(fields){
+    await this._checkRequiredFields(this._changePasswordRequiredFields, fields)
+    return fields
   }
 
 }

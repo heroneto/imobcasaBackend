@@ -14,6 +14,7 @@ class UserController {
   basePath = "/users"
   getOnePath = `${this.basePath}/:id`
   searchPath = `${this.basePath}/search`
+  changePwdPath = '/me/password'
 
   constructor() {
     this.authenticationMid = new AuthenticationMiddleware()
@@ -41,6 +42,9 @@ class UserController {
       .all(this.authorizationMid.checkAdminPrivileges)
       .get(this._search)
 
+    this.routes.route(this.changePwdPath)
+      .all(this.authenticationMid.checkAuthentication)
+      .put(this.changePassword)
   }
 
   async _getOne(req, res) {
@@ -143,6 +147,26 @@ class UserController {
     }
   }
 
+  async changePassword(req, res) {
+    try {
+      const userService = new UserService()
+      const result = await userService.changePassword({
+        ...req.body,
+        ...req.locals
+      })
+      res.status(200).json(result)
+    } catch (err) {
+      if (err instanceof ServiceException) {
+        const { statusCode, message } = err
+        return res.status(statusCode).json(message)
+      } else {
+        console.error(err)
+        const { error } = serverError()
+        const { statusCode, body } = internalError(error)
+        return res.status(statusCode).send(body)
+      }
+    }
+  }
 }
 
 
