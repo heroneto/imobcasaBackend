@@ -26,6 +26,11 @@ module.exports = (sequelize, DataTypes) => {
     return await bcrypt.compareSync(password, this.password)
   }
 
+  user.prototype.generatePasswordHash = async function (password) {
+    const salt = bcrypt.genSaltSync()
+    return bcrypt.hashSync(password, salt)
+  }
+
   user.associate = function (models) {
     // associations can be defined here
   };

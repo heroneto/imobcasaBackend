@@ -154,7 +154,7 @@ class UserController {
         ...req.body,
         ...req.locals
       })
-      res.status(200).json(result)
+      return res.status(204).json()
     } catch (err) {
       if (err instanceof ServiceException) {
         const { statusCode, message } = err

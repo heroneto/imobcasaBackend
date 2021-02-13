@@ -48,6 +48,10 @@ class UserRepository {
     return user
   }
 
+  async changePassword(user, passwordHash){
+    user.password = passwordHash
+    return await user.save()
+  } 
   
 }
 

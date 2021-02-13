@@ -20,6 +20,8 @@ class UserService extends Service {
     }
   }
 
+
+
   async createUser(fields) {
     await this._checkRequiredFields(this._requiredFields, fields)
     return await this._userRepository.create(fields)
@@ -55,8 +57,9 @@ class UserService extends Service {
     const user = await this._userRepository.getOne({id: fields.reqUserId})
     await this._checkEntityExsits(user, "reqUserId")
     await this._checkPassword(user, fields.password)
+    const passwordHash = await user.generatePasswordHash(fields.newPassword)
 
-    return fields
+    return await this._userRepository.changePassword(user, passwordHash)
   }
 
 }
