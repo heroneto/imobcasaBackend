@@ -14,6 +14,11 @@ class UserService extends Service {
   }
 
   
+  async _checkPassword(user, password) {
+    if (!await user.validPassword(password)) {
+      this._throwUnalthorizedError("password")
+    }
+  }
 
   async createUser(fields) {
     await this._checkRequiredFields(this._requiredFields, fields)
@@ -49,6 +54,8 @@ class UserService extends Service {
     await this._checkRequiredFields(this._changePasswordRequiredFields, fields)
     const user = await this._userRepository.getOne({id: fields.reqUserId})
     await this._checkEntityExsits(user, "reqUserId")
+    await this._checkPassword(user, fields.password)
+
     return fields
   }
 

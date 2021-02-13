@@ -157,6 +157,19 @@ describe('USER CONTROLLER: tests', () =>{
       expect(res.status).toHaveBeenCalledWith(400)
       expect(res.json).toHaveBeenCalledWith(error)
     })
+    test("Should return 401 if invalid password has been provided", async () => {
+      const body = mocks.mockPwdChange("invalidPassword", "newValidPassword")
+      const locals = {
+        reqUserId: userId,
+        admin: true
+      } 
+      const req = mocks.mockReq(body, null, null, locals)
+      const res = mocks.mockRes()
+      const { error } = invalidParamError('password')
+      await userController.changePassword(req, res)
+      expect(res.status).toHaveBeenCalledWith(401)
+      expect(res.json).toHaveBeenCalledWith(error)
+    })
   })
 
   describe('DELETE User tests', () => {
