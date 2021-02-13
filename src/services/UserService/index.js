@@ -47,6 +47,8 @@ class UserService extends Service {
 
   async changePassword(fields){
     await this._checkRequiredFields(this._changePasswordRequiredFields, fields)
+    const user = await this._userRepository.getOne({id: fields.reqUserId})
+    await this._checkEntityExsits(user, "reqUserId")
     return fields
   }
 
