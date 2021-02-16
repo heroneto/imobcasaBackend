@@ -25,17 +25,19 @@ module.exports = {
   "production": {
     "username": process.env.DB_USER,
     "password": process.env.DB_PASSWORD,
-    "database": "imobcasa",
+    "database": process.env.DB_NAME,
     "host": process.env.DB_HOST,
-    "dialect": "mysql",
+    "dialect": "postgres",
     "operatorsAliases": "0",
     "logging": false,
     "dialectOptions": {
+      "options": {
+        "requestTimeout": 3000
+      },
       "ssl": {
-        "key": process.env.DB_SSL_KEY.replace(/\\n/gm, '\n'),
-        "cert": process.env.DB_SSL_CERT.replace(/\\n/gm, '\n'),
-        "ca": process.env.DB_SSL_CA.replace(/\\n/gm, '\n')
+        "require": true,
+        "rejectUnauthorized": false
       }
-    }    
+    }
   }
 }

@@ -8,7 +8,7 @@ module.exports = {
         id: uuidV4(),
         name: 'Cobrar cliente',
         description: 'Cobrar o cliente referente à uma atualização',
-        active: 1,
+        active: true,
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -16,7 +16,7 @@ module.exports = {
         id: uuidV4(),
         name: 'Retornar para o cliente',
         description: 'Retornar o contato para o cliente',
-        active: 2,
+        active: true,
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -24,7 +24,7 @@ module.exports = {
         id: uuidV4(),
         name: 'Enviar doc/foto/vídeo',
         description: 'Envio de documentação do cliente',
-        active: 3,
+        active: true,
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -32,7 +32,7 @@ module.exports = {
         id: uuidV4(),
         name: 'Visita agendada',
         description: 'Vísita agendada com o cliente',
-        active: 4,
+        active: true,
         createdAt: new Date(),
         updatedAt: new Date()
       },

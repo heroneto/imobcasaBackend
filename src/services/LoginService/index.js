@@ -50,8 +50,16 @@ class LoginService extends Service {
     const accessToken = await this._jwtImplementation.generateAccessToken(user.id, user.admin)
     const refreshToken = await this._jwtImplementation.generateRefreshToken(user.id, user.admin)
     return {
-      accessToken, 
-      refreshToken,
+      userId: user.id,
+      fullName: user.fullName,
+      email: user.email,
+      admin: user.admin,
+      username: user.username,
+      active: user.active,
+      tokens: {
+        accessToken,
+        refreshToken
+      }
     }
   }
 
@@ -64,9 +72,24 @@ class LoginService extends Service {
 
   async refreshToken(fields){
     await this._checkRequiredFields(this._refreshTokenRequiredFields, fields)
-    const refreshTokenDecoded = await this._checkToken(fields.refreshToken)
+    const { refreshToken } = fields
+    const refreshTokenDecoded = await this._checkToken(refreshToken)
     const user = await this._userRepository.getOne({id: refreshTokenDecoded.id})
-    return await this._jwtImplementation.generateAccessToken(user.id, user.admin)
+    const accessToken =  await this._jwtImplementation.generateAccessToken(user.id, user.admin)
+
+    return {
+      userId: user.id,
+      fullName: user.fullName,
+      email: user.email,
+      admin: user.admin,
+      username: user.username,
+      active: user.active,
+      tokens: {
+        accessToken,
+        refreshToken
+      }
+    }
+
   }
 }
 

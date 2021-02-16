@@ -12,7 +12,7 @@ describe('AUTH CONTROLLER: tests', () => {
   let user
   beforeAll(async () => {
     try{
-      databaseSetup()
+      await databaseSetup()
       user = await User.create(mocks.mockUser())
     }catch(err){
       console.log(err.toString())
@@ -97,7 +97,7 @@ describe('AUTH CONTROLLER: tests', () => {
       const res = mocks.mockRes()
       await loginController.refreshToken(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
-      expect(res.json).toHaveBeenCalledWith(expect.any(String))
+      expect(res.json).toHaveBeenCalledWith(modelsExpected.loginExpected())
     })
   })
 })
