@@ -7,7 +7,7 @@ module.exports = {
       {
         id: uuidV4(),
         name: 'Penha',
-        active: 1,
+        active: true,
         fbCreatedDate: new Date(),
         fbFormId: "_123IDteste",
         createdAt: new Date(),
