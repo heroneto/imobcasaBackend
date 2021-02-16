@@ -184,12 +184,12 @@ describe('USER CONTROLLER: tests', () => {
   })
 
   describe('RESET PWD tests', () => {
-    test(`Should return 400 if no userId has been provided`, async () => {
+    test(`Should return 400 if no id has been provided`, async () => {
       const body = mocks.mockPwdReset("newPassword", userId)
-      delete body.userId
+      delete body.id
       const req = mocks.mockReq(body)
       const res = mocks.mockRes()
-      const { error } = missingParamError('userId')
+      const { error } = missingParamError('id')
       await userController.resetPassword(req, res)
       expect(res.status).toHaveBeenCalledWith(400)
       expect(res.json).toHaveBeenCalledWith(error)
@@ -208,10 +208,26 @@ describe('USER CONTROLLER: tests', () => {
       const body = mocks.mockPwdReset("newPassword", "InvalidUserID")
       const req = mocks.mockReq(body)
       const res = mocks.mockRes()
-      const { error } = invalidParamError('userId')
+      const { error } = invalidParamError('id')
       await userController.resetPassword(req, res)
       expect(res.status).toHaveBeenCalledWith(400)
       expect(res.json).toHaveBeenCalledWith(error)
+    })
+    test(`Should return 400 if invalid password has been provided`, async () => {
+      const body = mocks.mockPwdReset("newValidPassword", userId)
+      const req = mocks.mockReq(body)
+      const res = mocks.mockRes()
+      const { error } = invalidParamError('password')
+      await userController.resetPassword(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toHaveBeenCalledWith(error)
+    })
+    test(`Should return 204 if password has been changed`, async () => {
+      const body = mocks.mockPwdReset("newPasswordReset", userId)
+      const req = mocks.mockReq(body)
+      const res = mocks.mockRes()
+      await userController.resetPassword(req, res)
+      expect(res.status).toHaveBeenCalledWith(204)
     })
   })
 

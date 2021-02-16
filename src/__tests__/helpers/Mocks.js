@@ -58,10 +58,10 @@ class Mocks {
     }
   }
 
-  mockPwdReset(password, userId) {
+  mockPwdReset(password, id) {
     return {
       password,
-      userId
+      id
     }
   }
 
