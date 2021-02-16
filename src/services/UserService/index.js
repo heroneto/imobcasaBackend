@@ -7,6 +7,7 @@ class UserService extends Service {
   _deleteUserRequiredFields = ['id']
   _getUserRequiredFields = ['id']
   _changePasswordRequiredFields = ['password', 'newPassword', 'reqUserId', 'admin']
+  _resetPasswordRequiredFields = ['password', 'id']
 
   constructor(){
     super()
@@ -20,6 +21,11 @@ class UserService extends Service {
     }
   }
 
+  async _checkSameOldPassword(user, password) {
+    if (await user.validPassword(password)) {
+      this._throwInvalidParamError("password")
+    }
+  }
 
 
   async createUser(fields) {
@@ -57,8 +63,19 @@ class UserService extends Service {
     const user = await this._userRepository.getOne({id: fields.reqUserId})
     await this._checkEntityExsits(user, "reqUserId")
     await this._checkPassword(user, fields.password)
+    await this._checkSameOldPassword(user, fields.newPassword)
     const passwordHash = await user.generatePasswordHash(fields.newPassword)
 
+    return await this._userRepository.changePassword(user, passwordHash)
+  }
+
+  async resetPassword(fields){
+    await this._checkRequiredFields(this._resetPasswordRequiredFields, fields)
+    const { id, password } = fields
+    const user = await this._userRepository.getOne({id: id})
+    await this._checkEntityExsits(user, "id")
+    await this._checkSameOldPassword(user, password)
+    const passwordHash = await user.generatePasswordHash(password)
     return await this._userRepository.changePassword(user, passwordHash)
   }
 
