@@ -1,4 +1,4 @@
-const {UserController} = require('../../controllers')
+const { UserController } = require('../../controllers')
 const userController = new UserController()
 const databaseSetup = require('../../database')
 const { missingParamError, invalidParamError } = require('../../helpers/Errors')
@@ -9,37 +9,37 @@ const mocks = new Mocks()
 const modelsExpected = new ModelsExpected()
 
 beforeAll(async () => {
-  try{
+  try {
     await databaseSetup()
-  }catch(err){
+  } catch (err) {
     console.log(err.toString())
   }
 })
 
-describe('USER CONTROLLER: tests', () =>{
+describe('USER CONTROLLER: tests', () => {
   let userId = ""
   let userPwd = "validPassword"
   beforeAll(async () => {
-    try{
-      const user  = await User.create(mocks.mockUser())
+    try {
+      const user = await User.create(mocks.mockUser())
       userId = user.id
-    }catch(err){
+    } catch (err) {
       console.log(err)
     }
   })
 
   afterAll(async () => {
-    try{
-      await User.destroy({where: {}})
-    }catch(err){
+    try {
+      await User.destroy({ where: {} })
+    } catch (err) {
       console.log(err)
     }
   })
 
   describe('POST User tests', () => {
     const requiredFields = ['fullName', 'username', 'email', 'password', 'admin', 'active']
-    for(const field of requiredFields){
-      test(`POST: Should return 400 if no ${field} has beem send`, async() =>{
+    for (const field of requiredFields) {
+      test(`POST: Should return 400 if no ${field} has beem send`, async () => {
         const user = mocks.mockUser()
         delete user[`${field}`]
         const res = mocks.mockRes()
@@ -49,7 +49,7 @@ describe('USER CONTROLLER: tests', () =>{
         expect(res.json).toBeCalledWith(`MissingParamError: ${field}`)
       })
     }
-    test('POST: Should return 200 if user has been created', async () =>{
+    test('POST: Should return 200 if user has been created', async () => {
       const user = mocks.mockUser()
       const res = mocks.mockRes()
       const req = mocks.mockReq(user)
@@ -58,19 +58,19 @@ describe('USER CONTROLLER: tests', () =>{
       expect(res.json).toHaveBeenCalledWith(expect.objectContaining(modelsExpected.userModel()))
     })
   })
-  
+
   describe('GET User tests', () => {
-    test('GET: Should return 200', async () =>{
+    test('GET: Should return 200', async () => {
       const res = mocks.mockRes()
       const req = mocks.mockReq()
-      await userController._list(req,res)
+      await userController._list(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
       expect(res.json).toHaveBeenCalledWith(expect.arrayContaining([expect.objectContaining(modelsExpected.userModel())]))
     })
   })
 
   describe('PUT User tests', () => {
-    test('PUT: Should return 400 if no id has beem send', async()=>{
+    test('PUT: Should return 400 if no id has beem send', async () => {
       const user = mocks.mockUser()
       delete user.username
       const res = mocks.mockRes()
@@ -79,7 +79,7 @@ describe('USER CONTROLLER: tests', () =>{
       expect(res.status).toHaveBeenCalledWith(400)
       expect(res.json).toBeCalledWith('MissingParamError: id')
     })
-    test('PUT: Should return 400 if invalid id has beem send', async()=>{
+    test('PUT: Should return 400 if invalid id has beem send', async () => {
       const user = mocks.mockUser()
       user.id = 'invalidId'
       user.username = 'invalidUsername'
@@ -89,7 +89,7 @@ describe('USER CONTROLLER: tests', () =>{
       expect(res.status).toHaveBeenCalledWith(400)
       expect(res.json).toBeCalledWith('InvalidParamError: id')
     })
-    test('PUT: Should return 200 username has beem updated', async()=>{
+    test('PUT: Should return 200 username has beem updated', async () => {
       const user = mocks.mockUser()
       user.id = userId
       const res = mocks.mockRes()
@@ -102,13 +102,13 @@ describe('USER CONTROLLER: tests', () =>{
 
   describe('CHANGE PWD tests', () => {
     const requiredFields = ['password', 'newPassword']
-    for(const field of requiredFields){
+    for (const field of requiredFields) {
       test(`Should return 400 if no ${field} has been provided`, async () => {
         const body = mocks.mockPwdChange("validPassword", "newValidPassword")
         const locals = {
           reqUserId: userId,
           admin: true
-        } 
+        }
         delete body[`${field}`]
         const req = mocks.mockReq(body, null, null, locals)
         const res = mocks.mockRes()
@@ -122,7 +122,7 @@ describe('USER CONTROLLER: tests', () =>{
       const body = mocks.mockPwdChange("validPassword", "newValidPassword")
       const locals = {
         admin: true
-      } 
+      }
       const req = mocks.mockReq(body, null, null, locals)
       const res = mocks.mockRes()
       const { error } = missingParamError('reqUserId')
@@ -135,7 +135,7 @@ describe('USER CONTROLLER: tests', () =>{
       const body = mocks.mockPwdChange("validPassword", "newValidPassword")
       const locals = {
         reqUserId: userId,
-      } 
+      }
       const req = mocks.mockReq(body, null, null, locals)
       const res = mocks.mockRes()
       const { error } = missingParamError('admin')
@@ -149,7 +149,7 @@ describe('USER CONTROLLER: tests', () =>{
       const locals = {
         reqUserId: "invalid userID",
         admin: true
-      } 
+      }
       const req = mocks.mockReq(body, null, null, locals)
       const res = mocks.mockRes()
       const { error } = invalidParamError('reqUserId')
@@ -162,7 +162,7 @@ describe('USER CONTROLLER: tests', () =>{
       const locals = {
         reqUserId: userId,
         admin: true
-      } 
+      }
       const req = mocks.mockReq(body, null, null, locals)
       const res = mocks.mockRes()
       const { error } = invalidParamError('password')
@@ -175,7 +175,7 @@ describe('USER CONTROLLER: tests', () =>{
       const locals = {
         reqUserId: userId,
         admin: true
-      } 
+      }
       const req = mocks.mockReq(body, null, null, locals)
       const res = mocks.mockRes()
       await userController.changePassword(req, res)
@@ -183,8 +183,31 @@ describe('USER CONTROLLER: tests', () =>{
     })
   })
 
+  describe('RESET PWD tests', () => {
+    test(`Should return 400 if no userId has been provided`, async () => {
+      const body = mocks.mockPwdReset("newPassword", userId)
+      delete body.userId
+      const req = mocks.mockReq(body)
+      const res = mocks.mockRes()
+      const { error } = missingParamError('userId')
+      await userController.resetPassword(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toHaveBeenCalledWith(error)
+    })
+    test(`Should return 400 if no password has been provided`, async () => {
+      const body = mocks.mockPwdReset("newPassword", userId)
+      delete body.password
+      const req = mocks.mockReq(body)
+      const res = mocks.mockRes()
+      const { error } = missingParamError('password')
+      await userController.resetPassword(req, res)
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toHaveBeenCalledWith(error)
+    })
+  })
+
   describe('DELETE User tests', () => {
-    test('DELETE: Should return 400 if no id has beem send', async()=>{
+    test('DELETE: Should return 400 if no id has beem send', async () => {
       const user = mocks.mockUser()
       delete user.id
       delete user.username
@@ -194,18 +217,18 @@ describe('USER CONTROLLER: tests', () =>{
       expect(res.status).toHaveBeenCalledWith(400)
       expect(res.json).toBeCalledWith('MissingParamError: id')
     })
-    test('DELETE: Should return 400 if invalid id has beem send', async()=>{
+    test('DELETE: Should return 400 if invalid id has beem send', async () => {
       const user = mocks.mockUser()
       user.id = 'invalidId'
       const res = mocks.mockRes()
-      const req = mocks.mockReq(null, null, {id: "invalid user id"}, null)
+      const req = mocks.mockReq(null, null, { id: "invalid user id" }, null)
       await userController._delete(req, res)
       expect(res.status).toHaveBeenCalledWith(400)
       expect(res.json).toBeCalledWith('InvalidParamError: id')
     })
-    test('DELETE: Should return 200 username has beem deleted by id', async() =>{
+    test('DELETE: Should return 200 username has beem deleted by id', async () => {
       const res = mocks.mockRes()
-      const req = mocks.mockReq(null, null, {id: userId}, null)
+      const req = mocks.mockReq(null, null, { id: userId }, null)
       await userController._delete(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
       expect(res.json).toBeCalledWith(1)
@@ -215,18 +238,18 @@ describe('USER CONTROLLER: tests', () =>{
   describe('GET USER BY ID', () => {
     let userId = ""
     beforeAll(async () => {
-      try{
-        const user  = await User.create(mocks.mockUser())
+      try {
+        const user = await User.create(mocks.mockUser())
         userId = user.id
-      }catch(err){
+      } catch (err) {
         console.log(err)
       }
     })
-  
+
     afterAll(async () => {
-      try{
-        await User.destroy({where: {}})
-      }catch(err){
+      try {
+        await User.destroy({ where: {} })
+      } catch (err) {
         console.log(err)
       }
     })
@@ -240,15 +263,15 @@ describe('USER CONTROLLER: tests', () =>{
       expect(res.json).toHaveBeenCalledWith(error)
     })
     test("Should return 400 if invalid id has been send", async () => {
-      const req = mocks.mockReq(null, null, {id: "invalid user id"}, null )
+      const req = mocks.mockReq(null, null, { id: "invalid user id" }, null)
       const res = mocks.mockRes()
       await userController._getOne(req, res)
       expect(res.status).toHaveBeenCalledWith(400)
-      const {error} = invalidParamError('id')
+      const { error } = invalidParamError('id')
       expect(res.json).toHaveBeenCalledWith(error)
     })
     test('Should return 200 if user has been found', async () => {
-      const req = mocks.mockReq(null, null, {id:userId}, null )
+      const req = mocks.mockReq(null, null, { id: userId }, null)
       const res = mocks.mockRes()
       await userController._getOne(req, res)
       expect(res.status).toHaveBeenCalledWith(200)

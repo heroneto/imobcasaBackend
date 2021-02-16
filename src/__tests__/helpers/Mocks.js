@@ -58,6 +58,14 @@ class Mocks {
     }
   }
 
+  mockPwdReset(password, userId) {
+    return {
+      password,
+      userId
+    }
+  }
+
+
   async mockJwtToken(id) {
     const jwtImplementation = new JwtImplementation()
     const user = await User.findOne({ where: { id: id } })
