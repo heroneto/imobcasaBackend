@@ -1,5 +1,5 @@
 const { Router } = require('express')
-const {UserService} = require('../../services')
+const { UserService } = require('../../services')
 const ServiceException = require('../../helpers/Exceptions/ServiceException')
 const {
   AuthenticationMiddleware,
@@ -8,13 +8,13 @@ const {
 const { internalError } = require('../../helpers/Protocols')
 const { serverError } = require('../../helpers/Errors')
 
-
 class UserController {
   routes = Router()
   basePath = "/users"
   getOnePath = `${this.basePath}/:id`
   searchPath = `${this.basePath}/search`
   changePwdPath = '/me/password'
+  resetPwdPath = `${this.getOnePath}/password/reset`
 
   constructor() {
     this.authenticationMid = new AuthenticationMiddleware()
@@ -34,7 +34,7 @@ class UserController {
 
     this.routes.route(this.getOnePath)
       .all(this.authenticationMid.checkAuthentication)
-      .all(this.authorizationMid.checkAdminPrivileges)     
+      .all(this.authorizationMid.checkAdminPrivileges)
       .get(this._getOne)
 
     this.routes.route(this.searchPath)
@@ -45,6 +45,11 @@ class UserController {
     this.routes.route(this.changePwdPath)
       .all(this.authenticationMid.checkAuthentication)
       .put(this.changePassword)
+
+    this.routes.route(this.resetPwdPath)
+      .all(this.authenticationMid.checkAuthentication)
+      .all(this.authorizationMid.checkAdminPrivileges)
+      .put(this.resetPassword)
   }
 
   async _getOne(req, res) {
@@ -151,6 +156,27 @@ class UserController {
     try {
       const userService = new UserService()
       const result = await userService.changePassword({
+        ...req.body,
+        ...req.locals
+      })
+      return res.status(204).json()
+    } catch (err) {
+      if (err instanceof ServiceException) {
+        const { statusCode, message } = err
+        return res.status(statusCode).json(message)
+      } else {
+        console.error(err)
+        const { error } = serverError()
+        const { statusCode, body } = internalError(error)
+        return res.status(statusCode).send(body)
+      }
+    }
+  }
+
+  async resetPassword(req, res) {
+    try {
+      const userService = new UserService()
+      const result = await userService.resetPassword({
         ...req.body,
         ...req.locals
       })

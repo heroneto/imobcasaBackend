@@ -7,6 +7,7 @@ class UserService extends Service {
   _deleteUserRequiredFields = ['id']
   _getUserRequiredFields = ['id']
   _changePasswordRequiredFields = ['password', 'newPassword', 'reqUserId', 'admin']
+  _resetPasswordRequiredFields = ['password', 'userId']
 
   constructor(){
     super()
@@ -60,6 +61,17 @@ class UserService extends Service {
     const passwordHash = await user.generatePasswordHash(fields.newPassword)
 
     return await this._userRepository.changePassword(user, passwordHash)
+  }
+
+  async resetPassword(fields){
+    await this._checkRequiredFields(this._resetPasswordRequiredFields, fields)
+    return fields
+    // const { userId, password } = fields
+    // const user = await this._userRepository.getOne({id: userId})
+    // await this._checkEntityExsits(user, "reqUserId")
+    // const passwordHash = await user.generatePasswordHash(password)
+
+    // return await this._userRepository.changePassword(user, passwordHash)
   }
 
 }
