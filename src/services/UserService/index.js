@@ -63,6 +63,7 @@ class UserService extends Service {
     const user = await this._userRepository.getOne({id: fields.reqUserId})
     await this._checkEntityExsits(user, "reqUserId")
     await this._checkPassword(user, fields.password)
+    await this._checkSameOldPassword(user, fields.newPassword)
     const passwordHash = await user.generatePasswordHash(fields.newPassword)
 
     return await this._userRepository.changePassword(user, passwordHash)
