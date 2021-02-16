@@ -65,13 +65,14 @@ class UserService extends Service {
 
   async resetPassword(fields){
     await this._checkRequiredFields(this._resetPasswordRequiredFields, fields)
-    return fields
-    // const { userId, password } = fields
-    // const user = await this._userRepository.getOne({id: userId})
-    // await this._checkEntityExsits(user, "reqUserId")
+    const { userId, password } = fields
+    const user = await this._userRepository.getOne({id: userId})
+    await this._checkEntityExsits(user, "userId")
     // const passwordHash = await user.generatePasswordHash(password)
 
     // return await this._userRepository.changePassword(user, passwordHash)
+    return fields
+
   }
 
 }
