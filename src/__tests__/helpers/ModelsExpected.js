@@ -85,7 +85,7 @@ class ModelsExpected {
 
   loginExpected() {
     return {
-      userId: expect.any(String),
+      id: expect.any(String),
       fullName: expect.any(String),
       email: expect.any(String),
       admin: expect.any(Boolean),
