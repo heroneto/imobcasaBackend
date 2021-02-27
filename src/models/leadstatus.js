@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
   });
   leadstatus.associate = function (models) {
     // associations can be defined here
+    // leadstatus.hasMany(models.Lead, {as: "leads"})
   };
   return leadstatus;
 };
