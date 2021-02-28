@@ -20,6 +20,9 @@ module.exports = (sequelize, DataTypes) => {
   });
   lead.associate = function(models) {
     // associations can be defined here
+    //     User.belongsTo(models.Company, {foreignKey: 'companyId', as: 'company'})
+
+    lead.belongsTo(models.LeadStatus, {foreignKey: 'statusid', as: "status"})
   };
   return lead;
 };

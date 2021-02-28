@@ -1,10 +1,16 @@
 const Service = require("../Service")
 const { getPageForms } = require('../apis')
+const {FormRepository} = require('../../repositories')
 
 class FacebookService extends Service{
 
   constructor(){
     super()
+    this._formRepository = new FormRepository()
+  }
+
+  _filterFormsRegistred(forms, formsIdRegistred) {
+    return forms.filter(form => !formsIdRegistred.includes(form.id))
   }
 
   async listPageForms(fields){
@@ -20,8 +26,12 @@ class FacebookService extends Service{
     }
     const { cursors, next } = paging
 
+    const formsRegistred = await this._formRepository.list()
+    const fbFormIdRegistred = formsRegistred.map(form => form.fbFormId)
+    const forms = this._filterFormsRegistred(data, fbFormIdRegistred)
+
     return {
-      forms: data,
+      forms: forms,
       after: cursors.after ? cursors.after : "",
       next: next ? next : ""
     }
