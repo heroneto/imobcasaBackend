@@ -43,7 +43,8 @@ class UserRepository {
     const user = await User.findOne({
       where: {
         id: fields.id
-      }
+      },
+      raw: true
     })
     return user
   }

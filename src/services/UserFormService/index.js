@@ -54,7 +54,19 @@ class UserFormService extends Service{
 
   async list(fields){
     await this._checkRequiredFields(this._listRequiredFields, fields)
-    return await this._userFormRepository.list(fields)
+    const usersFormsList = await this._userFormRepository.list(fields)
+    let data = []
+    for(const userForm of usersFormsList){
+      const user = await this._userRespository.getOne({id: userForm.userid})
+      data.push({
+        ...userForm,
+        userData: {
+          username: user.username,
+          fullName: user.fullName,
+        }
+      })
+    }
+    return data
   }
 
   async enable(fields){

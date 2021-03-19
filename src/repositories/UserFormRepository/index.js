@@ -30,7 +30,8 @@ class UserFormRepository{
     return await UsersForms.findAll({
       where: {
         formid: fields.formid
-      }
+      },
+      raw: true
     })
   }
 
