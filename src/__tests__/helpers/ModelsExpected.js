@@ -25,6 +25,23 @@ class ModelsExpected {
     }
   }
 
+  listUserFormModel() {
+    return {
+      id: expect.any(String),
+      formid: expect.any(String),
+      userid: expect.any(String),
+      createdAt: expect.any(String),
+      updatedAt: expect.any(String),
+      enabled: expect.any(Number),
+      lastLeadReceivedTime: expect.any(String),
+      score: null,
+      userData: {
+        username: expect.any(String),
+        fullName: expect.any(String)
+      }
+    }
+  }
+
   formModel() {
     return {
       id: expect.any(String),

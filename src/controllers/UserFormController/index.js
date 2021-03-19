@@ -6,7 +6,7 @@ const { serverError } = require('../../helpers/Errors')
 
 class UserFormController{
   path = "/forms/:formid/user/:userid"
-  listPath = "/forms/:formid/users/"  
+  listPath = "/forms/:formid/users"  
   routes = Router()
   constructor() {
     this.load()

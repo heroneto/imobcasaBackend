@@ -132,7 +132,7 @@ describe("USERFORM Controller tests", () => {
       const req = mocks.mockReq(null, null, parameters)      
       await userFormController.list(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
-      expect(res.json).toHaveBeenCalledWith(expect.arrayContaining([expect.objectContaining(modelsExpected.userFormModel())]))
+      expect(res.json).toHaveBeenCalledWith(expect.arrayContaining([expect.objectContaining(modelsExpected.listUserFormModel())]))
     })
   })
 
