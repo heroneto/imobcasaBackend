@@ -26,10 +26,10 @@ class UserFormRepository{
     })
   }
 
-  async list(fields){
+  async list(formid){
     return await UsersForms.findAll({
       where: {
-        formid: fields.formid
+        formid: formid
       },
       raw: true
     })
