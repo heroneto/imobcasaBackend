@@ -114,7 +114,8 @@ describe("USERFORM Controller tests", () => {
   describe("LIST User form tests", () => {
     test("Should return 400 if no formid has been provided", async () => {
       const parameters = {
-        formid: formid
+        formid: formid,
+        related: "TRUE"
       }
       delete parameters.formid
       const res = mocks.mockRes()
@@ -124,9 +125,23 @@ describe("USERFORM Controller tests", () => {
       expect(res.status).toHaveBeenCalledWith(400)
       expect(res.json).toHaveBeenCalledWith(error)
     })
-    test("Should return 200 if valid formid has been provided", async () => {
+
+    test("Should return 400 if no related has been provided", async () => {
       const parameters = {
         formid: formid
+      }
+      const res = mocks.mockRes()
+      const req = mocks.mockReq(null, null, parameters)      
+      await userFormController.list(req, res)
+      const { error } = missingParamError('related')
+      expect(res.status).toHaveBeenCalledWith(400)
+      expect(res.json).toHaveBeenCalledWith(error)
+    })
+
+    test("Should return 200 if valid formid has been provided", async () => {
+      const parameters = {
+        formid: formid,
+        related: "TRUE"
       }
       const res = mocks.mockRes()
       const req = mocks.mockReq(null, null, parameters)      
