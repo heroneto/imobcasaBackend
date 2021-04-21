@@ -25,6 +25,7 @@ describe("USERFORM Controller tests", () => {
       userid = user.id
       const form = await Form.create(mocks.mockForm())
       formid = form.id
+      await User.create(mocks.mockUser(false, "anotherUser"))
     }catch(err){
       console.log(err)
     }
@@ -138,7 +139,7 @@ describe("USERFORM Controller tests", () => {
       expect(res.json).toHaveBeenCalledWith(error)
     })
 
-    test("Should return 200 if valid formid has been provided", async () => {
+    test("Should return 200 if valid formid has been providedand related has been provided TRUE", async () => {
       const parameters = {
         formid: formid,
         related: "TRUE"
@@ -148,6 +149,17 @@ describe("USERFORM Controller tests", () => {
       await userFormController.list(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
       expect(res.json).toHaveBeenCalledWith(expect.arrayContaining([expect.objectContaining(modelsExpected.listUserFormModel())]))
+    })
+    test("Should return 200 if valid formid has been provided and related has been provided FALSE", async () => {
+      const parameters = {
+        formid: formid,
+        related: "FALSE"
+      }
+      const res = mocks.mockRes()
+      const req = mocks.mockReq(null, null, parameters)      
+      await userFormController.list(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.json).toHaveBeenCalledWith(expect.arrayContaining([expect.objectContaining(modelsExpected.userModel())]))
     })
   })
 
