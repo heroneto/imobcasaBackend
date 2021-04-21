@@ -24,7 +24,10 @@ class UserFormController{
   async list(request, response){
     try {
       const userFormService = new UserFormService()
-      const result = await userFormService.list(request.params)
+      const result = await userFormService.list({
+        ...request.params,
+        ...request.query
+      })
       return response.status(200).json(result)
     } catch (err) {
       if (err instanceof ServiceException) {

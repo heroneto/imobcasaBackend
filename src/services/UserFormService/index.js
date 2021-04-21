@@ -8,7 +8,7 @@ const {
 
 class UserFormService extends Service{
   _requiredFields = ["userid", "formid"]  
-  _listRequiredFields = ["formid"]
+  _listRequiredFields = ["formid", "related"]
   _enableRequiredFields = ["userid", "formid"]  
   _disableRequiredFields = ["userid", "formid"]
   _updateRequiredFields = ["userid", "formid", "score", "enabled", "lastLeadReceivedTime"]
@@ -54,19 +54,24 @@ class UserFormService extends Service{
 
   async list(fields){
     await this._checkRequiredFields(this._listRequiredFields, fields)
-    const usersFormsList = await this._userFormRepository.list(fields)
-    let data = []
-    for(const userForm of usersFormsList){
-      const user = await this._userRespository.getOne({id: userForm.userid})
-      data.push({
-        ...userForm,
-        userData: {
-          username: user.username,
-          fullName: user.fullName,
-        }
-      })
+    const related = (fields.related === "TRUE")
+    if(related){      
+      const usersFormsList = await this._userFormRepository.list(fields)
+      let data = []
+      for(const userForm of usersFormsList){
+        const user = await this._userRespository.getOne({id: userForm.userid})
+        data.push({
+          ...userForm,
+          userData: {
+            username: user.username,
+            fullName: user.fullName,
+          }
+        })
+      }
+      return data
+    }else {
+      
     }
-    return data
   }
 
   async enable(fields){
