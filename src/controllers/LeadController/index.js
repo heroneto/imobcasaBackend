@@ -1,5 +1,5 @@
 const { Router } = require('express')
-const {LeadService} = require('../../services')
+const { LeadService } = require('../../services')
 const ServiceException = require('../../helpers/Exceptions/ServiceException')
 const {
   AuthenticationMiddleware,
@@ -15,6 +15,7 @@ class LeadController {
   getOnePath = `${this.basePath}/:id`
   getMyLeads = `${this.basePath}/`
   searchPath = `${this.basePath}/search/:value`
+  listStatusPath = `/leads/status/list`
 
   constructor() {
     this.authenticationMid = new AuthenticationMiddleware()
@@ -38,6 +39,10 @@ class LeadController {
     this.routes.route(this.searchPath)
       .all(this.authenticationMid.checkAuthentication)
       .get(this.search)
+
+    this.routes.route(this.listStatusPath)
+      .all(this.authenticationMid.checkAuthentication)
+      .get(this.listStatus)
 
   }
 
@@ -154,6 +159,24 @@ class LeadController {
         ...request.locals
       })
       return response.status(200).json(lead)
+    } catch (err) {
+      if (err instanceof ServiceException) {
+        const { statusCode, message } = err
+        return response.status(statusCode).json(message)
+      } else {
+        console.error(err)
+        const { error } = serverError()
+        const { statusCode, body } = internalError(error)
+        return response.status(statusCode).send(body)
+      }
+    }
+  }
+
+  async listStatus(request, response) {
+    try {
+      const leadService = new LeadService()
+      const result = await leadService.listStatus()
+      return response.status(200).json(result)
     } catch (err) {
       if (err instanceof ServiceException) {
         const { statusCode, message } = err

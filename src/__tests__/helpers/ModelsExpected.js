@@ -124,6 +124,17 @@ class ModelsExpected {
     }
   }
 
+  leadStatusExpected(){
+    return {
+      id: expect.any(String),
+      name: expect.any(String),
+      description: expect.any(String),
+      order: expect.any(Number),
+      createdAt: expect.any(Date),
+      updatedAt: expect.any(Date)
+    }
+  }
+
 }
 
 

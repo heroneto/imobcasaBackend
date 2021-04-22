@@ -19,6 +19,10 @@ class LeadStatusRepository {
     })
   }
 
+  async list(){
+    return await LeadStatus.findAll()
+  }
+
 }
 
 module.exports = LeadStatusRepository

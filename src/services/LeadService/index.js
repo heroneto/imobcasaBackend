@@ -129,6 +129,10 @@ class LeadService extends Service{
     return leads    
   }
 
+  async listStatus(){
+    return await this._leadStatusRepository.list()
+  }
+
 }
 
 module.exports = LeadService
