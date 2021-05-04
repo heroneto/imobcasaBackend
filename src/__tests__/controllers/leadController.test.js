@@ -308,7 +308,7 @@ describe('LEAD CONTROLLER: tests', () => {
       await leadController.list(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
       expect(res.json).toHaveBeenCalledWith(expect.arrayContaining([expect.objectContaining({
-        ...modelsExpected.leadModel(),
+        ...modelsExpected.leadListModel(),
         statusid: leadStatus[0].id
       })]))
     })
@@ -320,7 +320,7 @@ describe('LEAD CONTROLLER: tests', () => {
       await leadController.list(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
       expect(res.json).toHaveBeenCalledWith(expect.arrayContaining([expect.objectContaining({
-        ...modelsExpected.leadModel(),
+        ...modelsExpected.leadListModel(),
         statusid: leadStatus[1].id
       })]))
     })
@@ -331,7 +331,7 @@ describe('LEAD CONTROLLER: tests', () => {
       await leadController.list(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
       expect(res.json).toHaveBeenCalledWith(expect.arrayContaining([expect.objectContaining({
-        ...modelsExpected.leadModel(),
+        ...modelsExpected.leadListModel(),
         statusid: leadStatus[2].id
       })]))
     })

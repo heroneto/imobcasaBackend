@@ -27,6 +27,27 @@ class LeadService extends Service{
     this._leadSourceRepository = new LeadSourceRepository()
   }
 
+  async _getOwnerData(userid){
+    const { fullName, username } = await this._userRepository.getOne({id: userid})
+    return  { fullName, username } 
+  }
+
+  async _getFormData(formid){
+    const { name } = await this._formRepository.getOne({id: formid}) 
+    return { name }
+  }
+
+
+  async _normalizeLeadData(leads){
+    const normalizedData = []
+    for(const lead of leads){
+      lead.ownerData =  await this._getOwnerData(lead.userid)
+      lead.formData = await this._getFormData(lead.formid)
+      normalizedData.push(lead)
+    }
+    return normalizedData
+  }
+   
 
   _filterMyLeads(leads, fields){
     const filteredLeads = leads.filter(lead => {
@@ -54,11 +75,11 @@ class LeadService extends Service{
       skip,
       limit,
       statusId
-    })    
+    })       
     if(!admin){
-      return this._filterMyLeads(leads, fields)  
+      return this._normalizeLeadData(this._filterMyLeads(leads, fields))
     }
-    return leads
+    return this._normalizeLeadData(leads)
     
   }
 

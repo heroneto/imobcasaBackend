@@ -20,7 +20,9 @@ class LeadRepository {
       limit: limit,
       where: {       
         statusId: statusId
-      }
+      },
+      raw: true
+      
     })
   }
 

@@ -69,6 +69,29 @@ class ModelsExpected {
     }
   }
 
+  leadListModel() {
+    return {
+      id: expect.any(String),
+      name: expect.any(String),
+      phone: expect.any(String),
+      sourceid: expect.any(String),
+      formid: expect.any(String),
+      userid: expect.any(String),
+      active: expect.any(Number),
+      statusid: expect.any(String),
+      negociationStartedAt: expect.any(String),
+      updatedAt: expect.any(String),
+      createdAt: expect.any(String),
+      ownerData: {
+        fullName: expect.any(String),
+        username: expect.any(String)
+      },
+      formData: {
+        name: expect.any(String)
+      },      
+    }
+  }
+
   leadModel() {
     return {
       id: expect.any(String),
@@ -81,7 +104,7 @@ class ModelsExpected {
       statusid: expect.any(String),
       negociationStartedAt: expect.any(Date),
       updatedAt: expect.any(Date),
-      createdAt: expect.any(Date)
+      createdAt: expect.any(Date),
     }
   }
 
