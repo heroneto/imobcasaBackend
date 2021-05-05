@@ -300,6 +300,18 @@ describe('LEAD CONTROLLER: tests', () => {
       expect(res.status).toHaveBeenCalledWith(400)
       expect(res.json).toHaveBeenCalledWith(error)
     })
+    test(`LIST: should return 200 with all leads`, async () => {
+      const query = mocks.mockLeadPaginationQuery(null, null, null)
+
+      const req = mocks.mockReq(null, query, null, { reqUserId: adminUser.id, admin: adminUser.admin })
+      const res = mocks.mockRes()
+      await leadController.list(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.json).toHaveBeenCalledWith(expect.arrayContaining([expect.objectContaining({
+        ...modelsExpected.leadListModel(),
+        statusid: leadStatus[0].id
+      })]))
+    })
     test(`LIST: should return 200 with all leads with specific status id`, async () => {
       const query = mocks.mockLeadPaginationQuery(null, null, leadStatus[0].id)
 
