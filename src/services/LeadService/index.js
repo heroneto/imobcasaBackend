@@ -12,7 +12,7 @@ const {
 class LeadService extends Service{
   _getOneRequiredFields = ["id", "reqUserId", "admin"]
   _createRequiredFields =  ["name", "phone", "sourceid", "formid", "userid", "active", "statusid", "negociationStartedAt", "reqUserId", "admin"]
-  _listRequiredFields = ["reqUserId", "admin", "skip", "limit", "statusId"]
+  _listRequiredFields = ["reqUserId", "admin", "skip", "limit"]
   _updateRequiredFields = ["id", "name", "phone", "sourceid", "formid", "userid", "active", "statusid", "negociationStartedAt", "reqUserId", "admin"]
   _deleteRequiredFields = ["id"]
   _searchRequiredFields = ["value", "reqUserId", "admin"]
@@ -71,7 +71,22 @@ class LeadService extends Service{
   async list(fields){
     await this._checkRequiredFields(this._listRequiredFields, fields)
     const { admin, skip, limit, statusId } = fields
-    const leads = await this._leadRepository.list({
+
+    if(!statusId){
+      const leads = await this._leadRepository.list({
+        skip,
+        limit,
+        statusId
+      })    
+
+      if(!admin){
+        return this._normalizeLeadData(this._filterMyLeads(leads, fields))
+      }
+      return this._normalizeLeadData(leads)      
+    }
+   
+
+    const leads = await this._leadRepository.listByStatus({
       skip,
       limit,
       statusId

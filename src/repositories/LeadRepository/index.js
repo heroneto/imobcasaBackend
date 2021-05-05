@@ -17,12 +17,8 @@ class LeadRepository {
   async list({skip, limit, statusId}) {
     return await Lead.findAll({
       offset: skip,
-      limit: limit,
-      where: {       
-        statusId: statusId
-      },
-      raw: true
-      
+      limit: limit,   
+      raw: true      
     })
   }
 
@@ -32,7 +28,8 @@ class LeadRepository {
       limit: limit,
       where: {
         statusId: statusId
-      }
+      },
+      raw: true
     })
   }
 
