@@ -431,5 +431,15 @@ describe('LEAD CONTROLLER: tests', () => {
     })
   })
 
+  describe('GET Lead Sources', () => {
+    it('GET: Should return 200 with list of leadSources', async () => {
+      const res = mocks.mockRes()
+      const req = mocks.mockReq()
+      await leadController.listSource(req, res)
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.json).toHaveBeenLastCalledWith(expect.arrayContaining([expect.objectContaining(modelsExpected.leadSourceExpected())]))
+    })
+  })
+
 
 })

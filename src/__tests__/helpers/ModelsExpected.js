@@ -158,6 +158,16 @@ class ModelsExpected {
     }
   }
 
+  leadSourceExpected(){
+    return {
+      id: expect.any(String),
+      name: expect.any(String),
+      active: expect.any(Boolean),
+      createdAt: expect.any(Date),
+      updatedAt: expect.any(Date)
+    }
+  }
+
 }
 
 
