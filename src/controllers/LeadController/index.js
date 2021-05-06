@@ -16,6 +16,7 @@ class LeadController {
   getMyLeads = `${this.basePath}/`
   searchPath = `${this.basePath}/search/:value`
   listStatusPath = `/leads/status/list`
+  listSourcesPath = `/leads/sources/list`
 
   constructor() {
     this.authenticationMid = new AuthenticationMiddleware()
@@ -43,6 +44,10 @@ class LeadController {
     this.routes.route(this.listStatusPath)
       .all(this.authenticationMid.checkAuthentication)
       .get(this.listStatus)
+
+    this.routes.route(this.listSourcesPath)
+      .all(this.authenticationMid.checkAuthentication)
+      .get(this.listSource)
 
   }
 
@@ -176,6 +181,24 @@ class LeadController {
     try {
       const leadService = new LeadService()
       const result = await leadService.listStatus()
+      return response.status(200).json(result)
+    } catch (err) {
+      if (err instanceof ServiceException) {
+        const { statusCode, message } = err
+        return response.status(statusCode).json(message)
+      } else {
+        console.error(err)
+        const { error } = serverError()
+        const { statusCode, body } = internalError(error)
+        return response.status(statusCode).send(body)
+      }
+    }
+  }
+
+  async listSource(request, response) {
+    try {
+      const leadService = new LeadService()
+      const result = await leadService.listSource()
       return response.status(200).json(result)
     } catch (err) {
       if (err instanceof ServiceException) {

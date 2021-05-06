@@ -19,6 +19,10 @@ class LeadSourceRepository {
     })
   }
 
+  async list(){
+    return await LeadSource.findAll()
+  }
+
 }
 
 module.exports = LeadSourceRepository

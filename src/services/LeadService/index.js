@@ -127,6 +127,9 @@ class LeadService extends Service{
       formid, 
       userid, 
     })
+    console.log("formid", formid)
+    console.log("userid", userid)
+    console.log("USER FORM", userform)
     await this._checkEntityExsits(userform, "User does not exists in form")
 
     return await this._leadRepository.create(fields)
@@ -167,6 +170,10 @@ class LeadService extends Service{
 
   async listStatus(){
     return await this._leadStatusRepository.list()
+  }
+
+  async listSource() {
+    return await this._leadSourceRepository.list()
   }
 
 }
