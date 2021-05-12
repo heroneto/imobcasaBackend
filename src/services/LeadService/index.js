@@ -37,6 +37,11 @@ class LeadService extends Service{
     return { name }
   }
 
+  async _getLeadSource(leadSourceId){
+    const { name } = await this._leadSourceRepository.getOne({ id: leadSourceId })
+    return { name }
+  }
+
 
   async _normalizeLeadData(leads){
     const normalizedData = []
@@ -62,6 +67,11 @@ class LeadService extends Service{
     await this._checkRequiredFields(this._getOneRequiredFields, fields)
     const lead = await this._leadRepository.getOne(fields)
     await this._checkEntityExsits(lead)
+
+    lead.ownerData = await this._getOwnerData(lead.userid)
+    lead.formData = await this._getFormData(lead.formid)
+    lead.sourceData = await this._getLeadSource(lead.sourceid)
+
     if(!fields.admin && lead.userid !== fields.reqUserId){
       await this._throwForbidenError()
     }
@@ -127,9 +137,6 @@ class LeadService extends Service{
       formid, 
       userid, 
     })
-    console.log("formid", formid)
-    console.log("userid", userid)
-    console.log("USER FORM", userform)
     await this._checkEntityExsits(userform, "User does not exists in form")
 
     return await this._leadRepository.create(fields)
@@ -137,7 +144,7 @@ class LeadService extends Service{
 
   async update(fields){
     await this._checkRequiredFields(this._updateRequiredFields, fields)
-    const lead = await this._leadRepository.getOne(fields)
+    const lead = await this._leadRepository.getOne(fields, false)
     await this._checkEntityExsits(lead)
     if(!fields.admin && lead.userid !== fields.reqUserId){
       await this._throwForbidenError()

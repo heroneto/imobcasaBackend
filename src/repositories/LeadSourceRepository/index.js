@@ -7,7 +7,8 @@ class LeadSourceRepository {
     return await LeadSource.findOne({
       where: {
         id: fields.id
-      }
+      },
+      raw: true
     })
   }
 
