@@ -42,6 +42,11 @@ class LeadService extends Service{
     return { name }
   }
 
+  async _getLeadStatus(statusId){
+    const { name } = await this._leadStatusRepository.getOne({ id: statusId })
+    return { name }
+  }
+
 
   async _normalizeLeadData(leads){
     const normalizedData = []
@@ -71,6 +76,7 @@ class LeadService extends Service{
     lead.ownerData = await this._getOwnerData(lead.userid)
     lead.formData = await this._getFormData(lead.formid)
     lead.sourceData = await this._getLeadSource(lead.sourceid)
+    lead.statusData = await this._getLeadStatus(lead.statusid)
 
     if(!fields.admin && lead.userid !== fields.reqUserId){
       await this._throwForbidenError()

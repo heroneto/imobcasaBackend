@@ -114,6 +114,9 @@ class ModelsExpected {
       ownerData: {
         fullName: expect.any(String),
         username: expect.any(String)
+      },
+      statusData: {
+        name: expect.any(String)
       }
     }
   }
