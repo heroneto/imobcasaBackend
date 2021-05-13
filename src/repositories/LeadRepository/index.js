@@ -6,12 +6,11 @@ const { Op } = Sequelize
 class LeadRepository {
 
 
-  async getOne(fields, raw = true) {
+  async getOne(fields) {
     return await Lead.findOne({
       where: {
         id: fields.id
       },
-      raw: raw
     })
   }
 
@@ -74,7 +73,6 @@ class LeadRepository {
           }
         ]
       },
-      raw: true
     })
   }
 

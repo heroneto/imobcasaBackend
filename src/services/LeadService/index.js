@@ -73,15 +73,22 @@ class LeadService extends Service{
     const lead = await this._leadRepository.getOne(fields)
     await this._checkEntityExsits(lead)
 
-    lead.ownerData = await this._getOwnerData(lead.userid)
-    lead.formData = await this._getFormData(lead.formid)
-    lead.sourceData = await this._getLeadSource(lead.sourceid)
-    lead.statusData = await this._getLeadStatus(lead.statusid)
+    const ownerData = await this._getOwnerData(lead.userid)
+    const formData = await this._getFormData(lead.formid)
+    const sourceData = await this._getLeadSource(lead.sourceid)
+    const statusData = await this._getLeadStatus(lead.statusid)
 
     if(!fields.admin && lead.userid !== fields.reqUserId){
       await this._throwForbidenError()
     }
-    return lead
+
+    return {
+      ...lead.toJSON(),
+      ownerData,
+      formData,
+      sourceData,
+      statusData
+    }
   }
 
   async list(fields){
