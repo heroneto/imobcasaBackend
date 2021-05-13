@@ -90,7 +90,7 @@ describe('LEAD CONTROLLER: tests', () => {
       expect(res.status).toBeCalledWith(403)
       expect(res.json).toBeCalledWith(error)
     })
-    it.only('GET: Should return 200 if lead has been found', async () => {
+    it('GET: Should return 200 if lead has been found', async () => {
       const res = mocks.mockRes()
       const req = mocks.mockReq({}, {}, { id: lead.id }, { reqUserId: adminUser.id, admin: adminUser.admin })
       await leadController.getOne(req, res)
@@ -116,6 +116,10 @@ describe('LEAD CONTROLLER: tests', () => {
             fullName: expect.any(String),
             username: expect.any(String)
           },
+          taskTypeData: {
+            name: expect.any(String), 
+            description: expect.any(String), 
+          }
         })])
         
       }))
@@ -442,7 +446,16 @@ describe('LEAD CONTROLLER: tests', () => {
       expect(res.status).toHaveBeenCalledWith(403)
       expect(res.json).toHaveBeenCalledWith(error)
     })
+    it('DELETE: Should return 401 if valid id has been provided but has task associated', async () => {
+      const res = mocks.mockRes()
+      const req = mocks.mockReq(null, null, { id: lead.id }, { reqUserId: adminUser.id, admin: adminUser.admin })
+      await leadController.delete(req, res)
+      expect(res.status).toHaveBeenCalledWith(401)
+      const { error } = invalidParamError("Lead has tasks associated")
+      expect(res.json).toHaveBeenCalledWith(error)
+    })
     it('DELETE: Should return 200 if valid id has been provided', async () => {
+      await Task.destroy({ where: {} })
       const res = mocks.mockRes()
       const req = mocks.mockReq(null, null, { id: lead.id }, { reqUserId: adminUser.id, admin: adminUser.admin })
       await leadController.delete(req, res)
