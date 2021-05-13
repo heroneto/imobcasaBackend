@@ -6,7 +6,8 @@ const {
   LeadStatusRepository,
   LeadSourceRepository,
   FormRepository,
-  TaskRepository
+  TaskRepository,
+  TaskTypeRepository
 } = require('../../repositories')
 
 
@@ -27,6 +28,7 @@ class LeadService extends Service{
     this._formRepository = new FormRepository
     this._leadSourceRepository = new LeadSourceRepository()
     this._taskRepository = new TaskRepository()
+    this._taskTypeRepository = new TaskTypeRepository()
   }
 
   async _getOwnerData(userid){
@@ -55,11 +57,16 @@ class LeadService extends Service{
 
     for(const task of result){
       const { fullName, username } = await this._getOwnerData(task.userid)
+      const taskType = await (await this._taskTypeRepository.getOne(task.tasktypeid)).toJSON()
       tasks.push({
         ...task.toJSON(),
         ownerData: {
           username,
           fullName
+        },
+        taskTypeData: {
+          name: taskType.name, 
+          description: taskType.description
         }
       })
     }
@@ -86,6 +93,12 @@ class LeadService extends Service{
       }
     })
     return filteredLeads
+  }
+
+  _checkLeadTasks(tasks){
+    if(tasks.length > 0 ){
+      this._throwUnalthorizedError("Lead has tasks associated")
+    }
   }
 
   async getOne(fields){
@@ -195,9 +208,11 @@ class LeadService extends Service{
     await this._checkRequiredFields(this._deleteRequiredFields, fields)
     const lead = await this._leadRepository.getOne(fields)
     await this._checkEntityExsits(lead)
+    const tasks = await this._taskRepository.listByLead({ leadid: lead.id })
     if(!fields.admin && lead.userid !== fields.reqUserId){
       await this._throwForbidenError()
     }    
+    await this._checkLeadTasks(tasks)
     return await this._leadRepository.delete(fields)
   }
 
