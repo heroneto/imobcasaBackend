@@ -6,6 +6,7 @@ const {
   LeadStatusRepository,
   LeadSourceRepository,
   FormRepository,
+  TaskRepository
 } = require('../../repositories')
 
 
@@ -25,6 +26,7 @@ class LeadService extends Service{
     this._leadStatusRepository = new LeadStatusRepository()
     this._formRepository = new FormRepository
     this._leadSourceRepository = new LeadSourceRepository()
+    this._taskRepository = new TaskRepository()
   }
 
   async _getOwnerData(userid){
@@ -45,6 +47,24 @@ class LeadService extends Service{
   async _getLeadStatus(statusId){
     const { name } = await this._leadStatusRepository.getOne({ id: statusId })
     return { name }
+  }
+
+  async _getLeadTasks(leadId){
+    const result = await this._taskRepository.listByLead({ leadid: leadId })
+    let tasks = []
+
+    for(const task of result){
+      const { fullName, username } = await this._getOwnerData(task.userid)
+      tasks.push({
+        ...task.toJSON(),
+        ownerData: {
+          username,
+          fullName
+        }
+      })
+    }
+
+    return tasks
   }
 
 
@@ -77,6 +97,7 @@ class LeadService extends Service{
     const formData = await this._getFormData(lead.formid)
     const sourceData = await this._getLeadSource(lead.sourceid)
     const statusData = await this._getLeadStatus(lead.statusid)
+    const tasks = await this._getLeadTasks(lead.id)
 
     if(!fields.admin && lead.userid !== fields.reqUserId){
       await this._throwForbidenError()
@@ -87,7 +108,8 @@ class LeadService extends Service{
       ownerData,
       formData,
       sourceData,
-      statusData
+      statusData,
+      tasks
     }
   }
 
