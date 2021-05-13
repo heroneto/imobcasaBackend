@@ -1,7 +1,7 @@
 const { LeadController } = require('../../controllers')
 const leadController = new LeadController()
 const { invalidParamError, missingParamError, forbidenError, conflictError } = require('../../helpers').errors
-const { Lead, User, LeadSource, LeadStatus, UsersForms, Form } = require('../../models')
+const { Lead, User, LeadSource, LeadStatus, UsersForms, Form, Task, TaskType } = require('../../models')
 const Mocks = require('../helpers/Mocks')
 const ModelsExpected = require('../helpers/ModelsExpected')
 const mocks = new Mocks()
@@ -19,6 +19,8 @@ describe('LEAD CONTROLLER: tests', () => {
   let leadSource = {}
   let form = {}
   let userForm = {}
+  let taskType = {}
+  let task = {}
 
   beforeAll(async () => {
     try {
@@ -36,12 +38,16 @@ describe('LEAD CONTROLLER: tests', () => {
       lead2 = await Lead.create(mocks.mockLead(adminUser.id, leadStatus[1].id, leadSource.id, form.id))
       lead3 = await Lead.create(mocks.mockLead(adminUser.id, leadStatus[2].id, leadSource.id, form.id))
       lead4 = await Lead.create(mocks.mockLead(adminUser.id, leadStatus[3].id, leadSource.id, form.id))
+      taskType = await TaskType.create(mocks.mockTaskType())
+      task = await Task.create(mocks.mockTask(adminUser.id, lead.id, taskType.id))
     } catch (err) {
       console.error(err)
     }
   }),
     afterAll(async () => {
       try {
+        await Task.destroy({ where: {} })
+        await TaskType.destroy({ where: {} })
         await UsersForms.destroy({ where: {} })
         await Lead.destroy({ where: {} })
         await LeadStatus.destroy({ where: {} })
@@ -84,7 +90,7 @@ describe('LEAD CONTROLLER: tests', () => {
       expect(res.status).toBeCalledWith(403)
       expect(res.json).toBeCalledWith(error)
     })
-    it('GET: Should return 200 if lead has been found', async () => {
+    it.only('GET: Should return 200 if lead has been found', async () => {
       const res = mocks.mockRes()
       const req = mocks.mockReq({}, {}, { id: lead.id }, { reqUserId: adminUser.id, admin: adminUser.admin })
       await leadController.getOne(req, res)
@@ -103,7 +109,15 @@ describe('LEAD CONTROLLER: tests', () => {
         },
         statusData: {
           name: expect.any(String)
-        }
+        },
+        tasks: expect.arrayContaining([expect.objectContaining({
+          ...modelsExpected.taskModel(),
+          ownerData: {
+            fullName: expect.any(String),
+            username: expect.any(String)
+          },
+        })])
+        
       }))
     })
   })
