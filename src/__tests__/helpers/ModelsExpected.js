@@ -92,52 +92,7 @@ class ModelsExpected {
     }
   }
 
-  leadModel_getLead() {
-    return {
-      id: expect.any(String),
-      name: expect.any(String),
-      phone: expect.any(String),
-      sourceid: expect.any(String),
-      formid: expect.any(String),
-      userid: expect.any(String),
-      active: expect.any(Number),
-      statusid: expect.any(String),
-      negociationStartedAt: expect.any(String),
-      updatedAt: expect.any(String),
-      createdAt: expect.any(String),
-      formData: {
-        name: expect.any(String)
-      },
-      sourceData: {
-        name: expect.any(String)
-      },
-      ownerData: {
-        fullName: expect.any(String),
-        username: expect.any(String)
-      },
-      statusData: {
-        name: expect.any(String)
-      }
-    }
-  }
-
   leadModel() {
-    return {
-      id: expect.any(String),
-      name: expect.any(String),
-      phone: expect.any(String),
-      sourceid: expect.any(String),
-      formid: expect.any(String),
-      userid: expect.any(String),
-      active: expect.any(Number),
-      statusid: expect.any(String),
-      negociationStartedAt: expect.any(String),
-      updatedAt: expect.any(String),
-      createdAt: expect.any(String),
-    }
-  }
-
-  leadModel_create_update() {
     return {
       id: expect.any(String),
       name: expect.any(String),

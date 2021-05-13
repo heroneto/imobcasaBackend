@@ -89,7 +89,22 @@ describe('LEAD CONTROLLER: tests', () => {
       const req = mocks.mockReq({}, {}, { id: lead.id }, { reqUserId: adminUser.id, admin: adminUser.admin })
       await leadController.getOne(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
-      expect(res.json).toBeCalledWith(expect.objectContaining(modelsExpected.leadModel_getLead()))
+      expect(res.json).toBeCalledWith(expect.objectContaining({
+        ...modelsExpected.leadModel(),
+        formData: {
+          name: expect.any(String)
+        },
+        sourceData: {
+          name: expect.any(String)
+        },
+        ownerData: {
+          fullName: expect.any(String),
+          username: expect.any(String)
+        },
+        statusData: {
+          name: expect.any(String)
+        }
+      }))
     })
   })
   describe('POST Leads', () => {
@@ -184,7 +199,7 @@ describe('LEAD CONTROLLER: tests', () => {
       const req = mocks.mockReq(fakeLead, {}, { id: lead.id }, { reqUserId: adminUser.id, admin: adminUser.admin })
       await leadController.create(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
-      expect(res.json).toHaveBeenCalledWith(expect.objectContaining(modelsExpected.leadModel_create_update()))
+      expect(res.json).toHaveBeenCalledWith(expect.objectContaining(modelsExpected.leadModel()))
     })
   })
   describe('PUT Leads', () => {
@@ -271,7 +286,7 @@ describe('LEAD CONTROLLER: tests', () => {
       await leadController.update(req, res)
       expect(res.status).toHaveBeenCalledWith(200)
       expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
-        ...modelsExpected.leadModel_create_update(),
+        ...modelsExpected.leadModel(),
         name: fakeLead.name,
         phone: fakeLead.phone,
         id: fakeLead.id
