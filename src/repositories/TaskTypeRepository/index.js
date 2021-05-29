@@ -10,6 +10,10 @@ class TaskTypeRepository {
       }
     })
   }
+
+  async list(){
+    return TaskType.findAll()
+  }
 }
 
 module.exports = TaskTypeRepository

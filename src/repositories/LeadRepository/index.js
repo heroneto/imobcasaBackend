@@ -43,8 +43,6 @@ class LeadRepository {
     lead.sourceid = fields.sourceid
     lead.formid = fields.formid
     lead.userid = fields.userid
-    lead.active = fields.active
-    lead.statusid = fields.statusid
     await lead.save()
     return lead
   }

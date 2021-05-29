@@ -85,6 +85,10 @@ class TaskService extends Service {
     return this._taskRepository.update(task, updateTaskFields)
   }
 
+  async listTaskTypes() {
+    return await this._taskTypeRepository.list()
+  }
+
 }
 
 module.exports = TaskService

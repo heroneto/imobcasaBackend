@@ -15,7 +15,7 @@ class LeadService extends Service{
   _getOneRequiredFields = ["id", "reqUserId", "admin"]
   _createRequiredFields =  ["name", "phone", "sourceid", "formid", "userid", "active", "statusid", "negociationStartedAt", "reqUserId", "admin"]
   _listRequiredFields = ["reqUserId", "admin", "skip", "limit"]
-  _updateRequiredFields = ["id", "name", "phone", "sourceid", "formid", "userid", "active", "statusid", "negociationStartedAt", "reqUserId", "admin"]
+  _updateRequiredFields = ["id", "name", "phone", "sourceid", "formid", "userid", "reqUserId", "admin"]
   _deleteRequiredFields = ["id"]
   _searchRequiredFields = ["value", "reqUserId", "admin"]
 
@@ -198,9 +198,12 @@ class LeadService extends Service{
       await this._throwForbidenError()
     }
     const leadFinded = await this._leadRepository.findByPhone(fields.phone)
-    if(leadFinded.id !== fields.id){
-      await this._throwConflictError("phone")
-    }    
+    if(leadFinded){
+      if(leadFinded.id !== fields.id){
+        await this._throwConflictError("phone")
+      }   
+    }
+    
     return await this._leadRepository.update(lead, fields)
   }
 

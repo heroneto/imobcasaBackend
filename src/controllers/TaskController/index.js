@@ -9,6 +9,7 @@ const { serverError } = require('../../helpers/Errors')
 class TaskController {
   routes = Router()
   basePath = "/tasks"
+  taskTypes = "/tasktypes"
 
   constructor(){
     this.authenticationMid = new AuthenticationMiddleware()
@@ -30,6 +31,10 @@ class TaskController {
       .get(this._getOne)
       .put(this._update)
       .delete(this._delete)
+
+    this.routes.route(this.taskTypes)
+      .all(this.authenticationMid.checkAuthentication)
+      .get(this._listTaskTypes)
   }
 
 
@@ -126,6 +131,24 @@ class TaskController {
         ...req.locals
       })
       return res.status(200).json(task)
+    } catch (err) {
+      if (err instanceof ServiceException) {
+        const { statusCode, message } = err
+        return res.status(statusCode).json(message)
+      } else {
+        console.error(err)
+        const { error } = serverError()
+        const { statusCode, body } = internalError(error)
+        return res.status(statusCode).send(body)
+      }
+    }
+  }
+
+  async _listTaskTypes(req,res){
+    try {
+      const taskService = new TaskService()
+      const result = await taskService.listTaskTypes()
+      return res.status(200).json(result)
     } catch (err) {
       if (err instanceof ServiceException) {
         const { statusCode, message } = err
